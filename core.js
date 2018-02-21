@@ -60,7 +60,7 @@ module.exports = {
 	gameHistory,
 	'_expose':expose,		//REMOVE THIS LINE WHEN PUBLISHING
 	registry,				//REMOVE THIS LINE WHEN PUBLISHING
-	excludedPlayers,		//REMOVE THIS LINE WHEN PUBLISHING
+	occupiedPlayers,		//REMOVE THIS LINE WHEN PUBLISHING
 	startREPL,				//Should this line be removed when publishing?
 	Variable
 };

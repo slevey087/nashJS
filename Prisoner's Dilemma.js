@@ -1,6 +1,7 @@
 ({Player,registerStrategy, _expose, registry, Variable, gameHistory, excludedPlayers, startREPL} = require('./core'));
-({Choice, Turn, Game, Loop, StochasticLoop, HaltIf, StochasticHalt, Lambda, RandomPlayerChoice} = require('./core').Playables);
+({Choice, Turn, Sequence, Loop, StochasticLoop, HaltIf, StochasticHalt, Lambda, RandomPlayerChoice} = require('./core').Playables);
 
+pd = require('./stock-games/prisoner-dilemma');
 
 function chooseFirstOption(){
 	
@@ -52,12 +53,12 @@ L1 = Lambda(function(){
 
 h1 = StochasticHalt(.3,{logContinue:true});
 
-h1(t1)
-L1(h1)
+h1(t1);
+L1(h1);
 
-g1 = Game(t1,L1)
+s1 = Sequence(t1,L1)
 
-l1 = StochasticLoop(g1,.5,{logContinue:true});
+l1 = StochasticLoop(s1,.5,{logContinue:true});
 
 //console.log(_expose(t1).next)
 //console.log(_expose(t1).next.cooperate.Cooperate)
@@ -65,5 +66,5 @@ l1 = StochasticLoop(g1,.5,{logContinue:true});
 
 
 //The code below is to run the repl for testing purposes. 
-var toRepl = {_expose, registry,Player,Choice,Turn,Game,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1, l1, g1, L1};
+var toRepl = {_expose, registry,Player,Choice,Turn,Sequence,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1, l1, s1, L1};
 //startREPL(toRepl);

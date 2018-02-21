@@ -3,7 +3,7 @@
 var log = require('../logger');
 
 //Game state controllers
-var {registry, gameHistory} = require('../state');
+var {registry, gameHistory, occupiedPlayers} = require('../state');
 
 //Helper functions
 var {idHandler} = require('../helperFunctions').general;
@@ -42,7 +42,7 @@ _Choice.prototype.play = function({initializePlayers=false, usePayoffs=false, sh
 	var choice = this;
 	
 	//While this choice is happening, don't allow other choices to use this player.
-	excludedPlayers.add(choice.player.id);
+	occupiedPlayers.add(choice.player.id);
 	
 	return Promise.resolve().then(function(){
 		if (initializePlayers) return reinitializePlayers();
@@ -73,7 +73,7 @@ _Choice.prototype.play = function({initializePlayers=false, usePayoffs=false, sh
 	})
 	.then(function(result){
 	
-		log("silly","_Choice.play: removing from excludedPlayers: ", choice.player.id)
+		log("silly","_Choice.play: removing from occupiedPlayers: ", choice.player.id)
 		if (releasePlayer) choice.releasePlayer();
 	
 		return choice.proceed(result, shortCircuit);
@@ -83,7 +83,7 @@ _Choice.prototype.play = function({initializePlayers=false, usePayoffs=false, sh
 
 //Release player from excluded players list, so that other objects can use it.
 _Choice.prototype.releasePlayer = function(){
-	excludedPlayers.remove(this.player.id);
+	occupiedPlayers.remove(this.player.id);
 };
 
 
@@ -120,11 +120,11 @@ _Choice.prototype.zeroPayoffs = function(){
 
 
 
-function Choice(player, options, parameters={}){
-	var id = idHandler(parameters.id,"choice")
+function Choice(player, options, {id=null, initializePlayers=false, usePayoffs=false, shortCircuit=false, writeHistory=true, releasePlayer=true}={}){
+	var id = idHandler(id,"choice")
 	
 	//Create backend choice object
-	var _choice = new _Choice(id, player.id(), options, parameters);
+	var _choice = new _Choice(id, player.id(), options, {initializePlayers, usePayoffs, shortCircuit, writeHistory, releasePlayer});
 	
 	//Return this reference object to the user. Run the function to select a source
 	var choice = Playable(_choice)

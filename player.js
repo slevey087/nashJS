@@ -24,7 +24,7 @@ function _Player(id, parameters){
 	registry.players[id] = this;
 }
 
-
+console.log(process.cwd());
 //Assign strategy to player
 _Player.prototype.assign = function(strategy){
 	
