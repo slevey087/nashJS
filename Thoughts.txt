@@ -1,0 +1,20 @@
+- Normal-form games should be easy to create
+- Extensive form games with no simultaneity should be easy to create
+- Should payoffs be allowed to change during the game?
+- Default should be perfect information, with ways to hide specific information, or pass extra information
+- strategies should be classes, called with 'New' to create players, so that multiple players can use the same strategy
+- minimize opportunities for cheating by storing scores and payoffs outside player-accessible scope
+
+[choice0, choice1, choice2] = [['left','right'],['up','down'],['cooperate','defect']]
+
+->
+
+{
+    left:{
+        up:{
+            cooperate:2,
+            defect:3
+        },
+        down:...
+    }
+}
