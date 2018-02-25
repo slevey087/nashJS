@@ -9,11 +9,11 @@
   "author": "SLevey087",
   "license": "ISC",
   "dependencies": {
-    "glob": "^7.1.2",
     "synchronous-promise": "^2.0.4",
     "winston": "^2.4.0"
   },
   "devDependencies": {
+    "brfs": "^1.4.4",
     "browserify": "^16.0.0",
     "browserify-fs": "^1.0.0"
   }

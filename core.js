@@ -33,7 +33,7 @@ var {variablePrototype, Variable} = require('./logic');
 registry._addType_("strategies");
 idCounters._addType_("strategy");
 var {registerStrategy} 			= require('./strategy');
-
+var strategyLoader = require('./strategy-loader');
 
 
 //THIS FUNCTION IS ONLY FOR DEBUGGING. REMOVE IT FROM MODULE EXPORTS WHEN PUBLISHING
@@ -57,6 +57,7 @@ module.exports = {
 	Player,
 	'Playables':playableInterfaces,
 	registerStrategy,
+	strategyLoader,
 	gameHistory,
 	'_expose':expose,		//REMOVE THIS LINE WHEN PUBLISHING
 	registry,				//REMOVE THIS LINE WHEN PUBLISHING

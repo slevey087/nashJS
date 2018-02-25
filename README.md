@@ -33,6 +33,8 @@ c1.play();  //c1 will execute, followed by c2
 ```
 Some *playables* also can form several branches of chains. This is outlined in more detail in specific *playable* descriptions, following immediately.
 
+## The Most Common Playables
+
 ### Choice
 This is core building block of nashJS. A `choice` defines a single selection made by a single player. For instance, *player2* might choose between "cooperate" and "defect." 
 
@@ -139,8 +141,105 @@ t1.Right.Back({'player1':2, 'Jimbob':8});
 
 `Turns` can be chained to other playables in the normal way:
 ```
-c3(t1);
+c3(t1);                             //Play c3 after t1, no matter the outcome
 ```
 Or using branches, so that the next game-step depends on the outcome that was selected.
+```
+c3(t1.Left.Back());                 //Play c3 if p1 picks Left and p2 picks Back
+```
 
+### Sequence
+`Sequence` converts a chain of *playables* into a *playable.* This is useful for supplying longer chains to *playables* that act on other *playables* (such as loops) or for cleaning up code by defining your own *playables*. 
+```
+var s1 = Sequence(playableStart, playableFinish, {
+    id:null,
+    initializePlayers:false, 
+    shortCircuit:false, 
+    writeHistory:true, 
+});
+```
+- `playableStart` - any *playable* with which to begin the sequence.
+- `playableFinish` - the *playable* that should end the sequence.
+- Optional parameters:
+-- `id:null` - The id for this playable. If not provided, one will be generated automatically.
+-- `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
+-- `shortCircuit:false` - If false, proceed down the chain as normal after the `Sequence` is complete. If true, stop after this `Sequence` is complete. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
+-- `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
+
+`Sequence` will call `.play()` on the *playable* supplied as *playableStart*, then continue down the chain until either it reaches *playableFinish* or until the chain finishes.
+
+```
+var t1 = Turn(['Left', 'Right']);
+var t2 = Turn (['Up', 'Down']);
+var t3 = Turn(['Back','Forward']);
+
+t2(t1);
+t3(t2);
+
+var s1 = Sequence(t1, t2); 
+//Calling t1.play() would cause t1, then t2, then t3 to play. Calling s1.play() will cause only t1 then t2 to play.
+```
+If the sequence doesn't reach *playableFinish*, it will simply end when there are no more branches to play:
+```
+var t1 = Turn(['Left', 'Right']);
+var t2 = Turn (['Up', 'Down']);
+var t3 = Turn(['Back','Forward']);
+
+t2(t1);             //There is no path from t1 to t3
+
+var s1 = Sequence(t1, t3); 
+//Calling s1.play() will cause t1 then t2 to play. 
+```
+
+Note that every *playable* chained to `playableStart` will play, even if that branch does not lead to `playableFinish*:
+```
+var t1 = Turn(['Left', 'Right']);
+var t2 = Turn (['Up', 'Down']);
+var t3 = Turn(['Back','Forward']);
+
+t2(t1);
+t3(t1);         //Here, t2 and t3 are both chained to t1
+
+var s1 = Sequence(t1, t2); 
+//Calling s1.play() will cause t1, t2, and t3 to play, even though t3 is not on the branch that leads to t2.
+```
+
+### Loop
+`Loop` calls a *playable* repeatedly, a given number of times. This is useful to iterated or evolutionary games, as well as cleaning up code for games with repition.
+```
+var l1 = Loop(playable, count, {
+    id:null,
+    logContinue:false
+    initializePlayers:false, 
+    shortCircuit:false, 
+    writeHistory:true, 
+});
+```
+- `playable` - The *playable* to loop. 
+- `count` - The number of times to loop (defaults to 1)
+- Optional parameters:
+-- `id:null` - The id for this playable. If not provided, one will be generated automatically.
+-- `logContinue:false` - If false, omit entries to the `gameHistory` record for each time through the loop, and only record when the loop completes.
+-- `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
+-- `shortCircuit:false` - If false, proceed down the chain as normal after the `Sequence` is complete. If true, stop after this `Sequence` is complete. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
+-- `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
+Use `Loop` to repeat simple *playables* like `Choice` or `Turn`:
+```
+var t1 = Turn(['Left', 'Right']);
+var l1 = Loop(t1,5);
+
+l1.play();
+```
+Or with `Sequence` to loop chains of game-steps:
+```
+var t1 = Turn(['Left', 'Right']);
+var t2 = Turn (['Up', 'Down']);
+var t3 = Turn(['Back','Forward']);
+
+t2(t1);
+t3(t2);
+
+var s1 = Sequence(t1, t3); 
+var l1 = Loop(s1, 4);           //t1, then t2, then t3 will play 4 times.
+```
 ## Defining a Strategy
