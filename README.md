@@ -242,4 +242,13 @@ t3(t2);
 var s1 = Sequence(t1, t3); 
 var l1 = Loop(s1, 4);           //t1, then t2, then t3 will play 4 times.
 ```
+### HaltIf
+## Additional Playables
+### StochasticLoop
+### StochasticHalt
+### RandomPlayerChoice
+### Lambda
+
 ## Defining a Strategy
+## Play-time Logic
+## Creating Your Own Playables
