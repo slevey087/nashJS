@@ -1,6 +1,28 @@
 # nashJS
 A flexible and extendable game theory simulator for Javascript. Meant for testing different games and strategies. This is early days, bug reports and feature requests are very welcome (but might take a while).
 
+<!-- toc -->
+
+- [Installation](#installation)
+- [Defining a Game](#defining-a-game)
+  * [Working With *Playables*](#working-with-playables)
+- [The Most Common Playables](#the-most-common-playables)
+  * [Choice](#choice)
+  * [Turn](#turn)
+  * [Sequence](#sequence)
+  * [Loop](#loop)
+  * [HaltIf](#haltif)
+- [Additional Playables](#additional-playables)
+  * [StochasticLoop](#stochasticloop)
+  * [StochasticHalt](#stochastichalt)
+  * [RandomPlayerChoice](#randomplayerchoice)
+  * [Lambda](#lambda)
+- [Defining a Strategy](#defining-a-strategy)
+- [Play-time Logic](#play-time-logic)
+- [Creating Your Own Playables](#creating-your-own-playables)
+
+<!-- tocstop -->
+
 ## Installation
 
 ```
