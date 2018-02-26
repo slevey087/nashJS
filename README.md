@@ -4,6 +4,7 @@ A flexible and extendable game theory simulator for Javascript. Meant for testin
 <!-- toc -->
 
 - [Installation](#installation)
+- [Creating Players](#creating-players)
 - [Defining a Game](#defining-a-game)
   * [Working With *Playables*](#working-with-playables)
 - [The Most Common Playables](#the-most-common-playables)
@@ -28,7 +29,20 @@ A flexible and extendable game theory simulator for Javascript. Meant for testin
 ```
 npm install nash-js
 ```
-
+## Creating Players
+A game requires players. You can create some like so:
+```
+var p1 = Player();
+```
+Players require a *strategy*, which is a sequence of code that tells the player what to do. (See the section below for how to create a *strategy*). Assign a player a strategy by referring to the strategy by name. You can do so when creating the player:
+```
+var p1 = Player({strategy:"TitForTat"});
+```
+Or later using the `assign` function:
+```
+var p1 = Player();
+p1.assign("TitForTat");
+```
 ## Defining a Game
 In nashJS, the game structure is defined in advance, then executed. The atom unit in nashJS is called a *playable.* A *playable* is an object that can be called to execute a step of the game, using the `.play()` function. *Playables* can be chained together in various ways to form multi-step games, and these chains can themselves form a *playable.* 
 
@@ -265,6 +279,8 @@ var s1 = Sequence(t1, t3);
 var l1 = Loop(s1, 4);           //t1, then t2, then t3 will play 4 times.
 ```
 ### HaltIf
+
+
 ## Additional Playables
 ### StochasticLoop
 ### StochasticHalt
@@ -272,5 +288,6 @@ var l1 = Loop(s1, 4);           //t1, then t2, then t3 will play 4 times.
 ### Lambda
 
 ## Defining a Strategy
+
 ## Play-time Logic
 ## Creating Your Own Playables

@@ -12,12 +12,14 @@ var {chainerGenerator} 	= require('./helperFunctions').playable;
 
 
 //Backend for Player
-function _Player(id, parameters){
+function _Player(id, {name="", strategy=null}={}){
 	log('debug','Creating interal player object.');
 	
 	this.id = id
 	this.score = 0
-	this.name = parameters.name || "";
+	this.name = name;
+	
+	if (strategy) this.assign(strategy);
 	
 	this.alive = true;
 	

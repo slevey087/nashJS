@@ -22,15 +22,15 @@ registerStrategy(chooseSecondOption, "chooseSecond");
 
 
 
-p1 = Player();
-p1.assign("chooseFirst");
+p1 = Player({strategy:"chooseFirst"});
+//p1.assign("chooseFirst");
 p2 = Player();
 p2.assign("chooseFirst");
 p3 = Player();
 p3.assign("chooseSecond");
 
  c1 = Choice(p1,['cooperate','defect']);
-//c1['left'](5);
+//c1['left'](5) ;
 //c1['right'](2);
  c2 = Choice(p2,['Cooperate','Defect']);
 //c2['up'](1);
