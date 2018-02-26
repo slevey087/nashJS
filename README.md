@@ -74,12 +74,12 @@ var c1 = Choice(player, options, {
 - `player` - the reference object of the player who makes the choice (more on this in the `player` section.
 - `options` - an array of the available options that the player may select from. For instance: `["cooperate","defect"]`.
 - Optional parameters:
--- `id:null` - The id for this playable. If not provided, one will be generated automatically.
--- `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
--- `usePayoffs:false` - If false, then payoffs defined for this Choice will be ignored. (This will be superceded if the Choice is bundled into Turn or any other *playable.*)
--- `shortCircuit:false` - If false, proceed down the chain as normal after the Choice is complete. If true, stop after this Choice is complete. (This will be superceded if the Choice is bundled into Turn or any other *playable.*)
--- `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the Choice is bundled into Turn or any other *playable.*)
--- `releasePlayer:true` - When the Choice executes, players will be noted as occupied and prevented from being selected by other *playables*. If true, the Choice will release the player when finished. (This will be superceded if the Choice is bundled into Turn or any other *playable.*)
+  * `id:null` - The id for this playable. If not provided, one will be generated automatically.
+  * `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
+  * `usePayoffs:false` - If false, then payoffs defined for this Choice will be ignored. (This will be superceded if the Choice is bundled into Turn or any other *playable.*)
+  * `shortCircuit:false` - If false, proceed down the chain as normal after the Choice is complete. If true, stop after this Choice is complete. (This will be superceded if the Choice is bundled into Turn or any other *playable.*)
+  * `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the Choice is bundled into Turn or any other *playable.*)
+  * `releasePlayer:true` - When the Choice executes, players will be noted as occupied and prevented from being selected by other *playables*. If true, the Choice will release the player when finished. (This will be superceded if the Choice is bundled into Turn or any other *playable.*)
 
 To create a game-step that involves only a single-player making a choice, use Choice by itself. You can set payoffs dependent on the choice made:
 ```
@@ -129,12 +129,12 @@ var t1 = Turn(choices, {
 
 - `choices` - an array of the `choices` that make up the `turn`.
 - Optional parameters:
--- `id:null` - The id for this playable. If not provided, one will be generated automatically.
--- `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
--- `usePayoffs:true` - If false, then payoffs defined for this `Turn` will be ignored.
--- `shortCircuit:false` - If false, proceed down the chain as normal after the `Turn` is complete. If true, stop after this `Turn` is complete. (This will be superceded if the `Turn` is bundled into any other *playable.*)
--- `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Turn` is bundled into any other *playable.*)
--- `releasePlayer:true` - When each `Choice` executes, players will be noted as occupied and prevented from being selected by other *playables*. If true, the `Turn` will release all players when finished. (This will be superceded if the `Turn` is bundled into any other *playable.*)
+  * `id:null` - The id for this playable. If not provided, one will be generated automatically.
+  * `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
+  * `usePayoffs:true` - If false, then payoffs defined for this `Turn` will be ignored.
+  * `shortCircuit:false` - If false, proceed down the chain as normal after the `Turn` is complete. If true, stop after this `Turn` is complete. (This will be superceded if the `Turn` is bundled into any other *playable.*)
+  * `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Turn` is bundled into any other *playable.*)
+  * `releasePlayer:true` - When each `Choice` executes, players will be noted as occupied and prevented from being selected by other *playables*. If true, the `Turn` will release all players when finished. (This will be superceded if the `Turn` is bundled into any other *playable.*)
 
 Bundle any number of `Choices` into a `Turn`:
 ```
@@ -183,10 +183,10 @@ var s1 = Sequence(playableStart, playableFinish, {
 - `playableStart` - any *playable* with which to begin the sequence.
 - `playableFinish` - the *playable* that should end the sequence.
 - Optional parameters:
--- `id:null` - The id for this playable. If not provided, one will be generated automatically.
--- `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
--- `shortCircuit:false` - If false, proceed down the chain as normal after the `Sequence` is complete. If true, stop after this `Sequence` is complete. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
--- `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
+  * `id:null` - The id for this playable. If not provided, one will be generated automatically.
+  * `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
+  * `shortCircuit:false` - If false, proceed down the chain as normal after the `Sequence` is complete. If true, stop after this `Sequence` is complete. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
+  * `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
 
 `Sequence` will call `.play()` on the *playable* supplied as *playableStart*, then continue down the chain until either it reaches *playableFinish* or until the chain finishes.
 
@@ -240,11 +240,11 @@ var l1 = Loop(playable, count, {
 - `playable` - The *playable* to loop. 
 - `count` - The number of times to loop (defaults to 1)
 - Optional parameters:
--- `id:null` - The id for this playable. If not provided, one will be generated automatically.
--- `logContinue:false` - If false, omit entries to the `gameHistory` record for each time through the loop, and only record when the loop completes.
--- `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
--- `shortCircuit:false` - If false, proceed down the chain as normal after the `Sequence` is complete. If true, stop after this `Sequence` is complete. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
--- `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
+  * `id:null` - The id for this playable. If not provided, one will be generated automatically.
+  * `logContinue:false` - If false, omit entries to the `gameHistory` record for each time through the loop, and only record when the loop completes.
+  * `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
+  * `shortCircuit:false` - If false, proceed down the chain as normal after the `Sequence` is complete. If true, stop after this `Sequence` is complete. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
+  * `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
 Use `Loop` to repeat simple *playables* like `Choice` or `Turn`:
 ```
 var t1 = Turn(['Left', 'Right']);

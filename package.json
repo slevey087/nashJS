@@ -4,7 +4,8 @@
   "description": "A game theory simulator! Program games and strategies, then let them play and get the results. ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"toc": "markdown-toc -i readme.md"
   },
   "author": "SLevey087",
   "license": "ISC",
