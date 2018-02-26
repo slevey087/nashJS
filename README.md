@@ -29,10 +29,13 @@ A flexible and extendable game theory simulator for Javascript. Meant for testin
 ```
 npm install nash-js
 ```
+
 ## Creating Players
-A game requires players. You can create some like so:
+A game requires players. First import the `Player` parent function, then create some players like so:
 ```
+var {Player} = require('nash-js');
 var p1 = Player();
+var p2 = Player();
 ```
 Players require a *strategy*, which is a sequence of code that tells the player what to do. (See the section below for how to create a *strategy*). Assign a player a strategy by referring to the strategy by name. You can do so when creating the player:
 ```
@@ -47,11 +50,13 @@ p1.assign("TitForTat");
 In nashJS, the game structure is defined in advance, then executed. The atom unit in nashJS is called a *playable.* A *playable* is an object that can be called to execute a step of the game, using the `.play()` function. *Playables* can be chained together in various ways to form multi-step games, and these chains can themselves form a *playable.* 
 
 ### Working With *Playables*
+Import the *playables* you'd like to use using `require`, for instance:
+```
+var {Choice, Turn, Sequence, Loop} = require('nash-js').Playables;
+```
 A *playable* is created by calling its parent function, with the necessary arguments and optional parameters.
 
 ```
-var {Choice} = require('nash-js');
-
 var c1 = Choice(*** arguments here ***, {*** optional parameters here ***});
 ```
 
