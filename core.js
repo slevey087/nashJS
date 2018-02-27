@@ -1,5 +1,7 @@
 "use strict";
 
+
+
 //Logging
 var log = require('./logger');
 //log.useWinston();  				Winston doesn't work with browserify, so this is a shim. Uncomment to use Winston.
@@ -13,7 +15,7 @@ var {registry, idCounters, gameHistory, occupiedPlayers} = require('./state');
 
 
 //Players
-var {_Player, Player} 			= require('./player');
+var {_Player, Player, Population}		= require('./player');
 registry._addType_("players");
 idCounters._addType_("player");
 
@@ -55,6 +57,7 @@ function startREPL(toREPL){
 
 module.exports = {
 	Player,
+	Population,
 	'Playables':playableInterfaces,
 	registerStrategy,
 	strategyLoader,

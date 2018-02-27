@@ -3,7 +3,7 @@
 var log = require('../logger');
 
 //Game state controllers
-var {registry, gameHistory, excludedPlayers} = require('../state');
+var {registry, gameHistory, occupiedPlayers} = require('../state');
 
 //Helper functions
 var {idHandler} = require('../helperFunctions').general;
@@ -70,10 +70,10 @@ _RPChoice.prototype.choosePlayer = function choosePlayer(){
 	
 	log("silly", "rpChoice.choosePlayer: trying candidate: ", candidate)
 	
-	if (candidate in rpChoice.excludePlayers || excludedPlayers.includes(candidate)) return rpChoice.choosePlayer();	//TODO: prevent infinite loop if there are no players to be used
+	if (candidate in rpChoice.excludePlayers || occupiedPlayers.includes(candidate)) return rpChoice.choosePlayer();	//TODO: prevent infinite loop if there are no players to be used
 	else {
 		rpChoice.player = registry.players[candidate];
-		excludedPlayers.add(candidate);
+		occupiedPlayers.add(candidate);
 		log("silly", "rpChoice.choosePlayer: selecting candidate: ", candidate);
 	
 		return rpChoice.player.id;

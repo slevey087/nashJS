@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"toc": "markdown-toc -i readme.md"
+    "toc": "markdown-toc -i readme.md"
   },
   "author": "SLevey087",
   "license": "ISC",
   "dependencies": {
+    "esprima": "^4.0.0",
+    "expression-sandbox": "^1.1.0",
     "synchronous-promise": "^2.0.4",
     "winston": "^2.4.0"
   },

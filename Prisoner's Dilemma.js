@@ -1,7 +1,10 @@
-({Player,registerStrategy, strategyLoader, _expose, registry, Variable, gameHistory, excludedPlayers, startREPL} = require('./core'));
+({Player,Population, registerStrategy, strategyLoader, _expose, registry, Variable, gameHistory, excludedPlayers, startREPL} = require('./core'));
 ({Choice, Turn, Sequence, Loop, StochasticLoop, HaltIf, StochasticHalt, Lambda, RandomPlayerChoice} = require('./core').Playables);
 
 pd = require('./stock-games/prisoner-dilemma');
+
+
+
 
 function chooseFirstOption(){
 	
@@ -10,6 +13,7 @@ function chooseFirstOption(){
 		return options[0];};
 }
 registerStrategy(chooseFirstOption, "chooseFirst");
+
 
 function chooseSecondOption(){
 	

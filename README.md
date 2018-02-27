@@ -20,6 +20,7 @@ A flexible and extendable game theory simulator for Javascript. Meant for testin
   * [Lambda](#lambda)
 - [Defining a Strategy](#defining-a-strategy)
 - [Play-time Logic](#play-time-logic)
+- [Stock Games](#stock-games)
 - [Creating Your Own Playables](#creating-your-own-playables)
 
 <!-- tocstop -->
@@ -293,6 +294,17 @@ var l1 = Loop(s1, 4);           //t1, then t2, then t3 will play 4 times.
 ### Lambda
 
 ## Defining a Strategy
-
+A *strategy* is a prototype class. An instance of the class will be created for each player assigned that strategy. You must define a constructor function, then call the `registerStrategy` function to register it. The strategy must have a `.choose()` function, which will get called with the options presented by a `Choice`, and that function must return one of those options. Here is a simple example:
+```
+function chooseFirstOption(){
+	
+	this.choose = function(options){
+		return options[0];
+	};
+}
+registerStrategy(chooseFirstOption, "chooseFirst");
+```
+In this example, the function `chooseFirstOption` is the constructor function, which will be called when a `Player` is assigned this strategy. `this.choose` is a function that will be called by any `Choice`, and `options` will be the options defined for the `Choice`, as an array (such as `['cooperate', 'defect']`). This simple strategy just selects the first option presented to it, but your strategy may get as complicated as you like (with the following caveat: it may not use outside libraries.)
 ## Play-time Logic
+## Stock Games
 ## Creating Your Own Playables

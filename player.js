@@ -77,7 +77,18 @@ function Player(parameters={}){
 }
 
 
-module.exports = {
-	'_Player':_Player,
-	'Player':Player
+
+//To give the user an array with the interfaces of all players
+function Population(){
+	
+	var population = [];
+	for (var player in registry.players) {
+		population.push(registry.players[player].interface);
+	}
+	
+	return population;
 }
+
+
+
+module.exports = {_Player, Player, Population};

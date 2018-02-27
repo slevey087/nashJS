@@ -182,6 +182,9 @@ var classFactory = function (proto) {
 			return f.call.apply(f, arguments);      
 		};
 		
+		Object.defineProperty(f, "constructor", {configurable:true, writable:true});
+		Object.defineProperty(f, "call", {writable:true});
+		
 		Object.keys(proto).forEach(function (key) {
 			f[key] = proto[key];
 		});
