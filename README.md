@@ -34,16 +34,16 @@ npm install nash-js
 
 ## Creating Players
 A game requires players. First import the `Player` parent function, then create some players like so:
-```
+```javascript
 var {Player} = require('nash-js');
 var p1 = Player({**optional parameters**});;
 ```
 Players require a *strategy*, which is a sequence of code that tells the player what to do. (See the section below for how to create a *strategy*). Assign a player a strategy by referring to the strategy by name. You can do so when creating the player:
-```
+```javascript
 var p1 = Player({assign:"TitForTat"});
 ```
 Or later using the `assign` function:
-```
+```javascript
 var p1 = Player();
 p1.assign("TitForTat");
 ```
@@ -53,22 +53,22 @@ In nashJS, the game structure is defined in advance, then executed. The atom uni
 
 ### Working With *Playables*
 Import the *playables* you'd like to use using `require`, for instance:
-```
+```javascript
 var {Choice, Turn, Sequence, Loop} = require('nash-js').Playables;
 ```
 A *playable* is created by calling its parent function, with the necessary arguments and optional parameters.
 
-```
+```javascript
 var c1 = Choice(*** arguments here ***, {*** optional parameters here ***});
 ```
 
 You can execute this step of the game by using `.play()':
-```
+```javascript
 c1.play();
 ```
 
 You can form sequences by chaining *playables* together. This can be done in 2 ways. Either use a throw-away variable (this is useful for simple sequence games):
-```
+```javascript
 var game = Choice(*** arguments here ***);                  //This Choice will play first
 var x = Choice(*** some other arguments ***)(game);         //then this one
 x = Choice(*** even more arguments ***)(x);             //then this one
@@ -77,7 +77,7 @@ x = Choice(*** so argumentative ***)(x);                   //And finally this on
 game.play();  //Run the game!
 ```
 Or create a name for each *playable* (this is helpful for games with more complicated and branching structures):
-```
+```javascript
 var c1 = Choice(*** arguments here ***);                  //This Choice will play first
 var c2 = Choice(*** some other arguments ***);         
 var c3 = Choice(*** even more arguments ***);       
@@ -94,7 +94,7 @@ Some *playables* also can form several branches of chains. This is outlined in m
 ### Choice
 This is core building block of nashJS. A `choice` defines a single selection made by a single player. For instance, *player2* might choose between "cooperate" and "defect." 
 
-``` 
+``` javascript
 var c1 = Choice(player, options, {
     id:null, 
     initializePlayers:false, 
@@ -116,7 +116,7 @@ var c1 = Choice(player, options, {
   * `releasePlayer:true` - When the Choice executes, players will be noted as occupied and prevented from being selected by other *playables*. If true, the Choice will release the player when finished. (This will be superceded if the Choice is bundled into Turn or any other *playable.*)
 
 To create a game-step that involves only a single-player making a choice, use Choice by itself. You can set payoffs dependent on the choice made:
-```
+```javascript
 var c1 = Choice(p1, ["Left", "Right"]);      //p1 will choose left or right
 c1.left(3);                                 //Payoff 3 for choosing left
 c1.right(4);                                //Payoff 4 for choosing right.
@@ -126,7 +126,7 @@ console.log(p1.score())                     //Either 3 or 4
 ```
 
 You can chain from Choice to create sequences, just like any *playable*:
-```
+```javascript
 var c1 = Choice(p1, ["Left", "Right"]);      //p1 will choose left or right
 var c2 = Choice(p2, ["Back", "Forward"]);    //p2 will choose back or forward
 
@@ -135,7 +135,7 @@ c2(c1);                                     //Play c2 after c1
 c1.play();
 ```
 and you can also create specific branches depending on the outcome of the choice:
-```
+```javascript
 var c1 = Choice(p1, ["Left", "Right"]);      //p1 will choose left or right
 var c2 = Choice(p2, ["Back", "Forward"]);    //p2 will choose back or forward
 var c3 = Choice(p3, ["Up", "Down"]);        //p3 will choose up or down
@@ -150,7 +150,7 @@ Please note the syntax: to use a branch sequence, call the branch function (ie `
 ### Turn
 A `turn` is a collection of choices, called concurrently. Use `turn` when players need to make choices simultaneously (such as any normal-form game). 
 
-```
+```javascript
 var t1 = Turn(choices, {
     id:null,
     usePayoffs:true, 
@@ -171,7 +171,7 @@ var t1 = Turn(choices, {
   * `releasePlayer:true` - When each `Choice` executes, players will be noted as occupied and prevented from being selected by other *playables*. If true, the `Turn` will release all players when finished. (This will be superceded if the `Turn` is bundled into any other *playable.*)
 
 Bundle any number of `Choices` into a `Turn`:
-```
+```javascript
 var c1 = Choice(p1, ["Left", "Right"]);      //p1 will choose left or right
 var c2 = Choice(p2, ["Back", "Forward"]);    //p2 will choose back or forward
 
@@ -180,7 +180,7 @@ t1.play();
 ```
 
 You can set payoffs dependend on the choices made. There are two ways to do so. With *implicit payoffs*, supply an array to the branch function. The player in the first choice will receive the first payoff in the array, and so on:
-```
+```javascript
 var c1 = Choice(p1, ["Left", "Right"]);      //p1 will choose left or right
 var c2 = Choice(p2, ["Back", "Forward"]);    //p2 will choose back or forward
 
@@ -191,22 +191,22 @@ t1.Left.Forward([1,4]);                     //If p1 picks Left and p2 picks Forw
 t1.play();
 ```
 Or you can use *explicit payoffs*, where you name the player who should receive a payoff, by supplying an object where the keys are the player id's and the values are the payoffs. (This is useful if you'd like a Turn to affect the score of a player who was not involved in it).
-```
+```javascript
 t1.Right.Back({'player1':2, 'Jimbob':8});
 ```
 
 `Turns` can be chained to other playables in the normal way:
-```
+```javascript
 c3(t1);                             //Play c3 after t1, no matter the outcome
 ```
 Or using branches, so that the next game-step depends on the outcome that was selected.
-```
+```javascript
 c3(t1.Left.Back());                 //Play c3 if p1 picks Left and p2 picks Back
 ```
 
 ### Sequence
 `Sequence` converts a chain of *playables* into a *playable.* This is useful for supplying longer chains to *playables* that act on other *playables* (such as loops) or for cleaning up code by defining your own *playables*. 
-```
+```javascript
 var s1 = Sequence(playableStart, playableFinish, {
     id:null,
     initializePlayers:false, 
@@ -224,7 +224,7 @@ var s1 = Sequence(playableStart, playableFinish, {
 
 `Sequence` will call `.play()` on the *playable* supplied as *playableStart*, then continue down the chain until either it reaches *playableFinish* or until the chain finishes.
 
-```
+```javascript
 var t1 = Turn(['Left', 'Right']);
 var t2 = Turn (['Up', 'Down']);
 var t3 = Turn(['Back','Forward']);
@@ -236,7 +236,7 @@ var s1 = Sequence(t1, t2);
 //Calling t1.play() would cause t1, then t2, then t3 to play. Calling s1.play() will cause only t1 then t2 to play.
 ```
 If the sequence doesn't reach *playableFinish*, it will simply end when there are no more branches to play:
-```
+```javascript
 var t1 = Turn(['Left', 'Right']);
 var t2 = Turn (['Up', 'Down']);
 var t3 = Turn(['Back','Forward']);
@@ -248,7 +248,7 @@ var s1 = Sequence(t1, t3);
 ```
 
 Note that every *playable* chained to `playableStart` will play, even if that branch does not lead to `playableFinish*:
-```
+```javascript
 var t1 = Turn(['Left', 'Right']);
 var t2 = Turn (['Up', 'Down']);
 var t3 = Turn(['Back','Forward']);
@@ -262,7 +262,7 @@ var s1 = Sequence(t1, t2);
 
 ### Loop
 `Loop` calls a *playable* repeatedly, a given number of times. This is useful to iterated or evolutionary games, as well as cleaning up code for games with repition.
-```
+```javascript
 var l1 = Loop(playable, count, {
     id:null,
     logContinue:false
@@ -280,14 +280,14 @@ var l1 = Loop(playable, count, {
   * `shortCircuit:false` - If false, proceed down the chain as normal after the `Sequence` is complete. If true, stop after this `Sequence` is complete. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
   * `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
 Use `Loop` to repeat simple *playables* like `Choice` or `Turn`:
-```
+```javascript
 var t1 = Turn(['Left', 'Right']);
 var l1 = Loop(t1,5);
 
 l1.play();
 ```
 Or with `Sequence` to loop chains of game-steps:
-```
+```javascript
 var t1 = Turn(['Left', 'Right']);
 var t2 = Turn (['Up', 'Down']);
 var t3 = Turn(['Back','Forward']);
@@ -309,7 +309,7 @@ var l1 = Loop(s1, 4);           //t1, then t2, then t3 will play 4 times.
 
 ## Defining a Strategy
 A *strategy* is a prototype class. An instance of the class will be created for each player assigned that strategy. You must define a constructor function, then call the `registerStrategy` function to register it. The strategy must have a `.choose()` function, which will get called with the options presented by a `Choice`, and that function must return one of those options. Here is a simple example:
-```
+```javascript
 function chooseFirstOption(){
 	
 	this.choose = function(options){
@@ -324,8 +324,8 @@ In this example, the function `chooseFirstOption` is the constructor function, w
 ### Loading Strategies
 You can create a single Javascript file which defines both the game and the *strategies* you would like to use, or you can fetch the strategies from seperate files (as might happen if they are coming from different authors). If you know the name of the file containing the strategy, simply `require` it in the file that defines the game (don't forget to use `./` prefix in the `require` string to require local files). Alternatively, if perhaps you are doing a contest with an unknown number of entries, nashJS can load all the scripts in a given directory for you.
 ## Play-time Logic
-To make games more dynamic, you can use play-time logic (which is like run-time logic, but it runs during the game!). For any numerical parameter given in the structure of the game, you can instead create a `Variable` object, and pass that. This object can be updated using `.set()` during the game, to change the structure of the game. This is most commonly done using `Lambda`:
-```
+To make games more dynamic, you can use play-time logic (which is like run-time logic, but it runs during the game!). For any numerical parameter given in the structure of the game, you can instead create a `Variable` object, and pass that. This object can be updated using `.set()` during the game, to change the structure of the game. This is most easily done using `Lambda`:
+```javascript
 var v1 = Variable(3);
 
 var c1 = Choice(['left','right']);
@@ -343,7 +343,7 @@ L1.play();
 In this example, the value of the payoff of 'right' is set to 3 when the game is defined, but when `L1` is played, the value changes to 6. You can also use the original value of the `Variable` to set the new value, such as `v1.set(v1+1)`.This is especially handy for loops. 
 
 You can also specify a value to always be some function of a `Variable` by using an `Expression`. Define an `Expression` by using a function which returns a number. That function can depend on `Variable`s you've created, like so:
-```
+```javascript
 var e1 = Expression(function(){
     return v1 + 5;
 });
