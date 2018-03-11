@@ -19,6 +19,7 @@ A flexible and extendable game theory simulator for Javascript. Meant for testin
   * [RandomPlayerChoice](#randomplayerchoice)
   * [Lambda](#lambda)
 - [Defining a Strategy](#defining-a-strategy)
+  * [Loading Strategies](#loading-strategies)
 - [Play-time Logic](#play-time-logic)
 - [Stock Games](#stock-games)
 - [Creating Your Own Playables](#creating-your-own-playables)
@@ -35,18 +36,18 @@ npm install nash-js
 A game requires players. First import the `Player` parent function, then create some players like so:
 ```
 var {Player} = require('nash-js');
-var p1 = Player();
-var p2 = Player();
+var p1 = Player({**optional parameters**});;
 ```
 Players require a *strategy*, which is a sequence of code that tells the player what to do. (See the section below for how to create a *strategy*). Assign a player a strategy by referring to the strategy by name. You can do so when creating the player:
 ```
-var p1 = Player({strategy:"TitForTat"});
+var p1 = Player({assign:"TitForTat"});
 ```
 Or later using the `assign` function:
 ```
 var p1 = Player();
 p1.assign("TitForTat");
 ```
+To view a player's ID, call `p1.id()`. To view its current score, call `p1.score()`. To view the strategy currently assigned to it, call `p1.strategy()`.
 ## Defining a Game
 In nashJS, the game structure is defined in advance, then executed. The atom unit in nashJS is called a *playable.* A *playable* is an object that can be called to execute a step of the game, using the `.play()` function. *Playables* can be chained together in various ways to form multi-step games, and these chains can themselves form a *playable.* 
 
@@ -66,12 +67,25 @@ You can execute this step of the game by using `.play()':
 c1.play();
 ```
 
-You can form sequences by chaining *playables* together:
+You can form sequences by chaining *playables* together. This can be done in 2 ways. Either use a throw-away variable (this is useful for simple sequence games):
 ```
-var c2 = Choice(*** some other options ***);
-c2(c1);
+var game = Choice(*** arguments here ***);                  //This Choice will play first
+var x = Choice(*** some other arguments ***)(game);         //then this one
+x = Choice(*** even more arguments ***)(x);             //then this one
+x = Choice(*** so argumentative ***)(x);                   //And finally this one
 
-c1.play();  //c1 will execute, followed by c2
+game.play();  //Run the game!
+```
+Or create a name for each *playable* (this is helpful for games with more complicated and branching structures):
+```
+var c1 = Choice(*** arguments here ***);                  //This Choice will play first
+var c2 = Choice(*** some other arguments ***);         
+var c3 = Choice(*** even more arguments ***);       
+
+c2(c1);                                         //Play c2 after c1
+c3(c2);                                         //Play c3 after c2
+
+c1.play();
 ```
 Some *playables* also can form several branches of chains. This is outlined in more detail in specific *playable* descriptions, following immediately.
 
@@ -302,9 +316,40 @@ function chooseFirstOption(){
 		return options[0];
 	};
 }
+var {registerStrategy} = require('nash-js');
 registerStrategy(chooseFirstOption, "chooseFirst");
 ```
-In this example, the function `chooseFirstOption` is the constructor function, which will be called when a `Player` is assigned this strategy. `this.choose` is a function that will be called by any `Choice`, and `options` will be the options defined for the `Choice`, as an array (such as `['cooperate', 'defect']`). This simple strategy just selects the first option presented to it, but your strategy may get as complicated as you like (with the following caveat: it may not use outside libraries.)
+In this example, the function `chooseFirstOption` is the constructor function, which will be called when a `Player` is assigned this strategy. `this.choose` is a function that will be called by any `Choice`, and `options` will be the options defined for the `Choice`, as an array (such as `['cooperate', 'defect']`). This simple strategy just selects the first option presented to it, but your strategy may get as complicated as you like (with the following caveat: it may not use outside libraries.) You can keep use internal variables to keep track of data if you wish. The first argument of `registerStrategy` is your constructor function, and the second should be a string naming your strategy (and this is the string used to `assign` a strategy to a *player*.
+
+### Loading Strategies
+You can create a single Javascript file which defines both the game and the *strategies* you would like to use, or you can fetch the strategies from seperate files (as might happen if they are coming from different authors). If you know the name of the file containing the strategy, simply `require` it in the file that defines the game (don't forget to use `./` prefix in the `require` string to require local files). Alternatively, if perhaps you are doing a contest with an unknown number of entries, nashJS can load all the scripts in a given directory for you.
 ## Play-time Logic
+To make games more dynamic, you can use play-time logic (which is like run-time logic, but it runs during the game!). For any numerical parameter given in the structure of the game, you can instead create a `Variable` object, and pass that. This object can be updated using `.set()` during the game, to change the structure of the game. This is most commonly done using `Lambda`:
+```
+var v1 = Variable(3);
+
+var c1 = Choice(['left','right']);
+c1.left(5);
+c1.right(v1);
+
+var L1 = Lambda(function(){
+    v1.set(6);
+});
+
+c1(L1);
+
+L1.play();
+```
+In this example, the value of the payoff of 'right' is set to 3 when the game is defined, but when `L1` is played, the value changes to 6. You can also use the original value of the `Variable` to set the new value, such as `v1.set(v1+1)`.This is especially handy for loops. 
+
+You can also specify a value to always be some function of a `Variable` by using an `Expression`. Define an `Expression` by using a function which returns a number. That function can depend on `Variable`s you've created, like so:
+```
+var e1 = Expression(function(){
+    return v1 + 5;
+});
+
+c1.left(e1);
+```
+In the example, the value of `e1` will always be whatever the value of `v1` is plus 5. Calling `.set()` on `v1` will therefore cause the value of `e1` to change.
 ## Stock Games
 ## Creating Your Own Playables

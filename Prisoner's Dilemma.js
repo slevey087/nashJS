@@ -1,7 +1,10 @@
-({Player,Population, registerStrategy, strategyLoader, _expose, registry, Variable, gameHistory, excludedPlayers, startREPL} = require('./core'));
-({Choice, Turn, Sequence, Loop, StochasticLoop, HaltIf, StochasticHalt, Lambda, RandomPlayerChoice} = require('./core').Playables);
+({Player, _Player, _Population, Population, PlayerList, registerStrategy, strategyLoader, _expose, registry, Variable, Expression, gameHistory, excludedPlayers, startREPL} = require('./index')); 
+({Choice, Turn, Sequence, Loop, StochasticLoop, HaltIf, StochasticHalt, Lambda, RandomPlayerChoice, PopulationDynamics} = require('./index').Playables);
+StockGames = require('./index').StockGames;
 
-pd = require('./stock-games/prisoner-dilemma');
+pd = StockGames["Prisoner's Dilemma"];
+
+//pd = require('./lib/stock-games/prisoner-dilemma');
 
 
 
@@ -26,7 +29,7 @@ registerStrategy(chooseSecondOption, "chooseSecond");
 
 
 
-p1 = Player({strategy:"chooseFirst"});
+p1 = Player({assign:"chooseFirst"});
 //p1.assign("chooseFirst");
 p2 = Player();
 p2.assign("chooseFirst");
@@ -40,37 +43,79 @@ p3.assign("chooseSecond");
 //c2['up'](1);
 //c2['down'](7);
 
+t2 = Turn([c1,c2])
+
 
 c3 = RandomPlayerChoice(['cooperate','defect']);
 c4 = RandomPlayerChoice(['Cooperate','Defect']);
 
  t1 = Turn([c3,c4])
 
+ 
  v1 = new Variable(3);
 
+ 
+ 
+ 
 t1.defect.Defect([2,2])
 t1.defect.Cooperate([4,1])
 t1.cooperate.Defect([1,4])
 t1.cooperate.Cooperate([v1,v1])
 
+
+
 L1 = Lambda(function(){
 	v1.set(v1 + 1);
 });
 
-h1 = StochasticHalt(.3,{logContinue:true});
+pd1 = PopulationDynamics(1.5,1);
 
-h1(t1);
-L1(h1);
+h2 = HaltIf(function(){
+	return (Population().onlyAlive().length == 0);
+});
 
-s1 = Sequence(t1,L1)
+L1(t1);
+pd1(L1);
+h2(pd1)
 
-l1 = StochasticLoop(s1,.5,{logContinue:true});
+s1 = Sequence(t1,h2)
+
+l1 = Loop(s1,10,{logContinue:true});
 
 //console.log(_expose(t1).next)
 //console.log(_expose(t1).next.cooperate.Cooperate)
 
 
+h2 = HaltIf(function(){
+	return (Population().onlyAlive().length == 0);
+});
+
+
+L2 = Lambda(function(){
+	p1.kill();
+});
+
+t2(L2);
+
+
+Pairing = Lambda(function(){
+	var pool = Population().onlyAlive();
+	var p1 = pool[Math.floor(Math.random()*pool.length)];
+	var p2 = pool[Math.floor(Math.random()*pool.length)];
+	
+	if (p1.score() > p2.score()) p1.assign(p2.strategy());
+	else if (p1.score() == p2.score()) null;
+	else p2.assign(p1.strategy());
+	return [p1.id(),p2.id()];
+});
+
+Pairing(t1);
+s3 = Sequence(t1, Pairing);
+l4 = Loop(s3, 5, {playableParameters:{initializePlayers:true}});
+
+
+pd = StockGames["Prisoner's Dilemma"](p1,p2);
 
 //The code below is to run the repl for testing purposes. 
-var toRepl = {_expose, registry,Player,Choice,Turn,Sequence,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1, l1, s1, L1};
+var toRepl = {_expose, registry,Player,Choice,Turn,Sequence,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1};
 //startREPL(toRepl);
