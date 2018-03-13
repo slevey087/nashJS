@@ -1,8 +1,9 @@
-({Player, _Player, _Population, Population, PlayerList, registerStrategy, strategyLoader, _expose, registry, Variable, Expression, gameHistory, excludedPlayers, startREPL} = require('./index')); 
-({Choice, Turn, Sequence, Loop, StochasticLoop, HaltIf, StochasticHalt, Lambda, RandomPlayerChoice, PopulationDynamics} = require('./index').Playables);
+({Player, _Player, _Population, Population, PlayerList, registerStrategy, strategyLoader, _expose, registry, Variable, Expression, gameHistory, excludedPlayers, startREPL, nhistory, Information, PerfectInformation} = require('./index')); 
+({Choice, Turn, Sequence, Loop, StochasticLoop, HaltIf, StochasticHalt, Lambda, RandomPlayerChoice, PopulationDynamics, Simultaneous} = require('./index').Playables);
 StockGames = require('./index').StockGames;
 
 pd = StockGames["Prisoner's Dilemma"];
+
 
 //pd = require('./lib/stock-games/prisoner-dilemma');
 
@@ -11,8 +12,8 @@ pd = StockGames["Prisoner's Dilemma"];
 
 function chooseFirstOption(){
 	
-	this.choose = function(options){
-		console.log("made it to choosing");
+	this.choose = function(options, information){
+		console.log("Information is: ", JSON.parse(JSON.stringify(information)));
 		return options[0];};
 }
 registerStrategy(chooseFirstOption, "chooseFirst");
@@ -114,6 +115,32 @@ s3 = Sequence(t1, Pairing);
 l4 = Loop(s3, 5, {playableParameters:{initializePlayers:true}});
 
 
+L1 = Lambda(function(){
+	console.log("1")
+});
+
+L2 = Lambda(function(){
+	console.log("2")
+});
+
+LA = Lambda(function(){
+	console.log("A")
+});
+
+LB = Lambda(function(){
+	console.log("B")
+});
+
+L2(L1);
+LB(LA);
+
+s1 = Sequence(L1,L2);
+s2 = Sequence(LA, LB);
+
+l1 = Loop(L1,3);
+la = Loop(LA,3);
+
+n = StockGames["Two-Player Normal"](p1,p2,[["left","right"],["up","down"]]);
 pd = StockGames["Prisoner's Dilemma"](p1,p2);
 
 //The code below is to run the repl for testing purposes. 

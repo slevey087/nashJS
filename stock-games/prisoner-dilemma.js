@@ -1,20 +1,12 @@
 "use strict";
 
-var {Choice, Turn} = require('../lib/engine.js').Playables;
+var {_TwoPlayerNormal} = require('./simple-normal');
 
 module.exports = function(p1,p2, {id="Prisoner-Dilemma"}={}){
 	
-	var t1 = Turn([
-		Choice(p1,["Cooperate", "Defect"]), 
-		Choice(p2,["Cooperate", "Defect"])
-	], {
-		id:id
-	});
+	var parameters = arguments[2] || {id:"Prisoner-Dilemma"};
+	var choices = [["Cooperate","Defect"],["Cooperate","Defect"]];
+	var payoffs = [[[3,3],[1,4]],[[4,1],[2,2]]];
 	
-	t1.Cooperate.Cooperate([3,3]);
-	t1.Cooperate.Defect([1,4]);
-	t1.Defect.Cooperate([4,1]);
-	t1.Defect.Defect([2,2]);
-	
-	return t1;
+	return _TwoPlayerNormal(choices, payoffs, parameters);
 };
