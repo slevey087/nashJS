@@ -2,10 +2,6 @@
 ({Choice, Turn, Sequence, Loop, StochasticLoop, HaltIf, StochasticHalt, Lambda, RandomPlayerChoice, PopulationDynamics, Simultaneous} = require('./index').Playables);
 StockGames = require('./index').StockGames;
 
-pd = StockGames["Prisoner's Dilemma"];
-
-
-//pd = require('./lib/stock-games/prisoner-dilemma');
 
 
 
@@ -30,8 +26,11 @@ registerStrategy(chooseSecondOption, "chooseSecond");
 
 
 
+
+
+
 p1 = Player({assign:"chooseFirst"});
-//p1.assign("chooseFirst");
+
 p2 = Player();
 p2.assign("chooseFirst");
 p3 = Player();
@@ -50,13 +49,11 @@ t2 = Turn([c1,c2])
 c3 = RandomPlayerChoice(['cooperate','defect']);
 c4 = RandomPlayerChoice(['Cooperate','Defect']);
 
- t1 = Turn([c3,c4])
+t1 = Turn([c3,c4])
+
 
  
- v1 = new Variable(3);
-
- 
- 
+v1 = new Variable(3);
  
 t1.defect.Defect([2,2])
 t1.defect.Cooperate([4,1])
@@ -65,21 +62,27 @@ t1.cooperate.Cooperate([v1,v1])
 
 
 
+
 L1 = Lambda(function(){
 	v1.set(v1 + 1);
 });
 
+
 pd1 = PopulationDynamics(1.5,1);
+
 
 h2 = HaltIf(function(){
 	return (Population().onlyAlive().length == 0);
 });
 
+
 L1(t1);
 pd1(L1);
 h2(pd1)
 
+
 s1 = Sequence(t1,h2)
+
 
 l1 = Loop(s1,10,{logContinue:true});
 
@@ -99,50 +102,34 @@ L2 = Lambda(function(){
 t2(L2);
 
 
-Pairing = Lambda(function(){
-	var pool = Population().onlyAlive();
-	var p1 = pool[Math.floor(Math.random()*pool.length)];
-	var p2 = pool[Math.floor(Math.random()*pool.length)];
+generatePopulation = function(){
+	for (i=0; i<30; i++){
+		Player({assign:"chooseFirst"});
+	}
+	for (i=0; i<30; i++){
+		Player({assign:"chooseSecond"});
+	}
+}
+
+function gameGenerator(){
+	var t = Turn([RandomPlayerChoice(['cooperate','defect']), RandomPlayerChoice(['Cooperate','Defect'])])
+		
+	t.defect.Defect([2,2])
+	t.defect.Cooperate([4,1])
+	t.cooperate.Defect([1,4])
+	t.cooperate.Cooperate([3,3])
 	
-	if (p1.score() > p2.score()) p1.assign(p2.strategy());
-	else if (p1.score() == p2.score()) null;
-	else p2.assign(p1.strategy());
-	return [p1.id(),p2.id()];
-});
+	return t;
+}
 
-Pairing(t1);
-s3 = Sequence(t1, Pairing);
-l4 = Loop(s3, 5, {playableParameters:{initializePlayers:true}});
+CE = StockGames["Cultural Evolution"](gameGenerator, 1, {generatePopulation});
 
-
-L1 = Lambda(function(){
-	console.log("1")
-});
-
-L2 = Lambda(function(){
-	console.log("2")
-});
-
-LA = Lambda(function(){
-	console.log("A")
-});
-
-LB = Lambda(function(){
-	console.log("B")
-});
-
-L2(L1);
-LB(LA);
-
-s1 = Sequence(L1,L2);
-s2 = Sequence(LA, LB);
-
-l1 = Loop(L1,3);
-la = Loop(LA,3);
-
+/*
 n = StockGames["Two-Player Normal"](p1,p2,[["left","right"],["up","down"]]);
 pd = StockGames["Prisoner's Dilemma"](p1,p2);
+*/
+
 
 //The code below is to run the repl for testing purposes. 
-var toRepl = {_expose, registry,Player,Choice,Turn,Sequence,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1};
+//var toRepl = {_expose, registry,Player,Choice,Turn,Sequence,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1};
 //startREPL(toRepl);
