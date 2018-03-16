@@ -1,3 +1,3 @@
-theme: jekyll-theme-leap-day
+remote_theme:documentation-theme-jekyll
 name: nashJS
 markdown: kramdown
