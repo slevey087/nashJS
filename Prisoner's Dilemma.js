@@ -122,12 +122,13 @@ function gameGenerator(){
 	return t;
 }
 
-CE = StockGames["Cultural Evolution"](gameGenerator, 1, {generatePopulation});
+//CE = StockGames["Cultural Evolution"](gameGenerator, 1, {generatePopulation});
 
-/*
-n = StockGames["Two-Player Normal"](p1,p2,[["left","right"],["up","down"]]);
+
+//n = StockGames["Two-Player Normal"](p1,p2,[["left","right"],["up","down"]]);
 pd = StockGames["Prisoner's Dilemma"](p1,p2);
-*/
+pd = StockGames["Prisoner's Dilemma"](p1,p2);
+pd = StockGames["Prisoner's Dilemma"](p1,p2);
 
 
 //The code below is to run the repl for testing purposes. 

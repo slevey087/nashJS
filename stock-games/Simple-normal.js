@@ -22,7 +22,7 @@ function _TwoPlayerNormal(choices, payoffs=null, parameters={}){
 function TwoPlayerNormal(p1, p2, choices, payoffs=null, parameters={}){
 	//TODO: validate all variables
 	
-	return _TwoPlayerNormal(choices, payoffs)(p1,p2,parameters)
+	return _TwoPlayerNormal(choices, payoffs, parameters)(p1,p2)
 }
 
 module.exports = {_TwoPlayerNormal, TwoPlayerNormal}
