@@ -25,14 +25,21 @@ function chooseSecondOption(){
 registerStrategy(chooseSecondOption, "chooseSecond");
 
 
-
+function randomize(){
+	
+	this.choose = function(options, information){
+		var num = Math.floor(Math.random()* options.length)
+		return options[num];
+	}
+}
+registerStrategy(randomize, "randomize")
 
 
 
 p1 = Player({assign:"chooseFirst"});
 
 p2 = Player();
-p2.assign("chooseFirst");
+p2.assign("randomize");
 p3 = Player();
 p3.assign("chooseSecond");
 
@@ -130,6 +137,11 @@ pd = StockGames["Prisoner's Dilemma"](p1,p2);
 pd = StockGames["Prisoner's Dilemma"](p1,p2);
 pd = StockGames["Prisoner's Dilemma"](p1,p2);
 
+v2 = Variable(1)
+
+//n = StockGames["Simple Zero-Sum"](p1,p2,[["left","right"],["up","down"]], [[v2,2],[3,4]]);
+
+rpc = StockGames["Rock-Paper-Scissors"](p1,p2);
 
 //The code below is to run the repl for testing purposes. 
 //var toRepl = {_expose, registry,Player,Choice,Turn,Sequence,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1};

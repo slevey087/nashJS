@@ -1,6 +1,6 @@
 "use strict";
 
-var {_TwoPlayerNormal} = require('./simple-normal');
+var {_Normal} = require('./simple-normal');
 var {Variable, Expression} = require('../lib/logic');
 
 module.exports = function(p1,p2, {id="Prisoner-Dilemma", payoffScale=Variable(1), payoffSpread=Variable(4)}={}){
@@ -25,5 +25,5 @@ module.exports = function(p1,p2, {id="Prisoner-Dilemma", payoffScale=Variable(1)
 	var payoffs = [[[upperMiddle,upperMiddle],[payoffScale,upper]],[[upper,payoffScale],[lowerMiddle,lowerMiddle]]];
 	
 	
-	return _TwoPlayerNormal(choices, payoffs, parameters)(p1,p2);
+	return _Normal(choices, payoffs, parameters)([p1,p2]);
 };

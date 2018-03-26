@@ -25,4 +25,34 @@ function TwoPlayerNormal(p1, p2, choices, payoffs=null, parameters={}){
 	return _TwoPlayerNormal(choices, payoffs, parameters)(p1,p2)
 }
 
-module.exports = {_TwoPlayerNormal, TwoPlayerNormal}
+
+
+
+
+function _Normal(choiceLists, payoffs = null, parameters){
+	
+	return function(players){
+		
+		var choices = choiceLists.map(function(list, index){
+			return Choice(players[index], list);
+		});
+		
+		var t1 = Turn(choices, parameters);
+	
+		if (payoffs) t1.setAllPayoffs(payoffs);
+	
+		return t1;
+	};
+	
+}
+
+function Normal(players, choiceLists, payoffs, parameters){
+	//TODO: validate all arguments
+	
+	return _Normal(choiceLists, payoffs, parameters)(players);
+	
+}
+
+
+
+module.exports = {_TwoPlayerNormal, TwoPlayerNormal, _Normal, Normal}
