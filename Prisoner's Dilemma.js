@@ -33,7 +33,7 @@
 } = require("./index").Playables);
 StockGames = require("./index").StockGames;
 
-tourn = require("./stock-games/axelrod-tournament");
+rr = StockGames["Round Robin"];
 
 function chooseFirstOption() {
   this.choose = function(options, information) {
@@ -147,16 +147,14 @@ function gameGenerator() {
 //CE = StockGames["Cultural Evolution"](gameGenerator, 1, {generatePopulation});
 
 //n = StockGames["Two-Player Normal"](p1,p2,[["left","right"],["up","down"]]);
-pd = StockGames["Prisoner's Dilemma"](p1, p2);
-pd = StockGames["Prisoner's Dilemma"](p1, p2);
-pd = StockGames["Prisoner's Dilemma"](p1, p2);
+pd = StockGames["Prisoner's Dilemma"];
 
 v2 = Variable(1);
 
 //n = StockGames["Simple Zero-Sum"](p1,p2,[["left","right"],["up","down"]], [[v2,2],[3,4]]);
 
-rpc = StockGames["Rock-Paper-Scissors"](p1, p2);
-
+rpc = StockGames["Rock-Paper-Scissors"]([p1, p2]);
+t = StockGames["Axelrod Tournament"];
 //The code below is to run the repl for testing purposes.
 //var toRepl = {_expose, registry,Player,Choice,Turn,Sequence,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1};
 //startREPL(toRepl);
