@@ -12,6 +12,7 @@
   "dependencies": {
     "esprima": "^4.0.0",
     "expression-sandbox": "^1.1.0",
+    "lodash.clonedeepwith": "^4.5.0",
     "loglevel-colored-level-prefix": "^1.0.0",
     "present": "^1.0.0",
     "randgen": "^0.1.0",

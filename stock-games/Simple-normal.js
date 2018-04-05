@@ -1,7 +1,7 @@
 "use strict";
 
 //Game engine
-var { Choice, Turn } = require("../lib/engine.js").Playables;
+var { Choice, Turn } = require("../lib/engine").Playables;
 
 //Backend utility function, meant to be used by other stock-games
 function _TwoPlayerNormal(choices, payoffs = null, parameters = {}) {

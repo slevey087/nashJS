@@ -9,6 +9,9 @@ var StockGames = {
   "Prisoner's Dilemma": require("./prisoner-dilemma"),
   "Rock-Paper-Scissors": require("./rock-paper-scissors"),
 
+  // Iterated games
+  "Iterated Prisoner's Dilemma": require("./iterated-prisoner-dilemma"),
+
   // Evolutionary games
   "Cultural Evolution": require("./cultural-evolution"),
 
