@@ -1,61 +1,60 @@
 ({
-  Player,
-  _Player,
-  _Population,
-  Population,
-  PlayerList,
-  registerStrategy,
-  Strategies,
-  strategyLoader,
-  _expose,
-  registry,
-  Variable,
-  Expression,
-  gameHistory,
-  excludedPlayers,
-  startREPL,
-  nhistory,
-  Information,
-  PerfectInformation
+	Player,
+	_Player,
+	gamePopulation,
+	Population,
+	PlayerList,
+	registerStrategy,
+	Strategies,
+	strategyLoader,
+	_expose,
+	registry,
+	Variable,
+	Expression,
+	RandomVariable,
+	gameHistory,
+	excludedPlayers,
+	startREPL,
+	nhistory,
+	Information,
+	PerfectInformation
 } = require("./index"));
 ({
-  Choice,
-  Turn,
-  Sequence,
-  Loop,
-  StochasticLoop,
-  HaltIf,
-  StochasticHalt,
-  Lambda,
-  RandomPlayerChoice,
-  PopulationDynamics,
-  Simultaneous
+	Choice,
+	Turn,
+	Sequence,
+	Loop,
+	StochasticLoop,
+	HaltIf,
+	StochasticHalt,
+	Lambda,
+	RandomPlayerChoice,
+	PopulationDynamics,
+	Simultaneous
 } = require("./index").Playables);
 StockGames = require("./index").StockGames;
 
 rr = StockGames["Round Robin"];
 
 function chooseFirstOption() {
-  this.choose = function(options, information) {
-    console.log("Information is: ", JSON.parse(JSON.stringify(information)));
-    return options[0];
-  };
+	this.choose = function(options, information) {
+		return options[0];
+	};
 }
 registerStrategy(chooseFirstOption, "chooseFirst");
 
 function chooseSecondOption() {
-  this.choose = function(options) {
-    console.log("second choice");
-    return options[1];
-  };
+	this.choose = function(options) {
+		return options[1];
+	};
 }
 registerStrategy(chooseSecondOption, "chooseSecond");
 
 function randomize() {
-  this.choose = function(options, information) {
-    var num = Math.floor(Math.random() * options.length);
-    return options[num];
-  };
+	this.choose = function(options, information) {
+		var num = Math.floor(Math.random() * options.length);
+		return options[num];
+	};
 }
 registerStrategy(randomize, "randomize");
 
@@ -88,13 +87,13 @@ t1.cooperate.Defect([1, 4]);
 t1.cooperate.Cooperate([v1, v1]);
 
 L1 = Lambda(function() {
-  v1.set(v1 + 1);
+	v1.set(v1 + 1);
 });
 
 pd1 = PopulationDynamics(1.5, 1);
 
 h2 = HaltIf(function() {
-  return Population().onlyAlive().length == 0;
+	return Population().onlyAlive().length == 0;
 });
 
 L1(t1);
@@ -109,36 +108,36 @@ l1 = Loop(s1, 10, { logContinue: true });
 //console.log(_expose(t1).next.cooperate.Cooperate)
 
 h2 = HaltIf(function() {
-  return Population().onlyAlive().length == 0;
+	return Population().onlyAlive().length == 0;
 });
 
 L2 = Lambda(function() {
-  p1.kill();
+	p1.kill();
 });
 
 t2(L2);
 
 generatePopulation = function() {
-  for (i = 0; i < 30; i++) {
-    Player({ assign: "chooseFirst" });
-  }
-  for (i = 0; i < 30; i++) {
-    Player({ assign: "chooseSecond" });
-  }
+	for (i = 0; i < 30; i++) {
+		Player({ assign: "chooseFirst" });
+	}
+	for (i = 0; i < 30; i++) {
+		Player({ assign: "chooseSecond" });
+	}
 };
 
 function gameGenerator() {
-  var t = Turn([
-    RandomPlayerChoice(["cooperate", "defect"]),
-    RandomPlayerChoice(["Cooperate", "Defect"])
-  ]);
+	var t = Turn([
+		RandomPlayerChoice(["cooperate", "defect"]),
+		RandomPlayerChoice(["Cooperate", "Defect"])
+	]);
 
-  t.defect.Defect([2, 2]);
-  t.defect.Cooperate([4, 1]);
-  t.cooperate.Defect([1, 4]);
-  t.cooperate.Cooperate([3, 3]);
+	t.defect.Defect([2, 2]);
+	t.defect.Cooperate([4, 1]);
+	t.cooperate.Defect([1, 4]);
+	t.cooperate.Cooperate([3, 3]);
 
-  return t;
+	return t;
 }
 //
 //
@@ -155,6 +154,7 @@ v2 = Variable(1);
 
 rpc = StockGames["Rock-Paper-Scissors"]([p1, p2]);
 t = StockGames["Axelrod Tournament"];
+//t = StockGames["Iterated Prisoner's Dilemma"]([p1, p2]);
 //The code below is to run the repl for testing purposes.
 //var toRepl = {_expose, registry,Player,Choice,Turn,Sequence,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1};
 //startREPL(toRepl);
