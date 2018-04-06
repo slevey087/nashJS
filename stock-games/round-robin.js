@@ -1,7 +1,7 @@
 "use strict";
 
 // helper function
-var shuffle = require("../lib/helperfunctions")("general").shuffle;
+var { shuffle } = require("../lib/helperfunctions")("general");
 
 // nashJS engine component
 var { Sequence, Simultaneous } = require("../lib/engine").Playables;
@@ -11,9 +11,10 @@ var { Information } = require("../lib/information");
 var { History } = require("../lib/history");
 var { PlayerList } = require("../lib/population");
 
-// gameGenerator should be a function whose first argument is an array of players, and whose second is a parameters object.
+// gameGenerator should be a function whose first argument is an array of players
 var RoundRobin = function(gameGenerator, players, parameters = {}) {
 	parameters.id = parameters.id || "Round-Robin";
+	parameters.initializePlayers = parameters.initializePlayers && true;
 
 	// Create array of each combination of players
 	var matches = [];
@@ -33,39 +34,29 @@ var RoundRobin = function(gameGenerator, players, parameters = {}) {
 	// Track scores
 	var scores = [];
 
-	var addRound = function(players, parameters) {
-		// information mechanics
-		/*
-		var history = gameHistory.child()
-		parameters.information = new Information(
-			history,
-			new PlayerList(players).generator
-		);
-		parameters.history = history;
-*/
-		// the actual round
+	//
+	var addRound = function(players, parameters = {}) {
+		// information mechanics and other parameters
 		parameters.compartmentalize = { population: new PlayerList(players).generator }
+		parameters.initializePlayers = players;
+
+		// generate round
 		var round = gameGenerator(players, parameters);
 
 		// track the scores
-		var recordScores = Lambda(
-			function() {
-				var score = Population().scoresByStrategyTotals();
-				scores.push(score);
-				//return score for history
+		var recordScores = Lambda(function() {
+			var score = Population().scoresByStrategyTotals();
+			scores.push(score);
 
-
-				return score;
-			}, { id: "Record-Scores" }
-		);
+			//return score for history
+			return score;
+		}, { id: "Record-Scores" });
 
 		//Chain together
 		recordScores(round);
 
 		// return both
-		return [
-			round,
-			recordScores
+		return [round, recordScores
 			// ,Sequence(round, recordScores) // Uncomment for Simultaneous implementation
 		];
 	};
@@ -74,21 +65,22 @@ var RoundRobin = function(gameGenerator, players, parameters = {}) {
 	// load the first match manually
 	var [firstRound, firstRecord] = addRound(
 		matches.shift(),
-		parameters.gameParameters
+		parameters.parameters
 	);
 
 	//then load subsequent matches
 	var record = firstRecord;
-	var nextRecord, nextRound;
+	var lastRecord, lastRound;
 
 	matches.forEach(function(match) {
-		[nextRound, nextRecord] = addRound(match, parameters.gameParameters);
+		[lastRound, lastRecord] = addRound(match, parameters.parameters);
 
-		nextRound(record);
-		record = nextRecord;
+		lastRound(record);
+		record = lastRecord;
 	});
 
-	return Sequence(firstRound, nextRecord, parameters);
+
+	return Sequence(firstRound, lastRecord, parameters);
 
 	/* // Simultaneous implementation
 	var rounds = [];

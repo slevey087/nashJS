@@ -34,6 +34,7 @@
 StockGames = require("./index").StockGames;
 
 rr = StockGames["Round Robin"];
+wrap = require("./lib/helperfunctions")("stock-games")
 
 function chooseFirstOption() {
 	this.choose = function(options, information) {
