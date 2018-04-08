@@ -66,6 +66,7 @@ p2 = Player();
 p2.assign("randomize");
 p3 = Player();
 p3.assign("chooseSecond");
+p4 = Player({ assign: "randomize" });
 
 c1 = Choice(p1, ["cooperate", "defect"]);
 //c1['left'](5) ;
@@ -75,6 +76,10 @@ c2 = Choice(p2, ["Cooperate", "Defect"]);
 //c2['down'](7);
 
 t2 = Turn([c1, c2]);
+t3 = Turn([c1, c2]);
+t4 = Turn([c1, c2]);
+t5 = Turn([c1, c2]);
+s1 = Simultaneous([t2, t3, t4, t5])
 
 c3 = RandomPlayerChoice(["cooperate", "defect"]);
 c4 = RandomPlayerChoice(["Cooperate", "Defect"]);
@@ -148,7 +153,10 @@ function gameGenerator() {
 //CE = StockGames["Cultural Evolution"](gameGenerator, 1, {generatePopulation});
 
 //n = StockGames["Two-Player Normal"](p1,p2,[["left","right"],["up","down"]]);
-pd = StockGames["Prisoner's Dilemma"];
+pd1 = StockGames["Prisoner's Dilemma"]([p1, p2]);
+pd2 = StockGames["Prisoner's Dilemma"]([p3, p4]);
+
+s = Simultaneous([pd1, pd2])
 
 v2 = Variable(1);
 

@@ -12,18 +12,18 @@
   "dependencies": {
     "esprima": "^4.0.0",
     "expression-sandbox": "^1.1.0",
-    "lodash.clonedeepwith": "^4.5.0",
+    "jsonata": "1.4.1",
     "loglevel-colored-level-prefix": "^1.0.0",
     "present": "^1.0.0",
     "randgen": "^0.1.0",
     "require-globify": "^1.4.1",
-    "synchronous-promise": "^2.0.4",
-    "winston": "^2.4.1"
+    "synchronous-promise": "^2.0.4"
   },
   "devDependencies": {
     "brfs": "^1.5.0",
     "browserify": "^16.1.1",
     "browserify-fs": "^1.0.0",
+    "consolify": "^2.2.0",
     "markdown-toc": "^1.2.0"
   }
 }
