@@ -6,13 +6,16 @@ var { shuffle } = require("../lib/helperfunctions")("general");
 // nashJS engine component
 var { Sequence, Simultaneous } = require("../lib/engine").Playables;
 
+// helper functions
+var { gameWrapper } = require("../lib/helperFunctions")("stock-games")
+
 //for information mechanics
 var { Information } = require("../lib/information");
 var { History } = require("../lib/history");
 var { PlayerList } = require("../lib/population");
 
 // gameGenerator should be a function whose first argument is an array of players
-var RoundRobin = function(gameGenerator, players, parameters = {}) {
+var RoundRobin = gameWrapper(function(players, gameGenerator, parameters = {}) {
 	parameters.id = parameters.id || "Round-Robin";
 	parameters.initializePlayers = parameters.initializePlayers && true;
 
@@ -32,22 +35,29 @@ var RoundRobin = function(gameGenerator, players, parameters = {}) {
 	shuffle(matches);
 
 	// Track scores
-	var scores = [];
+	var scoresRecord = [];
 
 	//
 	var addRound = function(players, parameters = {}) {
 		// information mechanics and other parameters
-		parameters.compartmentalize = { population: new PlayerList(players).generator }
-		parameters.initializePlayers = players;
+		var population = new PlayerList(players).generator
+		parameters.compartmentalize = { population }
+		parameters.initializePlayers = population;
 
 		// generate round
 		var round = gameGenerator(players, parameters);
 
 		// track the scores
 		var recordScores = Lambda(function() {
-			var score = Population().scoresByStrategyTotals();
-			scores.push(score);
-
+			var score = {}
+			for (let [strategy, scores] of Object.entries(population().scoresByStrategy())) {
+				if (Array.isArray(scores)) {
+					if (scores.length == 1) scores = scores[0]
+					score[strategy] = scores;
+				}
+			}
+			scoresRecord.push(score);
+			console.log("recording scores")
 			//return score for history
 			return score;
 		}, { id: "Record-Scores" });
@@ -60,6 +70,8 @@ var RoundRobin = function(gameGenerator, players, parameters = {}) {
 			// ,Sequence(round, recordScores) // Uncomment for Simultaneous implementation
 		];
 	};
+
+
 
 	// Sequential implementation
 	// load the first match manually
@@ -89,6 +101,6 @@ var RoundRobin = function(gameGenerator, players, parameters = {}) {
 	});
 
 	return Simultaneous(rounds, parameters); */
-};
+});
 
 module.exports = RoundRobin;

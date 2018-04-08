@@ -46,7 +46,7 @@ registerStrategy(chooseFirstOption, "chooseFirst");
 
 function chooseSecondOption() {
 	this.choose = function(options, information) {
-		console.log("second choice");
+		//console.log("second choice");
 		return options[1];
 	};
 }

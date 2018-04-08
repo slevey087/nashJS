@@ -35,7 +35,7 @@ var TwoPlayerNormal = gameWrapper(function(players, choices, payoffs = null, par
 	var { informationFilter } = parameters;
 	if (!isFunction(informationFilter)) informationFilter = null;
 
-	// Wrap the users filter
+	// Wrap the user's filter
 	var wrappedFilter = function(information) {
 		// Figure out who I am and who the opponent is
 		var me = information.me.id
@@ -55,7 +55,7 @@ var TwoPlayerNormal = gameWrapper(function(players, choices, payoffs = null, par
 	}
 
 	// Pass the information filter
-	parameters.informationFilter = informationFilter
+	parameters.informationFilter = wrappedFilter
 
 	return Normal(players, choices, payoffs, parameters)
 }); //				 																												TODO: may want to validate arguments here too
