@@ -11,6 +11,7 @@
 	registry,
 	Variable,
 	Expression,
+	RandomVariable,
 	gameHistory,
 	excludedPlayers,
 	startREPL,
@@ -39,7 +40,7 @@ wrap = require("./lib/helperfunctions")("stock-games")
 function chooseFirstOption() {
 	this.choose = function(options, information) {
 
-		return options[0];
+    return options[0];
 	};
 }
 registerStrategy(chooseFirstOption, "chooseFirst");
@@ -47,6 +48,7 @@ registerStrategy(chooseFirstOption, "chooseFirst");
 function chooseSecondOption() {
 	this.choose = function(options, information) {
 		//console.log("second choice");
+
 		return options[1];
 	};
 }
@@ -164,6 +166,7 @@ v2 = Variable(1);
 
 rpc = StockGames["Rock-Paper-Scissors"]([p1, p2]);
 t = StockGames["Axelrod Tournament"];
+//t = StockGames["Iterated Prisoner's Dilemma"]([p1, p2]);
 //The code below is to run the repl for testing purposes.
 //var toRepl = {_expose, registry,Player,Choice,Turn,Sequence,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1};
 //startREPL(toRepl);
