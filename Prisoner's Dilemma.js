@@ -107,9 +107,9 @@ L1(t1);
 pd1(L1);
 h2(pd1);
 
-s1 = Sequence(t1, h2);
+//s1 = Sequence(t1, h2);
 
-l1 = Loop(s1, 10, { logContinue: true });
+//l1 = Loop(s1, 10, { logContinue: true });
 
 //console.log(_expose(t1).next)
 //console.log(_expose(t1).next.cooperate.Cooperate)
