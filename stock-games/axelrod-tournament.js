@@ -1,33 +1,43 @@
 "use strict";
 
 // game pieces
-var prisonerDilemma = require("./prisoner-dilemma");
+var prisonerDilemma = require("./iterated-prisoner-dilemma").createGenerator;
 var roundRobin = require("./round-robin");
 var { Loop } = require("../lib/engine").Playables;
+
+// helper functions
+var { gameWrapper } = require("../lib/helperFunctions")("stock-games")
 
 // Population interfaces
 var { Population } = require("../lib/population");
 var { generatePopulation } = require("../lib/helperfunctions")("tournament");
 
-module.exports = function({ generatePlayers = true } = {}) {
-  if (generatePlayers) {
-    // Get two sets of players. The second is so players can play themselves
-    var players = generatePopulation();
-    var copies = generatePopulation();
+var AxelrodTournament = gameWrapper(function(players, parameters = {}) {
+	var { generatePlayers = true, repeats = 5, gameLength = 200 } = parameters;
 
-    var iteration = roundRobin(prisonerDilemma, players, {
-      copies,
-      initializePlayers: true
-    });
-  } else {
-    var iteration = roundRobin(
-      prisonerDilemma,
-      Population()
-        .onlyAlive()
-        .onlyAvailable(),
-      { initializePlayers: true }
-    );
-  }
+	// Either create an entire population
+	if (generatePlayers) {
+		// Get two sets of players. The second is so players can play themselves
+		players = generatePopulation();
+		var copies = generatePopulation();
+		parameters.copies = copies;
+	}
 
-  return Loop(iteration, 5, { id: "Axelrod-Tournament" });
-};
+	// or use the supplied players
+	else if (players) {
+		// do nothing
+	} else {
+		// or use the players already present
+		players = Population().onlyAlive().onlyAvailable();
+	}
+
+	// assign parameters and generate the game
+	parameters.initializePlayers = players;
+	var iteration = roundRobin(players, prisonerDilemma(gameLength), parameters);
+
+	return Loop(iteration, repeats, { id: "Axelrod-Tournament" });
+});
+
+
+
+module.exports = AxelrodTournament;

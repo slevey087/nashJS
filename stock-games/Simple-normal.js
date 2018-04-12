@@ -1,47 +1,65 @@
 "use strict";
 
+//Helper functions
+var { isFunction } = require("../lib/helperFunctions")("general")
+var { gameWrapper } = require("../lib/helperFunctions")("stock-games")
+
 //Game engine
-var { Choice, Turn } = require("../lib/engine.js").Playables;
+var { Choice, Turn } = require("../lib/engine").Playables;
 
-//Backend utility function, meant to be used by other stock-games
-function _TwoPlayerNormal(choices, payoffs = null, parameters = {}) {
-  return function(players) {
-    var t1 = Turn(
-      [Choice(players[0], choices[0]), Choice(players[1], choices[1])],
-      parameters
-    );
 
-    if (payoffs) t1.setAllPayoffs(payoffs);
+var Normal = gameWrapper(function(players, choiceLists, payoffs = null, parameters = {}) {
 
-    return t1;
-  };
-}
+		//propogate the information filter
+		parameters.parameters ? parameters.parameters.informationFilter = parameters.informationFilter :
+			parameters.parameters = { informationFilter: parameters.informationFilter }
 
-//Front end wrapper for the user to quickly define a game.
-function TwoPlayerNormal(players, choices, payoffs = null, parameters = {}) {
-  //TODO: validate all variables
+		// construct the choices
+		var choices = choiceLists.map(function(list, index) {
+			return Choice(players[index], list, parameters.parameters);
+		});
 
-  return _TwoPlayerNormal(choices, payoffs, parameters)(players);
-}
+		var game = Turn(choices, parameters);
+		console.log(payoffs)
+		if (payoffs) game.setAllPayoffs(payoffs);
 
-function _Normal(choiceLists, payoffs = null, parameters) {
-  return function(players) {
-    var choices = choiceLists.map(function(list, index) {
-      return Choice(players[index], list);
-    });
+		return game;
+	} // 										TODO: validate all arguments
+);
 
-    var t1 = Turn(choices, parameters);
 
-    if (payoffs) t1.setAllPayoffs(payoffs);
+var TwoPlayerNormal = gameWrapper(function(players, choices, payoffs = null, parameters = {}) {
 
-    return t1;
-  };
-}
+	// Information mechanics.. There are only two players, so we can have a 'me' and 'opponent' entry.
+	// If user supplied an information filter, wrap that filter in ours.
+	var { informationFilter } = parameters;
+	if (!isFunction(informationFilter)) informationFilter = null;
 
-function Normal(players, choiceLists, payoffs, parameters) {
-  //TODO: validate all arguments
+	// Wrap the user's filter
+	var wrappedFilter = function(information) {
+		// Figure out who I am and who the opponent is
+		var me = information.me.id
+		var players = [information.turn.choices[0].choice.player, information.turn.choices[1].choice.player]
+		var opponent = players.splice(players.indexOf(me), 1) && players[0];
 
-  return _Normal(choiceLists, payoffs, parameters)(players);
-}
+		// add entry for opponent
+		var opponentDetail = information.population.filter(function(player) {
+			return (player.id == opponent)
+		})[0];
+		information.opponent = opponentDetail;
 
-module.exports = { _TwoPlayerNormal, TwoPlayerNormal, _Normal, Normal };
+		// run the user's information filter
+		if (informationFilter) information = informationFilter(information);
+
+		return information;
+	}
+
+	// Pass the information filter
+	parameters.informationFilter = wrappedFilter
+
+	return Normal(players, choices, payoffs, parameters)
+}); //				 																												TODO: may want to validate arguments here too
+
+
+
+module.exports = { TwoPlayerNormal, Normal };

@@ -1,39 +1,106 @@
 "use strict";
 
 // helper function
-var shuffle = require("../lib/helperfunctions")("general").shuffle;
+var { shuffle } = require("../lib/helperfunctions")("general");
 
 // nashJS engine component
-var { Sequence } = require("../lib/engine").Playables;
+var { Sequence, Simultaneous } = require("../lib/engine").Playables;
 
-// gameGenerator should be a function whose first argument is an array of players, and whose second is a parameters object.
-var RoundRobin = function(gameGenerator, players, parameters = {}) {
-  parameters.id = parameters.id || "Round-Robin";
+// helper functions
+var { gameWrapper } = require("../lib/helperFunctions")("stock-games")
 
-  // Create array of each combination of players
-  var matches = [];
+//for information mechanics
+var { Information } = require("../lib/information");
+var { History } = require("../lib/history");
+var { PlayerList } = require("../lib/population");
 
-  players.forEach(function(player1, index1) {
-    for (var index2 = 0; index2 < index1; index2++) {
-      matches.push([players[index2], player1]);
-    }
+// gameGenerator should be a function whose first argument is an array of players
+var RoundRobin = gameWrapper(function(players, gameGenerator, parameters = {}) {
+	parameters.id = parameters.id || "Round-Robin";
+	parameters.initializePlayers = parameters.initializePlayers && true;
 
-    // optional parameter 'copies.' Pass an extra copy of each player, to play themselves
-    if (parameters.copies) matches.push([parameters.copies[index1], player1]);
-  });
+	// Create array of each combination of players
+	var matches = [];
 
-  shuffle(matches);
+	players.forEach(function(player1, index1) {
+		for (var index2 = 0; index2 < index1; index2++) {
+			matches.push([players[index2], player1]);
+		}
 
-  // load the first match manually
-  var game = gameGenerator(matches.shift(), parameters.gameParameters);
+		// optional parameter 'copies.' Pass an extra copy of each player, to play themselves
+		if (parameters.copies) matches.push([parameters.copies[index1], player1]);
+	});
 
-  //then load subsequent matches
-  var round = game;
-  matches.forEach(function(match) {
-    round = gameGenerator(match, parameters.gameParameters)(round);
-  });
+	//randomize the order
+	shuffle(matches);
 
-  return Sequence(game, round._data.playable, parameters);
-};
+	// Track scores
+	var scoresRecord = [];
+
+	//
+	var addRound = function(players, parameters = {}) {
+		// information mechanics and other parameters
+		var population = new PlayerList(players).generator
+		parameters.compartmentalize = { population }
+		parameters.initializePlayers = population;
+
+		// generate round
+		var round = gameGenerator(players, parameters);
+
+		// track the scores
+		var recordScores = Lambda(function() {
+			var score = {}
+			for (let [strategy, scores] of Object.entries(population().scoresByStrategy())) {
+				if (Array.isArray(scores)) {
+					if (scores.length == 1) scores = scores[0]
+					score[strategy] = scores;
+				}
+			}
+			scoresRecord.push(score);
+			console.log("recording scores")
+			//return score for history
+			return score;
+		}, { id: "Record-Scores" });
+
+		//Chain together
+		recordScores(round);
+
+		// return both
+		return [round, recordScores
+			// ,Sequence(round, recordScores) // Uncomment for Simultaneous implementation
+		];
+	};
+
+
+
+	// Sequential implementation
+	// load the first match manually
+	var [firstRound, firstRecord] = addRound(
+		matches.shift(),
+		parameters.parameters
+	);
+
+	//then load subsequent matches
+	var record = firstRecord;
+	var lastRecord, lastRound;
+
+	matches.forEach(function(match) {
+		[lastRound, lastRecord] = addRound(match, parameters.parameters);
+
+		lastRound(record);
+		record = lastRecord;
+	});
+
+
+	return Sequence(firstRound, lastRecord, parameters);
+
+	/* // Simultaneous implementation
+	var rounds = [];
+	matches.forEach(function(match) {
+	  rounds.push(addRound(match, parameters.gameParameters)[2]);
+	});
+
+	return Simultaneous(rounds, parameters); */
+});
 
 module.exports = RoundRobin;
