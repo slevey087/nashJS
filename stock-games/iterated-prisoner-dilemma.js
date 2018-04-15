@@ -1,29 +1,5 @@
 "use strict";
 
-<<<<<<< HEAD
-// game engine
-var { Loop } = require("../lib/engine").Playables;
-
-// The actual game
-var prisonerDilemma = require("./prisoner-dilemma");
-
-module.exports = function(players, parameters = {}) {
-	var {
-		numberIterations = 50,
-			id = "Iterated-Prisoner-Dilemma",
-			turnParameters = {}
-	} = parameters;
-
-	turnParameters.id = "Prisoner-Dilemma";
-	parameters.id = parameters.id || id;
-
-	return Loop(
-		prisonerDilemma(players, turnParameters),
-		numberIterations,
-		parameters
-	);
-};
-=======
 // Base game
 var prisonerDilemma = require("./prisoner-dilemma").createGenerator();
 
@@ -42,4 +18,3 @@ var IteratedPrisonerDilemma = gameWrapper(function(players, numberIterations = 5
 // TODO validate arguments
 
 module.exports = IteratedPrisonerDilemma
->>>>>>> bce4b1691360cbe1cd1d4a07b91526e40cc1346f
