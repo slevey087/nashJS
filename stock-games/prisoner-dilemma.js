@@ -3,11 +3,15 @@
 // base game
 var TwoPlayerNormal = require("./simple-normal").TwoPlayerNormal;
 
+//NashJS engine components
+var Engine = require("../lib/engine")
+
 // helper functions
-var { gameWrapper } = require("../lib/helperFunctions")("stock-games")
+var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games");
 
 // play-time logic
-var { Variable, Expression } = require("../lib/logic");
+var { Variable, Expression } = Engine.FrontEnd;
+
 
 var prisonerDilemma = gameWrapper(function(players, {
 	id = "Prisoner-Dilemma",

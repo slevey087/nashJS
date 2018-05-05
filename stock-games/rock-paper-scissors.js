@@ -3,11 +3,14 @@
 // base game
 var SimpleZeroSum = require("./simple-zero-sum");
 
+var Engine = require("../lib/engine")
+
 // helper functions
-var { gameWrapper } = require("../lib/helperFunctions")("stock-games")
+var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games")
 
 // Play-time logic
-var { Expression } = require("../lib/logic");
+var { Expression } = Engine.FrontEnd
+
 
 // Rock-Paper-Scissors
 var RockPaperScissors = gameWrapper(function(players, payoff = 1, parameters = {}) {

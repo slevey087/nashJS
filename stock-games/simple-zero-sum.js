@@ -3,12 +3,15 @@
 // base game
 var TwoPlayerNormal = require("./simple-normal").TwoPlayerNormal;
 
+// NashJS components
+var Engine = require("../lib/engine")
+
 // Game state controller
-var { registry } = require("../lib/state");
-var { gameWrapper } = require("../lib/helperFunctions")("stock-games");
+var { registry } = Engine.BackEnd.State
+var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games");
 
 // Play-time logic
-var { Variable, Expression } = require("../lib/logic");
+var { Variable, Expression } = Engine.FrontEnd;
 
 /* beautify preserve:start */
 var SimpleZeroSum = gameWrapper(function(players, choices, payoffs = [[0, 0],	[0, 0]], parameters={}) {

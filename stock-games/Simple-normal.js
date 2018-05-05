@@ -1,12 +1,17 @@
 "use strict";
 
-//Helper functions
-var { isFunction } = require("../lib/helperFunctions")("general")
-var { gameWrapper } = require("../lib/helperFunctions")("stock-games")
-
 //Game engine
-var { Choice, Turn } = require("../lib/engine").Playables;
+var Engine = require("../lib/engine")
 
+//Helper functions
+var { isFunction } = Engine.BackEnd.HelperFunctions("general")
+var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games")
+
+// Playables
+var { Choice, Turn } = Engine.FrontEnd.Playables;
+
+//Play-time Logic
+var { RandomVariable } = Engine.FrontEnd
 
 var Normal = gameWrapper(function(players, choiceLists, payoffs = null, parameters = {}) {
 
@@ -20,10 +25,46 @@ var Normal = gameWrapper(function(players, choiceLists, payoffs = null, paramete
 		});
 
 		var game = Turn(choices, parameters);
-		console.log(payoffs)
+
 		if (payoffs) game.setAllPayoffs(payoffs);
 
 		return game;
+	}, {
+		strategyLoader: function() {
+			return [{
+					strategy: function chooseFirst() {
+						this.choose = function(choices, information) {
+							return choices[0]
+						}
+					},
+					name: "chooseFirst"
+				},
+
+				{
+					strategy: function chooseSecond() {
+						this.choose = function(choices, information) {
+							return choices[1]
+						}
+					},
+					name: "chooseSecond"
+				},
+
+				{
+					strategy: function randomize(choices = [0, 1]) {
+						// Creating a map will make picking a random value easier
+						choices = choices.map(function(item, index) {
+							return [index, item]
+						});
+						var choiceMap = new Map(choices)
+
+						this.choose = function(choices, information) {
+							return choices[choiceMap.get(Math.floor(Math.random() * choiceMap.size))];
+						}
+					},
+					name: "randomize"
+				}
+			];
+		}
 	} // 										TODO: validate all arguments
 );
 

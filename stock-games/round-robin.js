@@ -1,18 +1,18 @@
 "use strict";
 
+//NashJS Engine
+var Engine = require("../lib/engine")
+
 // helper function
-var { shuffle } = require("../lib/helperfunctions")("general");
+var { shuffle } = Engine.BackEnd.HelperFunctions("general");
+var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games")
 
 // nashJS engine component
-var { Sequence, Simultaneous } = require("../lib/engine").Playables;
-
-// helper functions
-var { gameWrapper } = require("../lib/helperFunctions")("stock-games")
+var { Sequence, Simultaneous } = Engine.FrontEnd.Playables;
 
 //for information mechanics
-var { Information } = require("../lib/information");
-var { History } = require("../lib/history");
-var { PlayerList } = require("../lib/population");
+var { Information, History, PlayerList } = Engine.BackEnd.Classes;
+
 
 // gameGenerator should be a function whose first argument is an array of players
 var RoundRobin = gameWrapper(function(players, gameGenerator, parameters = {}) {

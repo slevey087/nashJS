@@ -12,12 +12,14 @@
 	Variable,
 	Expression,
 	RandomVariable,
+	ComplexVariable,
 	gameHistory,
 	excludedPlayers,
 	startREPL,
 	nhistory,
 	Information,
-	PerfectInformation
+	PerfectInformation,
+	PluginManager
 } = require("./index"));
 ({
 	Choice,
@@ -34,16 +36,16 @@
 } = require("./index").Playables);
 StockGames = require("./index").StockGames;
 
-rr = StockGames["Round Robin"];
-wrap = require("./lib/helperfunctions")("stock-games")
+console.log("h")
 
 function chooseFirstOption() {
 	this.choose = function(options, information) {
 
-    return options[0];
+		return options[0];
 	};
 }
 registerStrategy(chooseFirstOption, "chooseFirst");
+
 
 function chooseSecondOption() {
 	this.choose = function(options, information) {
@@ -54,21 +56,25 @@ function chooseSecondOption() {
 }
 registerStrategy(chooseSecondOption, "chooseSecond");
 
+
 function randomize() {
 	this.choose = function(options, information) {
+		debugger;
 		var num = Math.floor(Math.random() * options.length);
 		return options[num];
 	};
 }
 registerStrategy(randomize, "randomize");
 
-p1 = Player({ assign: "chooseFirst" });
 
+p1 = Player();
+p1.assign("chooseFirst")
 p2 = Player();
 p2.assign("randomize");
 p3 = Player();
 p3.assign("chooseSecond");
-p4 = Player({ assign: "randomize" });
+p4 = Player();
+p4.assign("randomize")
 
 c1 = Choice(p1, ["cooperate", "defect"]);
 //c1['left'](5) ;
@@ -155,17 +161,17 @@ function gameGenerator() {
 //CE = StockGames["Cultural Evolution"](gameGenerator, 1, {generatePopulation});
 
 //n = StockGames["Two-Player Normal"](p1,p2,[["left","right"],["up","down"]]);
-pd1 = StockGames["Prisoner's Dilemma"]([p1, p2]);
-pd2 = StockGames["Prisoner's Dilemma"]([p3, p4]);
+//pd1 = StockGames["Prisoner's Dilemma"]([p1, p2]);
+//pd2 = StockGames["Prisoner's Dilemma"]([p3, p4]);
 
-s = Simultaneous([pd1, pd2])
+//s = Simultaneous([pd1, pd2])
 
 v2 = Variable(1);
 
 //n = StockGames["Simple Zero-Sum"](p1,p2,[["left","right"],["up","down"]], [[v2,2],[3,4]]);
 
-rpc = StockGames["Rock-Paper-Scissors"]([p1, p2]);
-t = StockGames["Axelrod Tournament"];
+//rpc = StockGames["Rock-Paper-Scissors"]([p1, p2]);
+//t = StockGames["Axelrod Tournament"];
 //t = StockGames["Iterated Prisoner's Dilemma"]([p1, p2]);
 //The code below is to run the repl for testing purposes.
 //var toRepl = {_expose, registry,Player,Choice,Turn,Sequence,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1};

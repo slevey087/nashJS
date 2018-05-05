@@ -18,7 +18,13 @@ var StockGames = {
 
 	//Tournaments
 	"Round Robin": require("./round-robin"),
-	"Axelrod Tournament": require("./axelrod-tournament")
+	"Axelrod Tournament": require("./axelrod-tournament"),
+
+	// Probability Theory
+	"Monty Hall": require("./monty-hall"),
+
+	//Neoclassical economics
+	"Exchange": require("./exchange")
 };
 
 module.exports = StockGames;

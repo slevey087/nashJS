@@ -4,10 +4,11 @@
 var TwoPlayerNormal = require("./simple-normal");
 
 // helper functions
-var { gameWrapper } = require("../lib/helperFunctions")("stock-games")
+var { gameWrapper } = require("../lib/engine").BackEnd.HelperFunctions("stock-games")
+
 
 // Battle of the Sexes
-module.exports = gameWrapper(function(players, parameters = {}) {
+var BattleOfTheSexes = gameWrapper(function(players, parameters = {}) {
 	parameters.id = parameters.id || "Battle-of-the-Sexes";
 
 	var choices = [
@@ -27,3 +28,5 @@ module.exports = gameWrapper(function(players, parameters = {}) {
 
 	return TwoPlayerNormal(players, choices, payoffs, parameters);
 });
+
+module.exports = BattleOfTheSexes;

@@ -1,10 +1,13 @@
 "use strict";
 
+// NashJS engine components
+var Engine = require("../lib/engine")
+
 // game engine
-var { Loop } = require("../lib/engine").Playables;
+var { Loop } = Engine.FrontEnd.Playables;
 
 // helper functions
-var { gameWrapper } = require("../lib/helperFunctions")("stock-games")
+var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games")
 
 
 var Iterated = gameWrapper(function(players, gameGenerator, gameName, numberIterations = 50, parameters = {}) {

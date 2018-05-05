@@ -3,14 +3,19 @@
 // game pieces
 var prisonerDilemma = require("./iterated-prisoner-dilemma").createGenerator;
 var roundRobin = require("./round-robin");
-var { Loop } = require("../lib/engine").Playables;
+
+// NashJS engine components
+var Engine = require("../lib/engine")
+
+var { Loop } = Engine.FrontEnd.Playables;
 
 // helper functions
-var { gameWrapper } = require("../lib/helperFunctions")("stock-games")
+var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games")
+var { generatePopulation } = Engine.BackEnd.HelperFunctions("tournament");
 
 // Population interfaces
-var { Population } = require("../lib/population");
-var { generatePopulation } = require("../lib/helperfunctions")("tournament");
+var { Population } = Engine.FrontEnd.Population;
+
 
 var AxelrodTournament = gameWrapper(function(players, parameters = {}) {
 	var { generatePlayers = true, repeats = 5, gameLength = 200 } = parameters;
