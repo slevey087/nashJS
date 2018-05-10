@@ -4,13 +4,13 @@
 var Engine = require("../lib/engine");
 
 // Playables
-var { Choice, Lambda } = Engine.FrontEnd.Playables;
+var { Choice, Lambda } = Engine.Frontend.Playables;
 
 // logic
-var { Variable, ComplexVariable } = Engine.FrontEnd
+var { Variable, ComplexVariable } = Engine.Frontend
 
 // helper functions
-var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games");
+var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games");
 
 
 var MontyHall = gameWrapper(function(player, parameters = {}) {
@@ -39,7 +39,6 @@ var MontyHall = gameWrapper(function(player, parameters = {}) {
 
 	//Need to set this here in order for scoring to work
 	var doors2 = ComplexVariable(doors.slice());
-	var scoresToDeliver = ComplexVariable(scores.slice());
 
 	var Reveal = Lambda(function({ history }) {
 
@@ -73,21 +72,16 @@ var MontyHall = gameWrapper(function(player, parameters = {}) {
 
 		// Copy doors list to send onward, then remove the revealed doors from list
 		doors2.set(doors.slice()); // Need to set this here so revealing to work
-		scoresToDeliver.set(scores.slice());
 		for (var i = 0; i < reveal.length; i++) {
 			let index = doors2.indexOf(reveal[i])
 			doors2().splice(index, 1)
-			scoresToDeliver().splice(index, 1)
 		}
 
 		return reveal.length == 1 ? reveal[0] : reveal;
 	}, { id: "Reveal" })
 
 	var SecondChoice = Choice(player, doors2, { id: "Stay-or-Switch", usePayoffs: true });
-	doors.forEach(function(door, index) { // TODO use setAllPayoffs as soon as it exists
-		SecondChoice[door](scores[index])
-	})
-	//SecondChoice.setAllPayoffs(scoresToDeliver)
+	SecondChoice.setAllPayoffs(scores)
 
 	Reveal(Choose)
 	SecondChoice(Reveal)
@@ -95,11 +89,11 @@ var MontyHall = gameWrapper(function(player, parameters = {}) {
 	return Sequence(Choose, SecondChoice, parameters);
 }, {
 
-	strategyLoader: function() {
+	strategyLoader() {
 		return [{
 				name: "alwaysSwitch",
 
-				strategy: function() {
+				strategy: function alwaysSwitch() {
 
 					this.door = null;
 
@@ -120,7 +114,7 @@ var MontyHall = gameWrapper(function(player, parameters = {}) {
 			},
 			{
 				name: "alwaysStay",
-				strategy: function() {
+				strategy: function alwaysStay() {
 					this.door = null;
 
 					//TODO add strategy description feature

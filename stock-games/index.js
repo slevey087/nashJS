@@ -24,7 +24,7 @@ var StockGames = {
 	"Monty Hall": require("./monty-hall"),
 
 	//Neoclassical economics
-	"Exchange": require("./exchange")
+	"Exchange": require("./exchange-complex")
 };
 
 module.exports = StockGames;

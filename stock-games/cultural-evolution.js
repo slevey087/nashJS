@@ -4,13 +4,13 @@
 var Engine = require("../lib/engine")
 
 // User data
-var { Population } = Engine.FrontEnd
+var { Population } = Engine.Frontend
 
 // Playables
-var { Lambda, Simultaneous, Sequence, Loop } = Engine.FrontEnd.Playables;
+var { Lambda, Simultaneous, Sequence, Loop } = Engine.Frontend.Playables;
 
 // Helper functions
-var { isFunction } = Engine.BackEnd.HelperFunctions("general");
+var { isFunction } = Engine.Backend.HelperFunctions("general");
 
 
 //Cultural evolution

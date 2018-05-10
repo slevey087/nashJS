@@ -7,14 +7,14 @@ var roundRobin = require("./round-robin");
 // NashJS engine components
 var Engine = require("../lib/engine")
 
-var { Loop } = Engine.FrontEnd.Playables;
+var { Loop } = Engine.Frontend.Playables;
 
 // helper functions
-var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games")
-var { generatePopulation } = Engine.BackEnd.HelperFunctions("tournament");
+var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games")
+var { generatePopulation } = Engine.Backend.HelperFunctions("tournament");
 
 // Population interfaces
-var { Population } = Engine.FrontEnd.Population;
+var { Population } = Engine.Frontend.Population;
 
 
 var AxelrodTournament = gameWrapper(function(players, parameters = {}) {

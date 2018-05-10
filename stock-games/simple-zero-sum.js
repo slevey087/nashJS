@@ -7,11 +7,11 @@ var TwoPlayerNormal = require("./simple-normal").TwoPlayerNormal;
 var Engine = require("../lib/engine")
 
 // Game state controller
-var { registry } = Engine.BackEnd.State
-var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games");
+var { registry } = Engine.Backend.State
+var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games");
 
 // Play-time logic
-var { Variable, Expression } = Engine.FrontEnd;
+var { Variable, Expression } = Engine.Frontend;
 
 /* beautify preserve:start */
 var SimpleZeroSum = gameWrapper(function(players, choices, payoffs = [[0, 0],	[0, 0]], parameters={}) {

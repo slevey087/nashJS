@@ -4,14 +4,14 @@
 var Engine = require("../lib/engine")
 
 // helper function
-var { shuffle } = Engine.BackEnd.HelperFunctions("general");
-var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games")
+var { shuffle } = Engine.Backend.HelperFunctions("general");
+var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games")
 
 // nashJS engine component
-var { Sequence, Simultaneous } = Engine.FrontEnd.Playables;
+var { Sequence, Simultaneous } = Engine.Frontend.Playables;
 
 //for information mechanics
-var { Information, History, PlayerList } = Engine.BackEnd.Classes;
+var { Information, History, PlayerList } = Engine.Backend.Classes;
 
 
 // gameGenerator should be a function whose first argument is an array of players

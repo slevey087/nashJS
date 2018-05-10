@@ -4,10 +4,10 @@
 var Engine = require("../lib/engine")
 
 // game engine
-var { Loop } = Engine.FrontEnd.Playables;
+var { Loop } = Engine.Frontend.Playables;
 
 // helper functions
-var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games")
+var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games")
 
 
 var Iterated = gameWrapper(function(players, gameGenerator, gameName, numberIterations = 50, parameters = {}) {

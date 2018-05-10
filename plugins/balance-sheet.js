@@ -7,10 +7,10 @@
 var Engine = require("../lib/engine")
 
 // Game state
-var { registry, gamePopulation } = Engine.BackEnd.State;
+var { registry, gamePopulation } = Engine.Backend.State;
 
 // Let's add some PlayerList functionality
-var { PlayerList } = Engine.BackEnd.Classes;
+var { PlayerList } = Engine.Backend.Classes;
 
 
 var BalanceSheet = function() {
@@ -73,7 +73,7 @@ var BalanceSheet = function() {
 		name: "balance-sheet",
 
 		// Option to initialize by creating 'property' for a group of players.
-		init: function(players = []) {
+		init(players = []) {
 			// Add some playerlist functionality
 			PlayerList.prototype.balanceSheets = function() {
 				return this.map(function(player) {
@@ -117,13 +117,13 @@ var BalanceSheet = function() {
 		},
 
 		// If we've init-ed alredy, just add bs's to the current player list if they don't have already
-		require: function(players = []) {
+		require(players = []) {
 			players.forEach(function(player) {
 				if (!player.balanceSheet) addEntries(registry.players[player.id()]);
 			});
 		},
 
-		stop: function() {
+		stop() {
 			// remove prototype addEntries
 			delete PlayerList.prototype.balanceSheets;
 			delete PlayerList.prototype.assets;
@@ -145,7 +145,7 @@ var BalanceSheet = function() {
 		'player-create': addEntries,
 
 		// Blank property when player is re-initialized
-		"player-reinitialize": function(player) {
+		"player-reinitialize" (player) {
 			player.balanceSheet = { assets: [], liabilities: [] }
 		}
 	}

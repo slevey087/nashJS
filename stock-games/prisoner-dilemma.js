@@ -7,10 +7,10 @@ var TwoPlayerNormal = require("./simple-normal").TwoPlayerNormal;
 var Engine = require("../lib/engine")
 
 // helper functions
-var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games");
+var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games");
 
 // play-time logic
-var { Variable, Expression } = Engine.FrontEnd;
+var { Variable, Expression } = Engine.Frontend;
 
 
 var prisonerDilemma = gameWrapper(function(players, {

@@ -6,10 +6,10 @@ var SimpleZeroSum = require("./simple-zero-sum");
 var Engine = require("../lib/engine")
 
 // helper functions
-var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games")
+var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games")
 
 // Play-time logic
-var { Expression } = Engine.FrontEnd
+var { Expression } = Engine.Frontend
 
 
 // Rock-Paper-Scissors

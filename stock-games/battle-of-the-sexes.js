@@ -4,7 +4,7 @@
 var TwoPlayerNormal = require("./simple-normal");
 
 // helper functions
-var { gameWrapper } = require("../lib/engine").BackEnd.HelperFunctions("stock-games")
+var { gameWrapper } = require("../lib/engine").Backend.HelperFunctions("stock-games")
 
 
 // Battle of the Sexes

@@ -7,10 +7,10 @@ var prisonerDilemma = require("./prisoner-dilemma").createGenerator();
 var Engine = require("../lib/engine")
 
 // game engine
-var { Loop } = Engine.FrontEnd.Playables;
+var { Loop } = Engine.Frontend.Playables;
 
 // helper functions
-var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games")
+var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games")
 
 // Game utility
 var Iterated = require("./iterated")
@@ -20,9 +20,9 @@ var Iterated = require("./iterated")
 var IteratedPrisonerDilemma = gameWrapper(function(players, numberIterations = 50, parameters = {}) {
 	return Iterated(players, prisonerDilemma, "Prisoner-Dilemma", numberIterations, parameters)
 }, {
-	strategyLoader: function() {
+	strategyLoader() {
 		return [{
-			strategy: function() {
+			strategy: function titForTat() {
 				this.choose = function(choices, information) {
 					if (information.opponent.history.length) return information.opponent.history[information.opponent
 							.history.length - 1]

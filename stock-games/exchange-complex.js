@@ -15,7 +15,7 @@ var { registry } = Engine.Backend.State
 // helper functions
 var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games")
 
-// We'll need the 'property' plugin
+// We'll need the 'balance-sheet' plugin
 var PluginManager = Engine.Backend.PluginManager;
 
 function invertTerms(termsOfTrade) {
@@ -36,12 +36,13 @@ function invertTerms(termsOfTrade) {
 var Exchange = gameWrapper(function(players, termsOfTrade = {}, parameters = {}) {
 	var { utilityFunctions, utilityMode = "absolute" } = parameters //utilityFunctions should be an array of 2 functions, which take a results object and return a change in utility
 	parameters.id = "Exchange" || parameters.id;
-	console.log(termsOfTrade)
+
 
 
 	// To play this game, players will need a balance sheet. This plugin will add balance sheets to the players,
 	// as well as ensure that new players are created with one, and that they are re-initialized properly.
-	PluginManager.package("balance-sheet").require(players);
+	var balanceSheet = PluginManager.package("balance-sheet-complex").require(players);
+	balanceSheet.settings({ cleanZeros: false })
 
 	var p1 = registry.players[players[0].id()];
 	var p2 = registry.players[players[1].id()];
@@ -69,58 +70,50 @@ var Exchange = gameWrapper(function(players, termsOfTrade = {}, parameters = {})
 
 		Object.entries(termsOfTrade).forEach(function(term) {
 			if (term[0] == "borrow") {
-				var liability = Object.entries(term[1])[0]
-				p1.balanceSheet.liabilities[liability[0]] = p1.balanceSheet.liabilities[liability[0]] ? p1.balanceSheet
-					.liabilities[liability[0]] + liability[1] : liability[1];
+				var loanTerms = Object.entries(term[1])[0]
+				var loan = new balanceSheet.FinancialClaim(p2.interface, p1.interface, loanTerms[1], loanTerms[0])
+
 				results.push({
 					player: p1.id,
 					borrow: {
-						[liability[0]]: liability[1]
+						[loanTerms[0]]: loanTerms[1]
 					}
 				});
 
-				var asset = p2.balanceSheet.assets[p1.id] ? p2.balanceSheet.assets[p1.id] : p2.balanceSheet.assets[
-					p1.id] = {};
-				asset[liability[0]] = asset[liability[0]] ? asset[liability[0]] + liability[1] : liability[1];
-				results
-					.push({
-						player: p2.id,
-						lend: {
-							[p1.id]: {
-								[liability[0]]: liability[1]
-							}
+				results.push({
+					player: p2.id,
+					lend: {
+						[p1.id]: {
+							[loanTerms[0]]: loanTerms[1]
 						}
-					});
+					}
+				});
+
 			} else if (term[0] == "lend") {
-				var liability = Object.entries(term[1])[0]
-				p2.balanceSheet.liabilities[liability[0]] = p2.balanceSheet.liabilities[liability[0]] ? p2.balanceSheet
-					.liabilities[liability[0]] + liability[1] : liability[1];
+				var loanTerms = Object.entries(term[1])[0]
+				var loan = new balanceSheet.FinancialClaim(p1.interface, p2.interface, loanTerms[1], loanTerms[0])
+
 				results.push({
 					player: p2.id,
 					borrow: {
-						[liability[0]]: liability[1]
+						[loanTerms[0]]: loanTerms[1]
 					}
 				});
 
-				var asset = p1.balanceSheet.assets[p2.id] ? p1.balanceSheet.assets[p2.id] : p1.balanceSheet.assets[
-					p2.id] = {};
-				asset[liability[0]] = asset[liability[0]] ? asset[liability[0]] + liability[1] : liability[1];
-				results
-					.push({
-						player: p1.id,
-						lend: {
-							[p2.id]: {
-								[liability[0]]: liability[1]
-							}
+				results.push({
+					player: p1.id,
+					lend: {
+						[p2.id]: {
+							[loanTerms[0]]: loanTerms[1]
 						}
-					});
-			} else {
-				p1.balanceSheet.assets[term[0]] = p1.balanceSheet.assets[term[0]] ? p1.balanceSheet.assets[
-					term[0]] + term[1] : term[1];
-				results.push({ player: p1.id, [term[0]]: term[1] });
+					}
+				});
 
-				p2.balanceSheet.assets[term[0]] = p2.balanceSheet.assets[term[0]] ? p2.balanceSheet.assets[
-					term[0]] - term[1] : -1 * term[1];
+			} else {
+				var good = new balanceSheet.RealClaim(p1.interface, term[0], 0)
+				good.transfer(p2.interface, term[1] * -1)
+
+				results.push({ player: p1.id, [term[0]]: term[1] });
 				results.push({ player: p2.id, [term[0]]: -1 * term[1] });
 			}
 		});

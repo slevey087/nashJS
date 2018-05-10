@@ -4,14 +4,14 @@
 var Engine = require("../lib/engine")
 
 //Helper functions
-var { isFunction } = Engine.BackEnd.HelperFunctions("general")
-var { gameWrapper } = Engine.BackEnd.HelperFunctions("stock-games")
+var { isFunction } = Engine.Backend.HelperFunctions("general")
+var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games")
 
 // Playables
-var { Choice, Turn } = Engine.FrontEnd.Playables;
+var { Choice, Turn } = Engine.Frontend.Playables;
 
 //Play-time Logic
-var { RandomVariable } = Engine.FrontEnd
+var { RandomVariable } = Engine.Frontend
 
 var Normal = gameWrapper(function(players, choiceLists, payoffs = null, parameters = {}) {
 
