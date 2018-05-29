@@ -20,11 +20,12 @@
 	Information,
 	PerfectInformation,
 	PluginManager
-} = require("./index"));
+} = require("../index"));
 ({
 	Choice,
 	Turn,
 	Sequence,
+	Consecutive,
 	Loop,
 	StochasticLoop,
 	HaltIf,
@@ -33,8 +34,8 @@
 	RandomPlayerChoice,
 	PopulationDynamics,
 	Simultaneous
-} = require("./index").Playables);
-StockGames = require("./index").StockGames;
+} = require("../index").Playables);
+StockGames = require("../index").StockGames;
 
 console.log("h")
 
@@ -88,6 +89,14 @@ t3 = Turn([c1, c2]);
 t4 = Turn([c1, c2]);
 t5 = Turn([c1, c2]);
 s1 = Simultaneous([t2, t3, t4, t5])
+
+c = Consecutive([
+	Turn([c1, c2]),
+	Turn([c2, c1]),
+	Choice(p1, ["cooperate", "defect"]),
+	Lambda(function() { console.log("hi") }),
+	HaltIf(function() { return true })
+])
 
 c3 = RandomPlayerChoice(["cooperate", "defect"]);
 c4 = RandomPlayerChoice(["Cooperate", "Defect"]);

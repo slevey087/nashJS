@@ -210,6 +210,19 @@ var BalanceSheet = function() {
 		//_player properties/methods
 		player.balanceSheet = { assets: [], liabilities: [] }
 
+		/*
+		var lookup = function(type) {
+			this.reduce(function(accumulator, value) {
+				if (type === value.good) accumulator += value.amount
+				else if (type instanceof Object && type.instrument == value.instrument && (type.claimed === value.claimed))
+					accumulator += value.amount
+				return accumulator;
+			}, 0)
+		}
+		player.balanceSheet.assets.lookup = lookup;
+		player.balanceSheet.liabilities.lookup = lookup;
+		*/
+
 		player.netWorth = function() {
 
 			var assets = this.balanceSheet.assets.reduce(function(accumulator, currentValue) {

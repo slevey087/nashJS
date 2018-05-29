@@ -32,10 +32,13 @@ function invertTerms(termsOfTrade) {
 	return inverse;
 }
 
-// termsOfTrade should
+// termsOfTrade should be an object reflecting the outcomes for player 1.
+// Example {apple:2, orange:-2}. To borrow or lend, create a sub-object describing the loan terms.
+// eg {apple:2, borrow:{IOU:5}}, or {couch:-10, lend:{'credit card':50}}
 var Exchange = gameWrapper(function(players, termsOfTrade = {}, parameters = {}) {
-	var { utilityFunctions, utilityMode = "absolute" } = parameters //utilityFunctions should be an array of 2 functions, which take a results object and return a change in utility
+	var { utilityFunctions, utilityMode = "absolute", initialEndowment = [{}, {}] } = parameters //utilityFunctions should be an array of 2 functions, which take a results object and return a change in utility
 	parameters.id = "Exchange" || parameters.id;
+
 
 
 
@@ -47,6 +50,22 @@ var Exchange = gameWrapper(function(players, termsOfTrade = {}, parameters = {})
 	var p1 = registry.players[players[0].id()];
 	var p2 = registry.players[players[1].id()];
 
+	// Do initial endowments if there are any. Format same as for terms of trade.
+	initialEndowment.forEach(function(endowment, index) {
+		var player = players[index]
+		var invertPlayer = players[Number(!index)]
+		Object.entries(endowment).forEach(function(term) {
+			if (term[0] == "borrow") {
+				var loanTerms = Object.entries(term[1])[0]
+				new balanceSheet.FinancialClaim(invertPlayer, player, loanTerms[1], loanTerms[0])
+			} else if (term[0] == "lend") {
+				var loanTerms = Object.entries(term[1])[0]
+				new balanceSheet.FinancialClaim(player, invertPlayer, loanTerms[1], loanTerms[0])
+			} else {
+				new balanceSheet.RealClaim(player, term[0], term[1])
+			}
+		})
+	})
 
 	// The actual playable
 	var Decision = TwoPlayerNormal(players, [

@@ -4,6 +4,7 @@
   "description": "A game theory simulator! Program games and strategies, then let them play and get the results. ",
   "main": "index.js",
   "scripts": {
+		"lab": "watchify ./lab/lab.js -t require-globify -o ./lab/lab-browser.js -vd",
     "test": "echo \"Error: no test specified\" && exit 1",
     "toc": "markdown-toc -i readme.md"
   },
