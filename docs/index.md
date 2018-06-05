@@ -16,4 +16,17 @@ This page will provide an overview of each of these strategies in turn.
 StockGames = require("nashJS").StockGames;
 ```
 
-This is an object whose keys are the names of games. Its values are the loader-functions for each stock game.
+This is an object whose keys are the names of games. Its values are the loader-functions for each stock game. Each game probably requires some arguments to be given to the loader function. See the specific entry on the game you're using for more details. But it is typical for the first argument to be an array of _Players_ while the last argument is an (optional) object of parameters.
+Then you can invoke a game by calling its name, for instance:
+
+```javascript
+var PD = StockGames["Prisoner's Dilemma"]([p1, p2]);
+PD.play();
+```
+
+## Stock Game Skeletons
+
+Within the Stock Games list are several game skeletons. These require some more detail or configuration, or might even require another game to wrap around, but they are shortcuts for creating slightly more complicated games from common patterns, without having to assemble them from scratch every time.
+
+Among the useful game skeletons include
+* 
