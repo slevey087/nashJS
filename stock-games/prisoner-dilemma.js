@@ -13,43 +13,35 @@ var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games");
 var { Variable, Expression } = Engine.Frontend;
 
 
-var prisonerDilemma = gameWrapper(function(players, {
-	id = "Prisoner-Dilemma",
-	payoffScale = Variable(1),
-	payoffSpread = Variable(4)
-} = {}) {
-	//TODO: fix the case of negative scale.
+var prisonerDilemma = gameWrapper(function(players, parameters = {}) {
+	parameters.id = parameters.id || "Prisoner-Dilemma";
+	var payoffs = parameters.payoffs || [Variable(1), Variable(2), Variable(3), Variable(4)];
 
-	var lowerMiddle = Expression(function() {
-		return payoffScale * (1 + (payoffSpread - 1) * 1 / 3);
-	});
-	var upperMiddle = Expression(function() {
-		return payoffScale * (1 + (payoffSpread - 1) * 2 / 3);
-	});
-	var upper = Expression(function() {
-		return payoffScale * payoffSpread;
-	});
 
-	// Pass along parameters, be sure to include id.
-	var parameters = arguments[1] || {};
-	parameters.id = parameters.id || id;
+	// sort numbers because the wrong order would screw up the game
+	payoffs.sort()
+	var sucker = payoffs[0]
+	var punishment = payoffs[1]
+	var reward = payoffs[2]
+	var temptation = payoffs[3]
+
 
 	var choices = [
 		["Cooperate", "Defect"],
 		["Cooperate", "Defect"]
 	];
-	var payoffs = [
+	var gamePayoffs = [
 		[
-			[upperMiddle, upperMiddle],
-			[payoffScale, upper]
+			[reward, reward],
+			[sucker, temptation]
 		],
 		[
-			[upper, payoffScale],
-			[lowerMiddle, lowerMiddle]
+			[temptation, sucker],
+			[punishment, punishment]
 		]
 	];
 
-	return TwoPlayerNormal(players, choices, payoffs, parameters);
+	return TwoPlayerNormal(players, choices, gamePayoffs, parameters);
 });
 
 

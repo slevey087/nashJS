@@ -37,41 +37,15 @@
 } = require("../index").Playables);
 StockGames = require("../index").StockGames;
 
-console.log("h")
-
-function chooseFirstOption() {
-	this.choose = function(options, information) {
-
-		return options[0];
-	};
-}
-registerStrategy(chooseFirstOption, "chooseFirst");
-
-
-function chooseSecondOption() {
-	this.choose = function(options, information) {
-		//console.log("second choice");
-
-		return options[1];
-	};
-}
-registerStrategy(chooseSecondOption, "chooseSecond");
-
-
-function randomize() {
-	this.choose = function(options, information) {
-		debugger;
-		var num = Math.floor(Math.random() * options.length);
-		return options[num];
-	};
-}
-registerStrategy(randomize, "randomize");
 
 
 p1 = Player();
-p1.assign("chooseFirst")
 p2 = Player();
+StockGames["Prisoner's Dilemma"]([p1, p2])
+
+p1.assign("chooseFirst")
 p2.assign("randomize");
+
 p3 = Player();
 p3.assign("chooseSecond");
 p4 = Player();

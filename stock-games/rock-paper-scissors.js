@@ -13,10 +13,11 @@ var { Expression } = Engine.Frontend
 
 
 // Rock-Paper-Scissors
-var RockPaperScissors = gameWrapper(function(players, payoff = 1, parameters = {}) {
+var RockPaperScissors = gameWrapper(function(players, parameters = {}) {
 	parameters.id = parameters.id || "Rock-Paper-Scissors";
+	parameters.payoff = parameters.payoff || 1;
 
-	var win = payoff;
+	var win = parameters.payoff;
 	var lose = Expression(function() {
 		return -payoff;
 	});

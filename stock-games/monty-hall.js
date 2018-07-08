@@ -92,6 +92,7 @@ var MontyHall = gameWrapper(function(player, parameters = {}) {
 	strategyLoader() {
 		return [{
 				name: "alwaysSwitch",
+				description: "Randomly select a door. Then, always switch to a different one.",
 
 				strategy: function alwaysSwitch() {
 
@@ -114,6 +115,8 @@ var MontyHall = gameWrapper(function(player, parameters = {}) {
 			},
 			{
 				name: "alwaysStay",
+				description: "Randomly select a door. Then, always stay with that door.",
+
 				strategy: function alwaysStay() {
 					this.door = null;
 

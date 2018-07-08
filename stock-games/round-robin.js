@@ -57,7 +57,7 @@ var RoundRobin = gameWrapper(function(players, gameGenerator, parameters = {}) {
 				}
 			}
 			scoresRecord.push(score);
-			console.log("recording scores")
+
 			//return score for history
 			return score;
 		}, { id: "Record-Scores" });

@@ -13,8 +13,9 @@ var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games")
 var { Expression } = Engine.Frontend
 
 
-var MatchingPennies = gameWrapper(function(players, payoff = 1, parameters = {}) {
+var MatchingPennies = gameWrapper(function(players, parameters = {}) {
 	parameters.id = parameters.id || "Matching-Pennies";
+	payoff = parameters.payoff || 1;
 
 	var win = payoff;
 	var lose = Expression(function() {
