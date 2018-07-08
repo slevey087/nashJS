@@ -60,10 +60,12 @@ Generators will store any arguments passed to them. In this example, each time `
 ### Complete Games
 
 * [Battle Of The Sexes](./battle-of-the-sexes.md)
+* [Exchange](./exchange.md)
 * [Matching Pennies](./matching-pennies.md)
 * [Monty Hall Problem](./monty-hall.md)
 * [Prisoner's Dilemma](./prisoner-dilemma.md)
 * [Iterated Prisoner's Dilemma](./iterated-prisoner-dilemma.md)
+* [Axelrod Tournament](./axelrod-tournament.md)
 * [Rock-Paper-Scissors](./rock-paper-scissors.md)
 
 ### Game Skeletons
