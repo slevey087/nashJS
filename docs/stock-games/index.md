@@ -59,6 +59,7 @@ Generators will store any arguments passed to them. In this example, each time `
 
 ### Complete Games
 
+* [Battle Of The Sexes](./battle-of-the-sexes.md)
 * [Matching Pennies](./matching-pennies.md)
 * [Monty Hall Problem](./monty-hall.md)
 * [Prisoner's Dilemma](./prisoner-dilemma.md)
@@ -72,3 +73,4 @@ Generators will store any arguments passed to them. In this example, each time `
 * [Simple Zero Sum](./simple-zero-sum.md)
 * [Iterated](./iterated.md)
 * [Round Robin](./round-robin.md)
+* [Cultural Evolution](./cultural-evolution.md)
