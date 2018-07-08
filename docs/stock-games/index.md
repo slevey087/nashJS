@@ -68,7 +68,7 @@ Generators will store any arguments passed to them. In this example, each time `
 
 ### Game Skeletons
 
-* [Normal](,/normal.md)
+* [Normal](./normal.md)
 * [Two-Player Normal](./two-player-normal.md)
 * [Simple Zero Sum](./simple-zero-sum.md)
 * [Iterated](./iterated.md)
