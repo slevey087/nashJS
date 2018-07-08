@@ -104,5 +104,8 @@ function CulturalEvolution(gameGenerator, numLoops = 1, {
 	return CE;
 }
 
+//TODO: fix parameters. User should be able to supply parameters which either
+// end up as parameters for the Loop or the Sequence.
+
 
 module.exports = CulturalEvolution;

@@ -23,4 +23,4 @@ This game is conducted in three segments. First, a _Choose_ segment, in which th
 
 ## Strategies
 
-This game comes with two simple strategies. Both strategies will select a door randomly, but `alwaysStay` will always choose to stay with that door, while `alwaysSwitch` will randomly select from the remaining doors.
+This game comes with two simple strategies. Both strategies will select a door randomly, but `Always Stay` will always choose to stay with that door, while `Always Switch` will randomly select from the remaining doors.

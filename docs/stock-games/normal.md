@@ -40,6 +40,6 @@ For 3 or more players, the notation simply generalizes into more dimensions. For
 
 Using this skeleton will automatically load several simple strategies, primarily meant for testing. These are:
 
-* `chooseFirst` - A player using this strategy will always choose the first available option.
-* `chooseSecond` - A player using this strategy will always choose the second available option.
-* `randomize` - A player using this strategy will choose randomly from the options presented to it, with equal probability. 
+* `Choose First` - A player using this strategy will always choose the first available option.
+* `Choose Second` - A player using this strategy will always choose the second available option.
+* `Randomize` - A player using this strategy will choose randomly from the options presented to it, with equal probability. 

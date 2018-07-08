@@ -37,7 +37,7 @@ var Normal = gameWrapper(function(players, choiceLists, payoffs = null, paramete
 							return choices[0]
 						}
 					},
-					name: "chooseFirst",
+					name: "Choose First",
 					description: "Always choose first available option."
 				},
 
@@ -47,7 +47,7 @@ var Normal = gameWrapper(function(players, choiceLists, payoffs = null, paramete
 							return choices[1]
 						}
 					},
-					name: "chooseSecond",
+					name: "Choose Second",
 					description: "Always choose second available option."
 				},
 
@@ -63,7 +63,7 @@ var Normal = gameWrapper(function(players, choiceLists, payoffs = null, paramete
 							return choices[choiceMap.get(Math.floor(Math.random() * choiceMap.size))];
 						}
 					},
-					name: "randomize",
+					name: "Randomize",
 					description: "Choose randomly from available options."
 				}
 			];

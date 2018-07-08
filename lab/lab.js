@@ -41,6 +41,8 @@ StockGames = require("../index").StockGames;
 
 p1 = Player();
 p2 = Player();
+ipd = StockGames["Iterated Prisoner's Dilemma"]([p1, p2], 10)
+/*
 StockGames["Prisoner's Dilemma"]([p1, p2])
 
 p1.assign("chooseFirst")
@@ -159,3 +161,4 @@ v2 = Variable(1);
 //The code below is to run the repl for testing purposes.
 //var toRepl = {_expose, registry,Player,Choice,Turn,Sequence,Loop,StochasticLoop,HaltIf, StochasticHalt, Lambda, p1,c1,c2,t1};
 //startREPL(toRepl);
+*/

@@ -5,6 +5,7 @@ var StockGames = {
 	"Simple Zero-Sum": require("./simple-zero-sum"),
 
 	// Classic games
+	"Battle Of The Sexes": require("./battle-of-the-sexes"),
 	"Matching Pennies": require("./matching-pennies"),
 	"Prisoner's Dilemma": require("./prisoner-dilemma"),
 	"Rock-Paper-Scissors": require("./rock-paper-scissors"),

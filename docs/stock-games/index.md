@@ -62,6 +62,7 @@ Generators will store any arguments passed to them. In this example, each time `
 * [Matching Pennies](./matching-pennies.md)
 * [Monty Hall Problem](./monty-hall.md)
 * [Prisoner's Dilemma](./prisoner-dilemma.md)
+* [Iterated Prisoner's Dilemma](./iterated-prisoner-dilemma.md)
 * [Rock-Paper-Scissors](./rock-paper-scissors.md)
 
 ### Game Skeletons
