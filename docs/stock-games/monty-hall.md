@@ -14,10 +14,10 @@ game.play()
 
 * `player` - a single _Player_, who will make two choices, first the door to select, then a second door to select.
 * `parameters` - optional parameters. These include
- * `numDoors = 3` - the number of doors in the game
- * `numPrizes = 1` - the number of doors with the "prize" (i.e. the car)
- * `numReveals = 1` - the number of doors that the hosts opens during the 'reveal' phase
- * `prize = 5` - the payoff for selecting the door with the prize behind it
+  * `numDoors = 3` - the number of doors in the game
+  * `numPrizes = 1` - the number of doors with the "prize" (i.e. the car)
+  * `numReveals = 1` - the number of doors that the hosts opens during the 'reveal' phase
+  * `prize = 5` - the payoff for selecting the door with the prize behind it
 
 This game is conducted in three segments. First, a _Choose_ segment, in which the player chooses an initial door. Next a _Reveal_ segment, in which the hosts strikes a door from the running, followed by a _Second Choice_ phase, where the player gets to choose from a revised list of doors. After the _Second Choice_, the payoff is awarded to the player if they have selected the winning door.
 
