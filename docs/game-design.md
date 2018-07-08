@@ -55,7 +55,7 @@ var Game = Consecutive([
 Game.play();
 ```
 
-See the specific pages on [Consecutive](./playables/consecutive) and the various [_Playables_](./playables/index) for more details
+See the specific pages on [Consecutive](./playables/consecutive.md) and the various [_Playables_](./playables/index.md) for more details
 
 ## _Playable_ Chaining
 
@@ -80,4 +80,4 @@ C3(C1["Sea"]())	// Play C3 after C1, but only if "Sea" is chosen
 
 C1.play()
 ```
-See the guides on specific [_Playables_](./playables.index.md) for more details.
+See the guides on specific [_Playables_](./playables/index.md) for more details.
