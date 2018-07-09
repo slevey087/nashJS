@@ -31,13 +31,14 @@ This documentation will generally employ the former method.
 
 ## What To Do Next?
 
-Where to go from here depends on what you're using `nashJS` for.
-
-For a quick intro on the basics of `nashJS` see the [Quick Start Guide](./docs/quick-start.md).
+For a quick intro on the basics of `nashJS` see the [Quick Start Guide](./docs/quick-start.md). Where to go from there depends on what you're using `nashJS` for.
 
 If you're running or creating a game, see the [Game Design Guide](./docs/game-design.md)
 
-If you're creating a strategy, such as to participate in a tournament, see the [Strategy Design Guide](./docs/strategy-design.md)
+If you're creating a strategy, such as to participate in a tournament, you can skip that and go straight to the guide to [Working With Strategies](./docs/strategy-working).
+
+If you're only designing a game and not a strategy, then you'll be finished there, but to learn to design a strategy, see the [Strategy Design Guide](./docs/strategy-design.md)
+
 
 TODO: Transfer/rewrite everything below here.
 

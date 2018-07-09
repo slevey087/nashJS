@@ -1,30 +1,3 @@
-# Working With Strategies
-
-`nashJS` provides a `Strategies` object to help you work with strategies. First require it, then call it to see an array of available strategies.
-
-```js
-var {Strategies} = require("nashJS")
-Strategies()
-//returns, for eg.: ["Tit For Tat", "Grudger", "Randomize", "logger"]
-```
-
-Running `Strategies.descriptions()` will return an object whose keys are strategy names and whose values are the description of that strategy.
-
-```js
-Strategies.descriptions()["Tit For Tat"]
-// returns: "Do whatever your opponent did last turn. Cooperate if this is the first turn."
-```
-
-To assign a strategy to a player, use the `assign` parameter when a player is created
-```js
-p1 = Player({assign:"Tit For Tat"})
-```
-
-or use `.assign()` after the fact:
-```js
-p1.assign("Tit For Two Tats")
-```
-
 ## Strategy Design
 
 This page outlines how to create your own strategy. There are two different ways to do so: either by script or by object. They are interchangeable, but easier in certain contexts. First we'll cover what's common between them, then how they differ.
