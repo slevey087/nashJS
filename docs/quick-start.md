@@ -111,4 +111,4 @@ See the [JSONata documentation](http://docs.jsonata.org/) for more details.
 
 If you're running or creating a game, see the [Game Design Guide](./game-design.md)
 
-If you're creating a strategy, such as to participate in a tournament, see the [Strategy Design Guide](./strategy-design.md)
+If you're creating a strategy, such as to participate in a tournament, skip to the [Strategy Working Guide](./strategy-working.md)

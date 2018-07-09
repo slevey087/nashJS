@@ -25,7 +25,7 @@ p1.assign("Naive Prober", 0.2)
 
 ## Methods
 
-Player objects have a number of methods. The most useful are probably `.id()` to view the player's id and `.score()` to view its current score. But here's more detail.
+Player objects have a number of methods. The most useful are probably `.assign` to assign a strategy and `.score()` to view its current score. But here's more detail.
 
 ### .alive()
 

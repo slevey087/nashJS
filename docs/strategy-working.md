@@ -72,3 +72,9 @@ p2.assign("logger");
 **debugger** simply runs the Javascript keyword `debugger` whenever it is asked to choose. In certain execution environments, this pauses execution and allows for probing of local variables. If that doesn't work well for your context, then **logger** might work better. When **logger** is asked to choose, it does a `console.log` on all the information which is passed to it.
 
 Inspecting this data is helpful for both game design and strategy design. Game designers should make sure that the player is seeing the expected information, and strategy designers should peruse the information their strategy will receive, in order to code their response.
+
+## What To Do Next
+
+If you're planning on creating a strategy from scratch, check out the [Strategy Design Guide](./strategy-design.md). Or, if you want to build a game instead, check the [Game Design Guide](./game-design.md).
+
+If you're totally clueless, try the [Quick Start Guide](./quick-start.md). Or if you've aced it all but have more specific questions about `nashJS` components, try the [Component Reference](./components/index.md)
