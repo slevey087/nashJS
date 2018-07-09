@@ -84,6 +84,6 @@ See the guides on specific [_Playables_](./playables/index.md) for more details.
 
 ## What To Do Next
 
-After you've built the game you want, you'll need strategies to play it. To learn about how to create a strategy, see the [Strategy Design Guide](./strategy-design.md).
+After you've built the game you want, you'll need strategies to play it. See the [Strategy Loading Guide](./strategy-loading.md). If that all makes sense and you'd like to create your own strategies, see the [Strategy Design Guide](./strategy-design.md).
 
-Even if you aren't creating strategies, you'll still need to import them. See the [Strategy Loading Guide](./strategy-loading.md)
+If you're totally confused, try going back to the [Quick Start Guide](./quick-start.md). Or, if you've mastered it thus far but still have more questions, try the [Component Reference](./components/index.md)
