@@ -13,7 +13,7 @@
 	Expression,
 	RandomVariable,
 	ComplexVariable,
-	gameHistory,
+	History,
 	excludedPlayers,
 	startREPL,
 	nhistory,

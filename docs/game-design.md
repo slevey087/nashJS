@@ -4,7 +4,7 @@ There are multiple ways to define a game in **nashJS**, depending on the level o
 
 For more even more specificity, you can assemble your game using the **nashJS** components known as _Playables_. These are individual game elements with a `.play()` method, which can be combined to form a game. The simplest way to combine them is using a `Consecutive` _playable_, which executes each _playable_ in order. For more involved or contingent sequences, _playables_ can be chained together directly.
 
-This page will provide an overview of each of these strategies in turn.
+This page will provide an overview of each of these strategies in turn, then we'll talk about what to do next.
 
 ## Stock Games
 
@@ -81,3 +81,9 @@ C3(C1["Sea"]())	// Play C3 after C1, but only if "Sea" is chosen
 C1.play()
 ```
 See the guides on specific [_Playables_](./playables/index.md) for more details.
+
+## What To Do Next
+
+After you've built the game you want, you'll need strategies to play it. To learn about how to create a strategy, see the [Strategy Design Guide](./strategy-design.md).
+
+Even if you aren't creating strategies, you'll still need to import them. See the [Strategy Loading Guide](./strategy-loading.md)
