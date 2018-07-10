@@ -20,6 +20,24 @@ var Iterated = require("./iterated")
 var IteratedPrisonerDilemma = gameWrapper(function(players, numberIterations = 50, parameters = {}) {
 	return Iterated(players, prisonerDilemma, "Prisoner-Dilemma", numberIterations, parameters)
 }, {
+	queryLoader() {
+		return [{
+				name: "@IPD-choices",
+				query: "$map($.[action].results, function($l){$l.result})",
+				description: "Results, organized by round."
+			},
+			{
+				name: "@IPD-players",
+				query: "$map($.[action].results, function($l){$l.player})",
+				description: "Players, organized by round."
+			},
+			{
+				name: "@IPD-payouts",
+				query: "$.action.payouts",
+				description: "Payouts, as array of objects."
+			}
+		]
+	},
 	strategyLoader() {
 		return [{
 				name: "Tit For Tat",

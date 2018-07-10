@@ -41,7 +41,8 @@ StockGames = require("../index").StockGames;
 
 p1 = Player();
 p2 = Player();
-ipd = StockGames["Iterated Prisoner's Dilemma"]([p1, p2], 10)
+p3 = Player();
+ipd = StockGames["Iterated Prisoner's Dilemma"]([p1, p2], 20)
 /*
 StockGames["Prisoner's Dilemma"]([p1, p2])
 

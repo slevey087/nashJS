@@ -59,14 +59,16 @@ p1.strategy() // returns "Tit For Two Tats"
 The `Strategies` object also comes with two pre-built strategies meant to aid in testing, **debugger** and **logger**. Load them as follows:
 ```js
 Strategies.debugger();
-// or
-Strategies.logger();
-```
-and assign them in the normal way.
-```js
 p1.assign("debugger");
 // or
+Strategies.logger();
 p2.assign("logger");
+```
+However, their loader functions actually return the strategy name as a string, which means you can load and assign in one step like so
+```js
+p1.assign(Strategies.debugger());
+// or
+p2.assign(Strategies.logger());
 ```
 
 **debugger** simply runs the Javascript keyword `debugger` whenever it is asked to choose. In certain execution environments, this pauses execution and allows for probing of local variables. If that doesn't work well for your context, then **logger** might work better. When **logger** is asked to choose, it does a `console.log` on all the information which is passed to it.

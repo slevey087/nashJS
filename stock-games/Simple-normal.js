@@ -8,7 +8,7 @@ var { isFunction } = Engine.Backend.HelperFunctions("general")
 var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games")
 
 // Playables
-var { Choice, Turn } = Engine.Frontend.Playables;
+var { Turn, Choice, RandomPlayerChoice } = Engine.Frontend.Playables;
 
 //Play-time Logic
 var { RandomVariable } = Engine.Frontend
@@ -21,7 +21,8 @@ var Normal = gameWrapper(function(players, choiceLists, payoffs = null, paramete
 
 		// construct the choices
 		var choices = choiceLists.map(function(list, index) {
-			return Choice(players[index], list, parameters.parameters);
+			return players == "random" ? RandomPlayerChoice(list, parameters.parameters) : Choice(players[index],
+				list, parameters.parameters);
 		});
 
 		var game = Turn(choices, parameters);
@@ -30,6 +31,19 @@ var Normal = gameWrapper(function(players, choiceLists, payoffs = null, paramete
 
 		return game;
 	}, {
+		queryLoader() {
+			return [{
+					name: "@N-choices",
+					query: "$.results{player:result}",
+					description: "Players and their choice."
+				},
+				{
+					name: "@N-players",
+					query: "$.results.player",
+					description: "Who played."
+				}
+			]
+		},
 		strategyLoader: function() {
 			return [{
 					strategy: function chooseFirst() {
