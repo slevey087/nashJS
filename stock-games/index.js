@@ -36,9 +36,13 @@ var StockGames = {
 	//Neoclassical economics
 	"Exchange": require("./exchange-complex"),
 
+	// Function to display loaded query shortcuts.
 	queries() {
-		return Object.keys(registry.queries).map(function(query) { return {
-				[query]: registry.queries[query].description } })
+		return Object.keys(registry.queries).map(function(query) {
+			return {
+				[query]: registry.queries[query].description
+			}
+		})
 	}
 };
 

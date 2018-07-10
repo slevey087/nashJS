@@ -103,9 +103,24 @@ History().query("$.action.results")
 //or
 History().log.query("$.results[player='player1']")
 ```
-and returns an object that's (hopeully) easier to navigate.
+and returns an object that's (hopeully) easier to navigate. See the [JSONata documentation](http://docs.jsonata.org/) for more details.
 
-See the [JSONata documentation](http://docs.jsonata.org/) for more details.
+However, because even JSONata can be kind of a pain, certain games may come with pre-built queries, which you can access with a shortcut rather than figuring out the whole thing. To see the list of available query shortcuts and what they do, use
+```js
+StockGames.queries()
+// Returns something like:
+// [
+//  {@N-choices: "Players and their choice."},
+//  {@N-players: "Who played."}
+// ]
+```
+which should all start with "@". To use the shortcut, just enter its name as you would any query.
+```js
+History().query("@N-choices")
+// returns something like:
+// {player1: "Cooperate", player2: "Cooperate"}
+```
+
 
 ## What To Do Next
 
