@@ -35,12 +35,17 @@ var Normal = gameWrapper(function(players, choiceLists, payoffs = null, paramete
 			return [{
 					name: "@N-choices",
 					query: "$.results{player:result}",
-					description: "Players and their choice."
+					description: "Normal: Players and their choice."
+				},
+				{
+					name: "@N-payouts",
+					query: "$.payouts",
+					description: "Normal: Payouts object, by player."
 				},
 				{
 					name: "@N-players",
 					query: "$.results.player",
-					description: "Who played."
+					description: "Normal: Who played."
 				}
 			]
 		},

@@ -14,6 +14,7 @@
 	RandomVariable,
 	ComplexVariable,
 	History,
+	Queries,
 	excludedPlayers,
 	startREPL,
 	nhistory,

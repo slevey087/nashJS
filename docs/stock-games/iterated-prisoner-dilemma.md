@@ -24,3 +24,9 @@ This comes with the a number of built-in strategies.
 * `Grudger` - Cooperates until your opponent Defects, then only Defects
 * `Naive Prober` - Just like `Tit For Tat` but occasionally Defects with default probability 0.1. To change the probability, supply an argument on assignment, eg: `p1.assign("Naive Prober", 0.2)`
 * `Tit For Two Tats` - More forgiving `Tit For Tat`. Cooperates, unless your opponent has Defected on the two previous rounds.
+
+## Queries
+
+This game comes with several pre-build queries to help you see the results more easily. They are:
+
+* `@IPD-choices` - TODO: write these.

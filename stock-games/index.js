@@ -1,12 +1,5 @@
 "use strict";
 
-// Code for stock game query shortcuts.
-var { registry, idCounters } = require("../lib/engine").Backend.State
-registry._addType_("queries")
-idCounters._addType_("query")
-
-
-
 var StockGames = {
 	//Game skeletons
 	"Two-Player Normal": require("./simple-normal").TwoPlayerNormal,

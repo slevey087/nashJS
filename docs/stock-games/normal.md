@@ -48,4 +48,8 @@ Using this skeleton will automatically load several simple strategies, primarily
 
 ## Queries
 
-Using this skeleton will automatically load several useful history queries. They are TODO: fill this in.
+Using this skeleton will automatically load several useful history queries. They are
+
+* `@N-choices` - Returns the results of the game, an object whose keys are the players and whose values are the choices made by that player.
+* `@N-payouts` - Returns the results of the game, an object whose keys are the players and whose values are the points awarded to them.
+* `@N-players` - Tells you who played, an array containint the id of each player.

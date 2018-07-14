@@ -120,7 +120,7 @@ History().query("@N-choices")
 // returns something like:
 // {player1: "Cooperate", player2: "Cooperate"}
 ```
-
+Because the structure of games varies, and therefore the query needed to produce particular data will vary by game, these query shortcuts are game-specific.
 
 ## What To Do Next
 
