@@ -1,6 +1,6 @@
 # Queries
 
-**NashJS** games tend to return quite a lot of information. To help you sort through the morass, **NashJS** comes packaged with the [**JSONata**](http://jsonata.org/) query languange. The principle interface to use **JSONata** is the `Queries` object.
+**NashJS** games tend to return quite a lot of information. To help you sort through the morass, **NashJS** comes packaged with the [**JSONata**](http://jsonata.org/) query language. The principle interface to use **JSONata** is the `Queries` object.
 
 To run a basic **JSONata** query on a target object,
 ```js
