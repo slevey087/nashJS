@@ -31,24 +31,22 @@ var Normal = gameWrapper(function(players, choiceLists, payoffs = null, paramete
 
 		return game;
 	}, {
-		queryLoader() {
-			return [{
-					name: "@N-choices",
-					query: "$.results{player:result}",
-					description: "Normal: Players and their choice."
-				},
-				{
-					name: "@N-payouts",
-					query: "$.payouts",
-					description: "Normal: Payouts object, by player."
-				},
-				{
-					name: "@N-players",
-					query: "$.results.player",
-					description: "Normal: Who played."
-				}
-			]
-		},
+		queries: [{
+				shortcut: "@N-choices",
+				query: "$.results{player:result}",
+				description: "Normal: Players and their choice."
+			},
+			{
+				shortcut: "@N-payouts",
+				query: "$.payouts",
+				description: "Normal: Payouts object, by player."
+			},
+			{
+				shortcut: "@N-players",
+				query: "$.results.player",
+				description: "Normal: Who played."
+			}
+		],
 		strategyLoader: function() {
 			return [{
 					strategy: function chooseFirst() {

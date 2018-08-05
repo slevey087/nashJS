@@ -1,6 +1,7 @@
 import test from "ava";
 
 var { StockGames, Player, History } = require("../../index")
+var { QueryResult } = require("../../lib/engine").Backend.Classes
 
 var p1 = Player()
 var p2 = Player()
@@ -44,9 +45,13 @@ p3.assign("Choose First")
 
 test("Queries", t => {
 	return game.play().then(function() {
-		t.deepEqual(History().query("@N-choices"), { player1: "Left", player2: "Down", player3: "Forward" })
-		t.deepEqual(History().query("@N-payouts"), { player2: 2, player3: 4 })
-		t.deepEqual(History().query("@N-players"), ["player1", "player2", "player3"]);
+		t.deepEqual(History().query("@N-choices"), new QueryResult("hi", {
+			player1: "Left",
+			player2: "Down",
+			player3: "Forward"
+		}).pack())
+		t.deepEqual(History().query("@N-payouts"), new QueryResult("hi", { player2: 2, player3: 4 }).pack())
+		t.deepEqual(History().query("@N-players"), new QueryResult("hi", ["player1", "player2", "player3"]).pack());
 	})
 
 })
