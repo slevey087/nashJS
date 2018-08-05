@@ -8,6 +8,7 @@ This section of the docs details everything there is to know about each `nashJS`
 * [Playables](./playables/index.md)
 * [Player](./player.md)
 * [Population]()
+* [Queries](./queries.md)
 * [Strategies]()
 * [Strategy Loading]()
 * [Strategy Registration]()
