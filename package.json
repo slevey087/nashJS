@@ -1,6 +1,6 @@
 {
   "name": "nashjs",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A game theory simulator! Program games and strategies, then let them play and get the results. ",
   "main": "index.js",
   "repository": "github:slevey087/nashJS",
