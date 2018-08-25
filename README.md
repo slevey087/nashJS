@@ -7,7 +7,7 @@ A flexible and extendable game theory simulator for Javascript. Meant for testin
 To install using NPM on the command line:
 
 ```
-npm install nashJS
+npm install nashjs
 ```
 ## Usage
 

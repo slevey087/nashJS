@@ -1,5 +1,5 @@
 {
-  "name": "nashJS",
+  "name": "nashjs",
   "version": "0.1.0",
   "description": "A game theory simulator! Program games and strategies, then let them play and get the results. ",
   "main": "index.js",
