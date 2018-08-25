@@ -13,6 +13,7 @@ var { Turn, Choice, RandomPlayerChoice } = Engine.Frontend.Playables;
 //Play-time Logic
 var { RandomVariable } = Engine.Frontend
 
+
 var Normal = gameWrapper(function(players, choiceLists, payoffs = null, parameters = {}) {
 
 		//propogate the information filter
