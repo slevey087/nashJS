@@ -6,7 +6,7 @@ This guide contains a broad overview of how to use `nashJS`. It might be suffici
 
 If you haven't already, install `nashJS` and import the parts you'll need. See the [readme](../README.md) for more on this. For this guide, we'll need the following components
 ```js
-var {Player, StockGames, Strategies, Population, History} = require("nashJS")
+var {Player, StockGames, Strategies, Population, History} = require("nashjs")
 ```
 
 To get a game going, first we'll need players. Create some using `Player`

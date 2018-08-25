@@ -26,7 +26,7 @@ If you use these functions, it is assumed that the line of code to register the 
 `nashJS` provides a `Strategies` object to help you work with strategies. First require it, then call it to see an array of available strategies.
 
 ```js
-var {Strategies} = require("nashJS")
+var {Strategies} = require("nashjs")
 Strategies()
 //returns, for eg.: ["Tit For Tat", "Grudger", "Randomize", "logger"]
 ```

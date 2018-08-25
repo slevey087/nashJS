@@ -11,7 +11,7 @@ This page will provide an overview of each of these strategies in turn, then we'
 **nashJS** comes pre-loaded with a number of Stock Games. To load one, first `require` the stock game loader.
 
 ```js
-StockGames = require("nashJS").StockGames;
+StockGames = require("nashjs").StockGames;
 ```
 
 This is an object whose keys are the names of games. Its values are the `generator` functions for each stock game. Each game probably requires some arguments to be given to the `generator` function. See the specific entry on the game you're using for more details. But it is typical for the first argument to be an array of _Players_ while the last argument is an (optional) object of parameters.

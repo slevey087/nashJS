@@ -42,7 +42,7 @@ Passed to `.choose()` will be `options`, an array of the available options, and 
 
 If you are coding a strategy for an existing game (such as to enter a tournament), then you would probably use the script method. If you are coding a strategy to package along with a new stock game, then you would probably use the object method. We'll talk about them in more detail now.
 
-**Note**: if you are registering the strategy from within a file that is called by `loadStrategy` or `loadStrategyFolder`, then `registerStrategy` and `registerStrategyObject` will be injected into the context, so there is no need to fetch them from anywhere. If you are registering the strategy from within a game file, or using Javascript's `require` or `import`, be sure to `require` the function you need, like so `var {registerStrategy} = require("nashJS");`
+**Note**: if you are registering the strategy from within a file that is called by `loadStrategy` or `loadStrategyFolder`, then `registerStrategy` and `registerStrategyObject` will be injected into the context, so there is no need to fetch them from anywhere. If you are registering the strategy from within a game file, or using Javascript's `require` or `import`, be sure to `require` the function you need, like so `var {registerStrategy} = require("nashjs");`
 
 ## Script Method
 

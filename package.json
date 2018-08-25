@@ -3,17 +3,18 @@
   "version": "0.1.0",
   "description": "A game theory simulator! Program games and strategies, then let them play and get the results. ",
   "main": "index.js",
-	"repository": "github:slevey087/nashJS",
+  "repository": "github:slevey087/nashJS",
   "scripts": {
     "lab": "watchify ./lab/lab.js -t require-globify -o ./lab/lab-browser.js -vd",
     "test": "ava",
-		"test:watch": "ava tests/*.js --verbose --watch",
+    "test:watch": "ava tests/*.js --verbose --watch",
     "ava": "ava --verbose",
     "toc": "markdown-toc -i readme.md"
   },
   "author": "SLevey087",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.6.1",
     "esprima": "^4.0.0",
     "expression-sandbox": "^1.1.0",
     "jsonata": "^1.4.1",

@@ -11,16 +11,16 @@ npm install nashjs
 ```
 ## Usage
 
-`require("nashJS")` will return an object made up of various `nashJS` components. You can either use ES6 destructuring to seperate out the components you want:
+`require("nashjs")` will return an object made up of various `nashJS` components. You can either use ES6 destructuring to seperate out the components you want:
 
 ```js
-var {Player, Strategies, Population} = require("nashJS");
+var {Player, Strategies, Population} = require("nashjs");
 Population();
 ```
 
 or store them all in one big object and use the components as methods on that object
 ```js
-var NASH = require("nashJS");
+var NASH = require("nashjs");
 NASH.Population();
 ```
 
