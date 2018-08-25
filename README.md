@@ -1,13 +1,10 @@
 # nashJS
 A flexible and extendable game theory simulator for Javascript. Meant for testing different games and strategies. This is early days, bug reports and feature requests are very welcome (but might take a while).
 
-<!-- toc -->
-
-
-
-<!-- tocstop -->
 
 ## Installation
+
+To install using NPM on the command line:
 
 ```
 npm install nashJS
