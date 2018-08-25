@@ -1,5 +1,5 @@
 # nashJS
-A flexible and extendable game theory simulator for Javascript. Meant for testing different games and strategies. This is early days, bug reports and feature requests are very welcome (but might take a while).
+A flexible and extendable game theory simulator for Javascript. Meant for testing different games and strategies. This is early days, bug reports and feature requests are very welcome (but might take a while). __This is a work in progress__. Not everything is functional, nor are all the help files written yet. Patience is appreciated.
 
 
 ## Installation
