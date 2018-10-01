@@ -123,12 +123,6 @@ test("_Playable proceed", async t => {
 });
 
 
-test("_Playable summaryThis", t => {
-	var _playable = new _Playable("id")
-	var summary = {}
-	t.is(_playable.summaryThis(summary), summary)
-});
-
 
 test("_Playable summarize", t => {
 	var _playable = new _Playable("id")
@@ -138,7 +132,7 @@ test("_Playable summarize", t => {
 	t.is(summary("playable"), _playable.id)
 
 	// trackes entries
-	t.is(summary.entries[_playable.id] == 1)
+	t.is(summary.entries[_playable.id], 1)
 
 	// mockup to check that .summaryThis and .summaryNext get called
 	var thisQ = false
@@ -152,7 +146,23 @@ test("_Playable summarize", t => {
 	t.true(nextQ)
 })
 
-test.todo("_Playable summaryNext")
+
+test("_Playable summaryThis", t => {
+	var _playable = new _Playable("id")
+	var summary = {}
+	t.is(_playable.summaryThis(summary), summary)
+});
+
+
+test("_Playable summaryNext", t => {
+	var _playable1 = new _Playable("id1")
+	var _playable2 = new _Playable("id2")
+
+	_playable1.addNext(_playable2)
+
+	t.is(_playable1.summaryNext().summary.next[0]("playable"), "id2")
+});
+
 
 
 // Playable
@@ -202,4 +212,9 @@ test("Playable play", async t => {
 	t.truthy((await playable.play()).Population && (await playable.play()).gameHistory)
 })
 
-test.todo("Playable summarize")
+test("Playable summarize", t => {
+	var _playable = new _Playable("id")
+	var playable = Playable.creator(_playable)
+
+	t.is(playable.summarize().playable, "id")
+})

@@ -6,6 +6,8 @@ var NASH = require("../index")
 // class
 var { Summary } = require("../lib/summary")
 
+
+
 test("Summary exists", t => {
 	t.truthy(Summary)
 })
@@ -40,13 +42,15 @@ test("Summary branch", t => {
 	t.true(summary.summary.choices instanceof Summary)
 })
 
+
 test("Summary array", t => {
 	var summary = new Summary()
 	var choices = [{ hey: "hi" }, { hey: "the" }]
 
 	summary.array("choices", choices, function(item, summary) {
-		return summary("hey", item.hey)
+		summary("hey", item.hey)
 	})
+
 
 	t.is(summary.summary.choices[0].summary.hey, "hi")
 	t.is(summary.summary.choices[1].summary.hey, "the")
