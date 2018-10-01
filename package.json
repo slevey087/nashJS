@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.6.1",
+    "callable-instance": "^1.0.0",
     "esprima": "^4.0.0",
     "expression-sandbox": "^1.1.0",
     "jsonata": "^1.4.1",

@@ -84,6 +84,47 @@ c3 = Choice(column, ['plant early', 'plant late'])(c1['right'])
 
 
 
+// Allowing players to select arbitray values
+q1 = Query(p1, [0, 5]) // p1 choose a number between 0 and 5
+
+// Branching would be done with an evaluator function, that returns the playable to go to next
+// play t2 next if the q1 result is less than 3
+t2(q1.outcome(function(value) {
+	if (value < 3) return true
+}))
+
+// You can assign payoffs when you create a branch
+t1 = Turn([q1, q2])
+success = t1.outcome(function([values]) {
+	if (values[0] == 7) && (values[1] < 2) return true
+})([1, 1])
+t2(success)
+// You couldn't use tree branching and function branching at the same time,
+// but function branching will work where tree branching would
+
+// for player:
+function someStrategy() {
+	this.choose = function(options, information) {
+		// for Choice
+	}
+
+	this.query = function(bounds, information) {
+		// for Query
+	}
+}
+
+
+// Allow named method calling, so that different steps of a game can call particular player functions
+c1 = Choice(p1, options, { method: "propose" })
+c2 = Choice(p1, options2, { method: "respond" })
+
+function someStrategy() {
+	this.propose = function(options, information) {}
+	this.respond = function(options, information) {}
+}
+
+
+
 //Indeterminacy
 
 //Have choices not happen at the same time, with information delivered in between
