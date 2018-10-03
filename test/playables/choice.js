@@ -4,6 +4,8 @@ var NASH = require("../../index")
 var { Player } = NASH
 var { Branch, _Playable, Playable } = require("../../lib/playables/playable")
 var { ChoiceBranch, _Choice, Choice } = require("../../lib/playables/choice")
+var { Summary } = require("../../lib/summary")
+
 var { registry } = require("../../lib/engine").Backend.State
 
 
@@ -120,17 +122,46 @@ test("_Choice summaryThis", t => {
 	var parameters = {}
 	var _choice = new _Choice("c1", player.id(), options, parameters)
 
-	var summary = {}
+	var summary = new Summary()
 	_choice.summaryThis(summary)
 
-	t.is(summary.player, player.id())
+
+	t.is(summary.summary.player, player.id())
 	t.true(options.every(function(item) {
-		return summary.options.includes(item)
+		return summary.summary.options.includes(item)
 	}))
 })
 
 
-test.todo("_Choice summaryNext")
+test("_Choice summaryNext", t => {
+	var player = Player()
+	var options = ["l", "r"]
+	var parameters = {}
+	var _choice1 = new _Choice("c1", player.id(), options, parameters)
+	var _choice2 = new _Choice("c2", player.id(), options, parameters)
+	var _choice3 = new _Choice("c3", player.id(), options, parameters)
+
+	// first test, no branching
+	_choice1.addNext(_choice2)
+	var summary = new Summary()
+	summary = _choice1.summaryNext(summary)
+
+	// no branching means there should be a single 'next' branch with the summary
+	t.deepEqual(summary("next").summary, _choice2.summarize().summary)
+
+
+	// second test, complex branching
+	_choice1.addNext(_choice3, ["l"])
+	var summary = new Summary()
+	summary = _choice1.summaryNext(summary)
+
+	// branching means there should be multiple next branches, each with summaries
+	t.deepEqual(summary("next").l[0].summary, _choice2.summarize().summary)
+	t.deepEqual(summary("next").l[1].summary, _choice3.summarize().summary)
+	t.deepEqual(summary("next").r.summary, _choice2.summarize().summary)
+})
+
+
 
 
 test("_Choice zeroPayoffs", t => {

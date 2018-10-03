@@ -55,3 +55,175 @@ test("Summary array", t => {
 	t.is(summary.summary.choices[0].summary.hey, "hi")
 	t.is(summary.summary.choices[1].summary.hey, "the")
 });
+
+
+test("Summary tree", t => {
+	var summary = new Summary()
+	var choices = [
+		["l", "r"]
+	]
+
+	// case where terms are identical. Result should be single key
+	var next = { l: "hi", r: "hi" }
+
+	summary.tree("next", choices, next, function(item, path, itemSummary) {
+		itemSummary("path", path)
+		itemSummary("item", item)
+		return itemSummary
+	})
+
+	t.deepEqual(summary.summary, { next: "hi" })
+
+	// case with different terms. Result should be tree summary
+	var next = { l: "hi", r: "hey" }
+
+	summary.tree("next", choices, next, function(item, path, itemSummary) {
+		itemSummary("path", path)
+		itemSummary("item", item)
+		return itemSummary
+	})
+
+	t.deepEqual(summary.summary.next.l.summary, { item: "hi", path: ["l"] })
+	t.deepEqual(summary.summary.next.r.summary, { item: "hey", path: ["r"] })
+});
+
+
+test("Summary treeArray", t => {
+	var summary = new Summary()
+	var choices = [
+		["l", "r"]
+	]
+
+	// case where terms are identical and singular. Result should be single key with single elment
+	var next = { l: ["hi"], r: ["hi"] }
+	summary.treeArray("next", choices, next, function(item, path, itemSummary) {
+		itemSummary("path", path)
+		itemSummary("item", item)
+		return itemSummary
+	})
+	t.deepEqual(summary.summary.next.summary, { item: "hi", path: ["r"] })
+
+	// case where terms have multiple items. Result should be full tree.
+	var next = { l: ["hi", "hey"], r: ["hi"] }
+	summary.treeArray("next", choices, next, function(item, path, itemSummary) {
+		itemSummary("path", path)
+		itemSummary("item", item)
+		return itemSummary
+	})
+	t.deepEqual(summary.summary.next.l[0].summary, { item: "hi", path: ["l"] })
+	t.deepEqual(summary.summary.next.l[1].summary, { item: "hey", path: ["l"] })
+	t.deepEqual(summary.summary.next.r.summary, { item: "hi", path: ["r"] })
+
+
+	// case where arrayIfOne is true
+	summary.treeArray("next", choices, next, function(item, path, itemSummary) {
+		itemSummary("path", path)
+		itemSummary("item", item)
+		return itemSummary
+	}, { arrayIfOne: true })
+	t.deepEqual(summary.summary.next.l[0].summary, { item: "hi", path: ["l"] })
+	t.deepEqual(summary.summary.next.l[1].summary, { item: "hey", path: ["l"] })
+	t.deepEqual(summary.summary.next.r[0].summary, { item: "hi", path: ["r"] })
+
+	// case where treeIfIdentical is true (only works for single element)
+	var next = { l: ["hi"], r: ["hi"] }
+	summary.treeArray("next", choices, next, function(item, path, itemSummary) {
+		itemSummary("path", path)
+		itemSummary("item", item)
+		return itemSummary
+	}, { treeIfIdentical: true })
+	t.deepEqual(summary.summary.next.l.summary, { item: "hi", path: ["l"] })
+	t.deepEqual(summary.summary.next.r.summary, { item: "hi", path: ["r"] })
+});
+
+
+test("Summary mapArray", t => {
+	var next = new Map()
+	// start small to test condensing
+	next.set("hey", [{ a: "hi" }])
+
+	// case of default settings
+	var summary = new Summary()
+	summary.mapArray("next", next, function(item, summary) {
+		summary("yo", item.a)
+	})
+
+	t.is(summary.summary.next.hey.summary.yo, "hi")
+
+	// case not using defaults
+	var summary = new Summary()
+	summary.mapArray("next", next, function(item, summary) {
+		summary("yo", item.a)
+	}, { arrayIfOne: true })
+
+	t.is(summary.summary.next[0].hey[0].summary.yo, "hi")
+
+
+	// bigger object to test that, and function naming
+	next.set(function b() {}, [{ a: "the" }])
+	var summary = new Summary()
+	summary.mapArray("next", next, function(item, summary) {
+		summary("yo", item.a)
+	})
+	t.is(summary.summary.next[1].b.summary.yo, "the")
+
+	// case of condensing "all"
+	var next = new Map()
+	next.set("all", [{ a: "hi" }])
+	var summary = new Summary()
+	summary.mapArray("next", next, function(item, summary) {
+		summary("yo", item.a)
+	})
+	t.is(summary.summary.next.summary.yo, "hi")
+
+	// case where not condensing "all"
+	var next = new Map()
+	next.set("all", [{ a: "hi" }])
+	var summary = new Summary()
+	summary.mapArray("next", next, function(item, summary) {
+		summary("yo", item.a)
+	}, { condenseAll: false })
+	t.is(summary.summary.next.all.summary.yo, "hi")
+});
+
+
+test("Summary print", t => {
+	// check that it returns this.summary
+	var summary = new Summary()
+	t.is(summary.summary, summary.print()) // only works for blank summary
+
+	// check that summary branches print too.
+	var summary = new Summary()
+	var branch = summary.branch("next")
+	t.is(branch.summary, summary.print().next)
+
+	// check array branches
+	var summary = new Summary()
+	var choices = [{ hey: "hi" }, { hey: "the" }]
+
+	var branch = summary.array("choices", choices, function(item, summary) {
+		summary("hey", item.hey)
+	})
+	t.is(branch.summary.choices[0].summary, summary.print().choices[0])
+	var branch = summary.array("choices", choices, function(item, summary) {
+		summary("hey", item.hey)
+	})
+	t.is(branch.summary.choices[1].summary, summary.print().choices[1])
+
+
+	// and check tree branches
+	var summary = new Summary()
+	var choices = [
+		["l", "r"]
+	]
+	var next = { l: ["hi", "hey"], r: ["hi"] }
+	summary.treeArray("next", choices, next, function(item, path, itemSummary) {
+		itemSummary("path", path)
+		itemSummary("item", item)
+		return itemSummary
+	})
+	var print = summary.print()
+	t.deepEqual(print.next.l[0], { item: "hi", path: ["l"] })
+	t.deepEqual(print.next.l[1], { item: "hey", path: ["l"] })
+	t.deepEqual(print.next.r, { item: "hi", path: ["r"] })
+})

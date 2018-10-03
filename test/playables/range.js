@@ -156,5 +156,39 @@ test("_Range summaryThis", t => {
 
 	t.is(summary.player, player.id())
 	t.true(summary.bounds[0] == 0 && summary.bounds[1] == 1)
+})
+
+
+test("_Range summaryNext", t => {
+	var player = Player()
+	var bounds = [1, 4]
+	var parameters = {}
+	var _range1 = new _Range("r1", player.id(), bounds, parameters)
+	var _range2 = new _Range("r2", player.id(), bounds, parameters)
+	var _range3 = new _Range("r3", player.id(), bounds, parameters)
+
+	// first test, no branching
+	_range1.addNext(_range2)
+	var summary = new Summary()
+	summary = _range1.summaryNext(summary)
+
+	// no branching means there should be a single 'next' branch with the summary
+	t.deepEqual(summary("next").summary, _range2.summarize().summary)
+
+
+	// second test, complex branching
+	var evaluator = new Evaluator(function(result) {
+		if (result == 3) return true
+	});
+	var ro = new RangeOutcome(evaluator, _range1)
+
+	console.log(evaluator)
+	_range1.addNext(_range3, evaluator)
+	var summary = new Summary()
+	summary = _range1.summaryNext(summary)
+
+	// branching means there should be multiple next branches, each with summaries
+	t.deepEqual(summary("next").l[0].summary, _range2.summarize().summary)
+
 
 })
