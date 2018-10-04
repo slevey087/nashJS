@@ -48,9 +48,9 @@ If you are coding a strategy for an existing game (such as to enter a tournament
 
 The _script method_ refers to writing a function exactly as in the previous example, then registering it using the `registerStrategy` function. This is handy if you're just writing a single strategy, especially if it will occupy its own file.
 
-`registerStrategy` takes 4 arguments:
+`registerStrategy` takes 4 arguments, where the 4th, `role`, is optional:
 ```js
-registerStrategy(strategy, name, description, playerName)
+registerStrategy(strategy, name, description, role)
 ```
 So, the first example might be,
 ```js
@@ -68,7 +68,7 @@ registerStrategy(chooseFirstOption, "Choose First Option", "Always selects the f
 
 The _object method_ refers to packing one or more strategy functions, along with a name and description for each, into a Javascript Object, then registering it using the `registerStrategyObject` function. This is handy for creating many strategies at once, particularly short ones, as might happen if you're creating your own [Stock Game](./stock-games/index.md)
 
-The object should have 3 properties, `name`, `description`, and `strategy` (and can optionally have a `playerName` property):
+The object should have 3 properties, `name`, `description`, and `strategy` (and can optionally have a `role` property):
 
 ```js
 var strategyObject1 = {

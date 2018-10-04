@@ -23,6 +23,18 @@ If the strategy allows for parameters, they can be passed using `.assign`:
 p1.assign("Naive Prober", 0.2)
 ```
 
+Players can also be assigned a `role`, which determines which strategies may be assigned to them. During strategy assignment, if both the player and the strategy have a `role`, and those roles don't match, then the assignment will fail. You can specify the role at creation, like so:
+```javascript
+// assigning the role "teacher"
+var p1 = Player({role:"teacher"});
+```
+
+or change it later using `.role`:
+```javascript
+// changing role to "student"
+p1.role("student")
+```
+
 ## Methods
 
 Player objects have a number of methods. The most useful are probably `.assign` to assign a strategy and `.score()` to view its current score. But here's more detail.
@@ -35,14 +47,6 @@ Returns a true/false specifying if the player is alive. If the player is not ali
 
 Assigns the `strategy` to the player, using the additional `args` if present. `strategy` should be a string, the strategy name.
 
-### .available()
-
-Returns true/false specifying if the player is available. If the player is not available, certain actions (such as `RandomPlayerChoice`) will not select this player. This is toggled using `.busy()` and `.release()`.
-
-### .busy()
-
-Sets the player's `available` property to false.
-
 ### .history()
 
 Returns the history of the player.
@@ -51,13 +55,26 @@ Returns the history of the player.
 
 Returns the player's id.
 
+### .isAvailable()
+
+Returns true/false specifying if the player is available. If the player is not available, certain actions (such as `RandomPlayerChoice`) will not select this player. This is toggled using `.markBusy()` and `.markAvailable()`.
+
 ### .kill()
 
 Sets the player's `alive` property to false. Can only be called once.
 
-### .release()
+### .markAvailable()
 
 Sets the player's `available` property to true.
+
+### .markBusy()
+
+Sets the player's `available` property to false.
+
+### .role(role)
+
+Changes the player's `role` to the supplied argument, and returns it. If no argument is supplied, returns the current `role`.
+
 
 ### .resetScore()
 

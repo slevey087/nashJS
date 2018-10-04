@@ -54,6 +54,17 @@ To see what strategy a player is currently using, use `.strategy()`
 p1.strategy() // returns "Tit For Two Tats"
 ```
 
+### Strategy Roles
+
+You might with to only assign certain strategies to certain kinds of players. For instance, in a game with a bidder and a responder, strategies expressly designed for the bidder role should not be assigned to the responder. To prevent this, both strategies and players can be assigned "roles." When assigning a strategy, if both the player and the strategy have a specified role, then the assignment will only be allowed if the roles match.
+
+To see which strategies are available for which roles, use,
+```js
+Strategies.byRoles()
+```
+which will return an object where the keys are roles and the values are arrays of strategies for that role.
+
+
 ## Tester Strategies
 
 The `Strategies` object also comes with two pre-built strategies meant to aid in testing, **debugger** and **logger**. Load them as follows:
