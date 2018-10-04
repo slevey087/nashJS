@@ -160,7 +160,7 @@ test("_Playable summaryNext", t => {
 
 	_playable1.addNext(_playable2)
 
-	t.is(_playable1.summaryNext().summary.next[0]("playable"), "id2")
+	t.is(_playable1.summaryNext().summary.next.summary.playable, "id2")
 });
 
 
@@ -217,4 +217,31 @@ test("Playable summarize", t => {
 	var playable = Playable.creator(_playable)
 
 	t.is(playable.summarize().playable, "id")
+})
+
+
+test("Playable toString", t => {
+	// should return summary, so test is the same.
+	var _playable = new _Playable("id")
+	var playable = Playable.creator(_playable)
+
+	var _playable2 = new _Playable("id2")
+	var playable2 = Playable.creator(_playable2)
+
+	playable2(playable)
+
+	// case 1, not condensing 'next'
+	registry.Settings["condense-next-summary-preview"] = false
+	var printed = JSON.parse(playable.toString())
+	t.deepEqual(printed.next, playable2.summarize())
+
+
+	// TODO: low priority, get this test to work. Currently doesn't work because playable already omits 'next' if there isn't one
+	// case 2, yes condensing 'next'
+	registry.Settings["condense-next-summary-preview"] = true
+	var printed = JSON.parse(playable.toString())
+	t.is(printed.next, "...")
+
+	//general test
+	t.is(printed.playable, "id")
 })

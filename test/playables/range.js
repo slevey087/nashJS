@@ -4,6 +4,7 @@ var NASH = require("../../index")
 var { Player } = NASH
 var { Branch, _Playable, Playable } = require("../../lib/playables/playable")
 var { Evaluator, RangeOutcome, _Range, Range } = require("../../lib/playables/range")
+var { Summary } = require("../../lib/summary")
 var { registry } = require("../../lib/engine").Backend.State
 
 
@@ -182,13 +183,13 @@ test("_Range summaryNext", t => {
 	});
 	var ro = new RangeOutcome(evaluator, _range1)
 
-	console.log(evaluator)
-	_range1.addNext(_range3, evaluator)
+	//_range1.addNext(_range3, evaluator)
 	var summary = new Summary()
 	summary = _range1.summaryNext(summary)
 
 	// branching means there should be multiple next branches, each with summaries
-	t.deepEqual(summary("next").l[0].summary, _range2.summarize().summary)
+	t.deepEqual(summary("next")[0].all.summary, _range2.summarize().summary)
+	t.deepEqual(summary("next")[0].all.summary, _range2.summarize().summary)
 
 
 })

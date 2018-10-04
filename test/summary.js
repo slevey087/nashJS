@@ -44,6 +44,30 @@ test("Summary branch", t => {
 
 
 test("Summary array", t => {
+
+	// case with single entry, condense array
+	var summary = new Summary()
+	var choices = [{ hey: "hi" }]
+
+	summary.array("choices", choices, function(item, summary) {
+		summary("hey", item.hey)
+	})
+
+	t.is(summary.summary.choices.summary.hey, "hi")
+
+
+	// case with single entry, don't condense array
+	var summary = new Summary()
+	var choices = [{ hey: "hi" }]
+
+	summary.array("choices", choices, function(item, summary) {
+		summary("hey", item.hey)
+	}, true)
+
+	t.is(summary.summary.choices[0].summary.hey, "hi")
+
+
+	// case with multiple entries
 	var summary = new Summary()
 	var choices = [{ hey: "hi" }, { hey: "the" }]
 

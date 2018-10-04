@@ -141,7 +141,12 @@ test("_Choice summaryNext", t => {
 	var _choice2 = new _Choice("c2", player.id(), options, parameters)
 	var _choice3 = new _Choice("c3", player.id(), options, parameters)
 
-	// first test, no branching
+	// case with no next
+	var summary = new Summary()
+	summary = _choice1.summaryNext(summary)
+	t.falsy(summary("next"))
+
+	// case with no branching
 	_choice1.addNext(_choice2)
 	var summary = new Summary()
 	summary = _choice1.summaryNext(summary)
@@ -150,7 +155,7 @@ test("_Choice summaryNext", t => {
 	t.deepEqual(summary("next").summary, _choice2.summarize().summary)
 
 
-	// second test, complex branching
+	// case with complex branching
 	_choice1.addNext(_choice3, ["l"])
 	var summary = new Summary()
 	summary = _choice1.summaryNext(summary)
@@ -174,7 +179,11 @@ test("_Choice zeroPayoffs", t => {
 });
 
 
-test.todo("_Choice play");
+test("_Choice play", t => {
+
+
+	t.fail()
+});
 
 
 // Choice
