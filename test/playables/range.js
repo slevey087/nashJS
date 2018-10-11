@@ -5,7 +5,7 @@ var { Player } = NASH
 var { Branch, _Playable, Playable } = require("../../lib/playables/playable")
 var { Evaluator, RangeOutcome, _Range, Range } = require("../../lib/playables/range")
 var { Summary } = require("../../lib/summary")
-var { registry } = require("../../lib/engine").Backend.State
+var { registry, gameHistory } = require("../../lib/engine").Backend.State
 
 
 // Evaluator first
@@ -144,7 +144,52 @@ test("_range findNext", t => {
 });
 
 
-test.todo("_Range play")
+test("_Range play", async t => {
+	var player = Player()
+	var bounds = [0, 10]
+	var parameters = {}
+	var _range = new _Range("r1", player.id(), bounds, parameters)
+
+	// shift to the internal player object
+	player = registry.players[player.id()]
+
+	// mockup choose function
+	var helperGlobal = { response: 1 }
+	player.choose = function(bounds, information, method) {
+		helperGlobal.bounds = bounds
+		helperGlobal.information = information
+		helperGlobal.method = method
+		return helperGlobal.response
+	}
+
+	// base case
+	var result = await _range.play()
+
+	t.is(result.result, 1)
+	t.is(result.playable, _range)
+
+	var time = result.historyEntry.duration // this'll be different each time
+	t.deepEqual(result.historyEntry, { range: "r1", duration: time, player: player.id, result: 1 })
+	t.snapshot(helperGlobal)
+	t.snapshot(player.history)
+	t.is(gameHistory[0], result.historyEntry)
+	t.is(gameHistory.log[0], result.historyEntry)
+
+	// case with rounding
+	helperGlobal.response = 1.4
+	_range.bounds = [0, 10, 1]
+	var result = await _range.play()
+	t.is(result.result, 1)
+
+	// TODO: case with informationFilter
+
+
+	// case where player is dead. Should reject TODO: make this work
+	//player.alive = false
+	//await t.throwsAsync(_range.play().catch(() => { Promise.reject(new Error()) }))
+
+
+});
 
 test("_Range summaryThis", t => {
 	var id = "hi"
@@ -211,7 +256,7 @@ test("Range constructor/creator", t => {
 	t.true(range instanceof Range)
 
 	// Should throw if we try to assign an informationFilter that isn't a function
-	t.throws(() => { Range.creator(player, options, { informationFilter: "the" }) })
+	t.throws(() => { Range.creator(player, bounds, { informationFilter: "the" }) })
 })
 
 
@@ -223,5 +268,29 @@ test("Range outcome", t => {
 
 	var func = function() {}
 	var parameters = {}
-	range.outcome(func, parameters)
+	var o1 = range.outcome(func, parameters)
+
+	t.true(o1 instanceof RangeOutcome)
+	t.is(o1.path.func, func)
 })
+
+
+test("Range payoff", t => {
+	var player = Player()
+	var r1 = Range.creator(player, [0, 10]); //p1 will choose 0 through 5
+
+	var r1_low = r1.outcome(function(result) {
+		if (result < 5) return true
+	})
+
+	var r1_high = r1.outcome(function(result) {
+		if (result >= 5) return true
+	})
+
+
+	r1_low(2) // set the payoff for choosing a number less than 5 to be 2
+	r1_high(3) // set the payoff for choosing a number greater than or equal to 5 to be 3
+
+	t.is(r1.payoff()(1), 2)
+	t.is(r1.payoff()(9), 3)
+});

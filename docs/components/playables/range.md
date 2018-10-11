@@ -113,3 +113,12 @@ c2(r1.outcome(function(result){
 
 r1.play();
 ```
+
+Much like with `Choice`, you can simulate the payoffs that will be awarded using the `.payoffs()` method. Analogous to how a `choice.payoffs()` call returns an object whose keys are possible outcomes, a `range.payoffs()` call returns a function whose argument is a possible outcome. That is,
+```js
+var r1 = Range(p1, [0,10]); //p1 will choose 0 through 5
+var c1 = Choice(p2, ["left","right"]) // p2 will choose between left or right
+
+c1.payoffs()["left"] // returns the payout for choosing "left"
+r1.payoffs()(4) 	// returns the payout for choosing 4.
+```

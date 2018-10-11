@@ -59,3 +59,21 @@ c1.play();
 ```
 
 You can use the branch function to set the payoff at the same time, ie. `c2(c1.Left(2))``
+
+An alternative way to set payoffs is to use the `.setAllPayoffs` method:
+```js
+var c1 = Choice(p1, ["Left", "Center", "Right"]);
+
+c1.setAllPayoffs([2,5,8])
+```
+
+The array of payoffs must be the same size as the number of possible choices (in this case, 3, for left, right, or center).
+
+To view the payoffs, use the `.payoffs` method, which will return an object whose keys correspond to possible options, and values are the payoffs associated with it. Eg.,
+```js
+var c1 = Choice(p1, ["Left", "Center", "Right"]);
+c1.setAllPayoffs([2,5,8])
+
+c1.payoffs()["Left"] // returns 2
+```
+(Note: the object returned by `.payoffs` is a copy of the current state of the payoffs array, NOT a reference to the actual array. So, changing it will have no effect on the payoffs for the `choice`, and if the `choice` payoffs change (ie. due to a change in a [Variable](../logic/Variable.md)), it will NOT be automatically updated into the object previously returned by `.payoffs()`. You must call `.payoffs()` again to see the change.)
