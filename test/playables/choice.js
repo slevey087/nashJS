@@ -3,10 +3,11 @@ import test from 'ava';
 var NASH = require("../../index")
 var { Player } = NASH
 var { Branch, _Playable, Playable } = require("../../lib/playables/playable")
-var { ChoiceBranch, _Choice, Choice } = require("../../lib/playables/choice")
+var { ChoiceBranch, _Choice } = require("../../lib/playables/choice")
+var { Choice } = NASH.Playables
 var { Summary } = require("../../lib/summary")
 
-var { registry } = require("../../lib/engine").Backend.State
+var { registry, gameHistory } = require("../../lib/engine").Backend.State
 
 
 // ChoiceBranch first
@@ -105,7 +106,7 @@ test("_Choice findNext", t => {
 
 test("_Choice releasePlayer", t => {
 	var player = Player()
-	player.busy()
+	player.markBusy()
 
 	var options = ["l", "r"]
 	var parameters = {}
@@ -179,10 +180,45 @@ test("_Choice zeroPayoffs", t => {
 });
 
 
-test("_Choice play", t => {
+test("_Choice play", async t => {
+	var player = Player()
+	var options = ["l", "r"]
+	var parameters = {}
+	var _choice = new _Choice("c1", player.id(), options, parameters)
+
+	// shift to the internal player object
+	player = registry.players[player.id()]
+
+	// mockup choose function
+	var helperGlobal = { response: "l" }
+	player.choose = function(options, information, method) {
+		helperGlobal.options = options
+		helperGlobal.information = information
+		helperGlobal.method = method
+		return helperGlobal.response
+	}
+
+	// base case
+	var result = await _choice.play()
+
+	t.is(result.result, "l")
+	t.is(result.playable, _choice)
+
+	var time = result.historyEntry.duration // this'll be different each time
+	t.deepEqual(result.historyEntry, { choice: "c1", duration: time, player: player.id, result: "l" })
+	t.snapshot(helperGlobal)
+	t.snapshot(player.history)
+	t.is(gameHistory[0], result.historyEntry)
+	t.is(gameHistory.log[0], result.historyEntry)
+
+	// case with informationFilter
 
 
-	t.fail()
+	// case where player is dead. Should reject TODO: make this work
+	//player.alive = false
+	//await t.throwsAsync(_choice.play().catch(() => { Promise.reject(new Error()) }))
+
+
 });
 
 
@@ -197,7 +233,7 @@ test("Choice constructor/creator", t => {
 	var player = Player()
 	var options = ["l", "r"]
 	var parameters = {}
-	var choice = Choice.creator(player, options, parameters)
+	var choice = Choice(player, options, parameters)
 
 	t.true(choice instanceof Choice)
 
@@ -206,7 +242,7 @@ test("Choice constructor/creator", t => {
 	t.truthy(choice.r)
 
 	// Should throw if we try to assign an informationFilter that isn't a function
-	t.throws(() => { Choice.creator(player, options, { informationFilter: "the" }) })
+	t.throws(() => { Choice(player, options, { informationFilter: "the" }) })
 })
 
 
@@ -214,7 +250,7 @@ test("Choice setAllPayoffs", t => {
 	var player = Player()
 	var options = ["l", "r"]
 	var parameters = {}
-	var choice = Choice.creator(player, options, parameters)
+	var choice = Choice(player, options, parameters)
 
 	choice.setAllPayoffs([2, 5])
 
@@ -229,7 +265,7 @@ test("Choice payoffs", t => {
 	var player = Player()
 	var options = ["l", "r"]
 	var parameters = {}
-	var choice = Choice.creator(player, options, parameters)
+	var choice = Choice(player, options, parameters)
 
 	choice.setAllPayoffs([2, 5])
 	var payoffs = choice.payoffs()

@@ -20,10 +20,12 @@
 	nhistory,
 	Information,
 	PerfectInformation,
-	PluginManager
+	PluginManager,
+	syncMode
 } = require("../index"));
 ({
 	Choice,
+	Range,
 	Turn,
 	Sequence,
 	Consecutive,

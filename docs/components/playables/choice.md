@@ -1,6 +1,6 @@
 # Choice
 
-This is core building block of nashJS. A `choice` defines a single selection made by a single player. For instance, _player2_ might choose between "cooperate" and "defect."
+This is a core building block of nashJS. A `choice` defines a single selection made by a single player. For instance, _player2_ might choose between "cooperate" and "defect."
 
 ```javascript
 Choice(player, options, {
@@ -52,10 +52,10 @@ var c1 = Choice(p1, ["Left", "Right"]); //p1 will choose left or right
 var c2 = Choice(p2, ["Back", "Forward"]); //p2 will choose back or forward
 var c3 = Choice(p3, ["Up", "Down"]); //p3 will choose up or down
 
-c2(c1.Left()); //If p1 chooses Left, go to c2
-c3(c1.Right()); //If p1 chooses Right, go to c3
+c2(c1.Left); //If p1 chooses Left, go to c2
+c3(c1.Right); //If p1 chooses Right, go to c3
 
 c1.play();
 ```
 
-Please note the syntax: to use a branch sequence, call the branch function (ie `c1.Left()`) as the argument to the next _playable_. (You can use the branch function to set the payoff at the same time, ie. `c2(c1.Left(2))`)
+You can use the branch function to set the payoff at the same time, ie. `c2(c1.Left(2))``

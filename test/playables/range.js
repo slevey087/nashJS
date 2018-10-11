@@ -144,6 +144,8 @@ test("_range findNext", t => {
 });
 
 
+test.todo("_Range play")
+
 test("_Range summaryThis", t => {
 	var id = "hi"
 	var player = Player()
@@ -152,11 +154,11 @@ test("_Range summaryThis", t => {
 
 	var _range = new _Range(id, player.id(), bounds, parameters)
 
-	var summary = {}
+	var summary = new Summary()
 	_range.summaryThis(summary)
 
-	t.is(summary.player, player.id())
-	t.true(summary.bounds[0] == 0 && summary.bounds[1] == 1)
+	t.is(summary("player"), player.id())
+	t.true(summary("bounds")[0] == 0 && summary("bounds")[1] == 1)
 })
 
 
@@ -190,6 +192,36 @@ test("_Range summaryNext", t => {
 	// branching means there should be multiple next branches, each with summaries
 	t.deepEqual(summary("next")[0].all.summary, _range2.summarize().summary)
 	t.deepEqual(summary("next")[0].all.summary, _range2.summarize().summary)
+})
 
 
+// Range
+test("Range exists and is subclass of Playable", t => {
+	t.truthy(Range)
+	t.true(Object.getPrototypeOf(Range) === Playable)
+})
+
+
+test("Range constructor/creator", t => {
+	var player = Player()
+	var bounds = [1, 5]
+	var parameters = {}
+	var range = Range.creator(player, bounds, parameters)
+
+	t.true(range instanceof Range)
+
+	// Should throw if we try to assign an informationFilter that isn't a function
+	t.throws(() => { Range.creator(player, options, { informationFilter: "the" }) })
+})
+
+
+test("Range outcome", t => {
+	var player = Player()
+	var bounds = [1, 5]
+	var parameters = {}
+	var range = Range.creator(player, bounds, parameters)
+
+	var func = function() {}
+	var parameters = {}
+	range.outcome(func, parameters)
 })
