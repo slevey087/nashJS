@@ -34,6 +34,8 @@ c1.play();
 console.log(p1.score()); //Either 3 or 4
 ```
 
+## Branching and Payoffs
+
 You can chain from Choice to create sequences, just like any _playable_:
 
 ```javascript

@@ -37,6 +37,8 @@ var r1 = Range(p1, [0,30,5]); //p1 will choose a multiple of 5 between 0 and 30 
 r1.play(); 	// If the user chose 22, it would be rounded to 20.
 ```
 
+## Branching and Payoffs
+
 You can chain from Range to create sequences, just like any _playable_:
 
 ```javascript
@@ -47,8 +49,6 @@ r2(r1); //Play r2 after r1
 
 r1.play();
 ```
-
-## .outcome
 
 Much like `Choice`, you can provide branching and payoff behavior dependent on the player's response. However, because the player has (nearly) an infinite array of options, this interface is somewhat more complex than that of `Choice`. You can create a possible branch using the `.outcome` method, which must be supplied an `evaluator` function which returns true for a certain set of outcomes.
 

@@ -63,6 +63,7 @@ test("RangeOutcome callable/payoff", t => {
 })
 
 
+// _Range class
 test("_Range exists and is a subclass of  _Playable", t => {
 	t.truthy(_Range)
 	t.true(Object.getPrototypeOf(_Range) === _Playable)
@@ -181,13 +182,12 @@ test("_Range play", async t => {
 	var result = await _range.play()
 	t.is(result.result, 1)
 
-	// TODO: case with informationFilter
 
+	// TODO: case with informationFilter
 
 	// case where player is dead. Should reject TODO: make this work
 	//player.alive = false
 	//await t.throwsAsync(_range.play().catch(() => { Promise.reject(new Error()) }))
-
 
 });
 

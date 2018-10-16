@@ -74,7 +74,7 @@ test("_Choice constructor", t => {
 		return options.includes(item)
 	}))
 
-	t.is(registry.choices.c1, _choice)
+	t.is(registry.decisions.c1, _choice)
 });
 
 
@@ -254,8 +254,8 @@ test("Choice setAllPayoffs", t => {
 
 	choice.setAllPayoffs([2, 5])
 
-	t.true(registry.choices[choice.id()].payoffs.l == 2)
-	t.true(registry.choices[choice.id()].payoffs.r == 5)
+	t.true(registry.decisions[choice.id()].payoffs.l == 2)
+	t.true(registry.decisions[choice.id()].payoffs.r == 5)
 
 	//t.throws()
 });
