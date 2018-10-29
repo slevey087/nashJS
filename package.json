@@ -5,6 +5,7 @@
   "main": "index.js",
   "repository": "github:slevey087/nashJS",
   "scripts": {
+		"ndb":"ndb ./lab/lab.js",
     "lab": "watchify ./lab/lab.js -t require-globify -o ./lab/lab-browser.js -vd",
     "test": "ava",
     "test:watch": "ava tests/*.js --verbose --watch",
@@ -33,6 +34,7 @@
     "browserify": "^16.1.1",
     "browserify-fs": "^1.0.0",
     "consolify": "^2.2.0",
-    "markdown-toc": "^1.2.0"
+    "markdown-toc": "^1.2.0",
+    "ndb": "^1.0.26"
   }
 }

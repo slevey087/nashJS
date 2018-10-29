@@ -230,13 +230,14 @@ test("_Range summaryNext", t => {
 	});
 	var ro = new RangeOutcome(evaluator, _range1)
 
-	//_range1.addNext(_range3, evaluator)
+	_range1.addNext(_range3, evaluator)
 	var summary = new Summary()
 	summary = _range1.summaryNext(summary)
 
 	// branching means there should be multiple next branches, each with summaries
 	t.deepEqual(summary("next")[0].all.summary, _range2.summarize().summary)
-	t.deepEqual(summary("next")[0].all.summary, _range2.summarize().summary)
+	t.deepEqual(summary("next")[1].test.summary, _range3.summarize().summary)
+
 })
 
 

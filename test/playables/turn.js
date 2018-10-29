@@ -168,7 +168,80 @@ test("_Turn summaryThis", t => {
 	var _c2 = new _Choice("c2", p1.id(), ["Left", "Right"])
 
 	var _turn = new _Turn("t1", [_c1, _c2])
-	t.log(_turn.summaryThis(new Summary()).summary.decisions[0])
+	t.snapshot(_turn.summaryThis(new Summary()))
+})
+
+
+test("_Turn summaryNext branch mode", t => {
+	var player = Player()
+	var options = ["l", "r"]
+	var options2 = ["u", "d"]
+	var parameters = {}
+	var _choice1 = new _Choice("c1", player.id(), options, parameters)
+	var _choice2 = new _Choice("c2", player.id(), options2, parameters)
+	var _choice3 = new _Choice("c3", player.id(), options, parameters)
+
+	var _turn1 = new _Turn("t1", [_choice1, _choice2], parameters)
+
+	// case with no next
+	var summary = new Summary()
+	summary = _turn1.summaryNext(summary)
+	t.falsy(summary("next"))
+
+	// case with no branching
+	_turn1.addNext(_choice3)
+	var summary = new Summary()
+	summary = _turn1.summaryNext(summary)
+
+	// no branching means there should be a single 'next' branch with the summary
+	t.deepEqual(summary("next").summary, _choice3.summarize().summary)
+
+	// case with complex branching
+	_turn1.addNext(_choice2, ["l", "d"])
+	var summary = new Summary()
+	summary = _turn1.summaryNext(summary)
+
+	// branching means there should be multiple next branches, each with summaries
+	t.deepEqual(summary("next").l.d[0].summary, _choice3.summarize().summary)
+	t.deepEqual(summary("next").l.d[1].summary, _choice2.summarize().summary)
+	t.deepEqual(summary("next").l.u.summary, _choice3.summarize().summary)
+	t.deepEqual(summary("next").r.u.summary, _choice3.summarize().summary)
+	t.deepEqual(summary("next").r.d.summary, _choice3.summarize().summary)
+})
+
+
+test("_Turn summaryNext outcome mode", t => {
+	var player = Player()
+	var bounds = [1, 4]
+	var parameters = {}
+	var _range1 = new _Range("r1", player.id(), bounds, parameters)
+	var _range2 = new _Range("r2", player.id(), bounds, parameters)
+	var _range3 = new _Range("r3", player.id(), bounds, parameters)
+
+	var _turn1 = new _Turn("t1", [_range1, _range2], parameters)
+
+	// first test, no branching
+	_turn1.addNext(_range3)
+	var summary = new Summary()
+	summary = _turn1.summaryNext(summary)
+
+	// no branching means there should be a single 'next' branch with the summary
+	t.deepEqual(summary("next").summary, _range3.summarize().summary)
+
+
+	// second test, complex branching
+	var evaluator = new Evaluator(function(result) {
+		if (result == 3) return true
+	});
+	var to = new TurnOutcome(evaluator, _turn1)
+
+	_turn1.addNext(_range2, evaluator)
+	var summary = new Summary()
+	summary = _turn1.summaryNext(summary)
+
+	// branching means there should be multiple next branches, each with summaries
+	t.deepEqual(summary("next")[0].all.summary, _range3.summarize().summary)
+	t.deepEqual(summary("next")[1].test.summary, _range2.summarize().summary)
 })
 
 
