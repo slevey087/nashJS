@@ -6,7 +6,7 @@ var { Branch, _Playable, Playable } = require("../../lib/playables/playable")
 var { TurnBranch, TurnOutcome, _Turn } = require("../../lib/playables/turn")
 var { Evaluator, _Range } = require("../../lib/playables/range")
 var { _Choice } = require("../../lib/playables/choice")
-var { Turn } = NASH.Playables
+var { Turn, Choice, Range } = NASH.Playables
 var { Summary } = require("../../lib/summary")
 
 var { registry, gameHistory } = require("../../lib/engine").Backend.State
@@ -245,4 +245,336 @@ test("_Turn summaryNext outcome mode", t => {
 })
 
 
-test.todo("_Turn addNext")
+test("_Turn addNext", t => {
+	// In tree mode, we just pass to Playable
+	var player = Player()
+	var options = ["l", "r"]
+	var options2 = ["u", "d"]
+	var parameters = {}
+	var _choice1 = new _Choice("c1", player.id(), options, parameters)
+	var _choice2 = new _Choice("c2", player.id(), options2, parameters)
+	var _choice3 = new _Choice("c3", player.id(), options, parameters)
+
+	var _turn1 = new _Turn("t1", [_choice1, _choice2], parameters)
+	_turn1.addNext(_choice2, ["l", "d"])
+
+	t.is(_turn1.next.l.d[0], _choice2)
+
+	// In range mode, things are different
+	var player = Player()
+	var bounds = [1, 4]
+	var parameters = {}
+	var _range1 = new _Range("r1", player.id(), bounds, parameters)
+	var _range2 = new _Range("r2", player.id(), bounds, parameters)
+	var _range3 = new _Range("r3", player.id(), bounds, parameters)
+
+	var _turn1 = new _Turn("t1", [_range1, _range2], parameters)
+
+	// second test, complex branching
+	var evaluator = new Evaluator(function(result) {
+		if (result == 3) return true
+	});
+	var to = new TurnOutcome(evaluator, _turn1)
+
+	_turn1.addNext(_range3, evaluator)
+	t.is(_turn1.next.get(evaluator)[0], _range3)
+})
+
+
+// Kinda sorta saving this for the day I ever figure out information mechanics in their entirety...
+test.todo("_Turn play")
+
+
+test("_Turn handleHistory", async t => {
+	var player = Player()
+	var options = ["l", "r"]
+	var options2 = ["u", "d"]
+	var parameters = {}
+	var _choice1 = new _Choice("c1", player.id(), options, parameters)
+	var _choice2 = new _Choice("c2", player.id(), options2, parameters)
+
+	var _turn1 = new _Turn("t1", [_choice1, _choice2], parameters)
+
+	// Mock up of these objects
+	var mock = false;
+	var history = {
+		addNoLog(arg) {
+			mock = arg
+		}
+	}
+
+	var result = { historyEntry: {} }
+
+	t.is(await _turn1.handleHistory({ history }, result), result)
+	t.is(mock, result.historyEntry)
+})
+
+
+test("_Turn findNext", t => {
+	// In tree mode
+	var player = Player()
+	var options = ["l", "r"]
+	var options2 = ["u", "d"]
+	var parameters = {}
+	var _choice1 = new _Choice("c1", player.id(), options, parameters)
+	var _choice2 = new _Choice("c2", player.id(), options2, parameters)
+	var _choice3 = new _Choice("c3", player.id(), options, parameters)
+
+	var _turn1 = new _Turn("t1", [_choice1, _choice2], parameters)
+	_turn1.addNext(_choice3, ["l", "d"])
+
+	t.is(_turn1.findNext({ result: { result: ["l", "d"] } })[0], _choice3)
+
+
+	// In outcome mode
+	var player = Player()
+	var bounds = [1, 4]
+	var parameters = {}
+	var _range1 = new _Range("r1", player.id(), bounds, parameters)
+	var _range2 = new _Range("r2", player.id(), bounds, parameters)
+	var _range3 = new _Range("r3", player.id(), bounds, parameters)
+
+	var _turn1 = new _Turn("t1", [_range1, _range2], parameters)
+	_turn1.addNext(_range3)
+
+	var evaluator = new Evaluator(function(result) {
+		if (result == 3) return true
+	});
+	var to = new TurnOutcome(evaluator, _turn1)
+	_turn1.addNext(_range2, evaluator)
+
+	var next = _turn1.findNext({ result: { result: 3 } })
+	t.is(next[0], _range3)
+	t.is(next[1], _range2)
+})
+
+
+test("_Turn setAllPayoffs", t => {
+	var player = Player()
+	var options = ["l", "r"]
+	var options2 = ["u", "d"]
+	var parameters = {}
+	var _choice1 = new _Choice("c1", player.id(), options, parameters)
+	var _choice2 = new _Choice("c2", player.id(), options2, parameters)
+
+	var _turn1 = new _Turn("t1", [_choice1, _choice2], parameters)
+
+	var payoffs = [
+		[
+			[1, 1, { p1: 6 }],
+			[2, 2]
+		],
+		[
+			[3, 3],
+			[4, 4]
+		]
+	]
+
+	_turn1.setAllPayoffs(payoffs)
+
+	// the implicit payoffs
+	t.deepEqual(_turn1.payoffsImplicit.l.u, [1, 1])
+	t.deepEqual(_turn1.payoffsImplicit.l.d, [2, 2])
+	t.deepEqual(_turn1.payoffsImplicit.r.u, [3, 3])
+	t.deepEqual(_turn1.payoffsImplicit.r.d, [4, 4])
+
+	// the explicit payoffs
+	t.deepEqual(_turn1.payoffsExplicit.l.u, { p1: 6 })
+})
+
+
+// Turn
+test("Turn exists and is subclass of Playable", t => {
+	t.truthy(Turn)
+	t.true(Object.getPrototypeOf(Turn) === Playable)
+})
+
+
+test("Turn constructor/creator", t => {
+	// Tree mode
+	var player = Player()
+	var options = ["l", "r"]
+	var parameters = {}
+	var choice1 = Choice(player, options, parameters)
+	options = ["u", "d"]
+	var choice2 = Choice(player, options, parameters)
+
+	var turn = Turn([choice1, choice2], parameters)
+
+	t.true(turn instanceof Turn)
+
+	// Check that branches were generated
+	t.truthy(turn.l.u)
+	t.truthy(turn.l.d)
+	t.truthy(turn.r.u)
+	t.truthy(turn.r.d)
+	t.truthy(turn.decisionMap)
+	t.falsy(turn.outcome)
+
+	//Outcome mode
+	var player = Player()
+	var bounds = [0, 10]
+	var parameters = {}
+	var range1 = Range(player, bounds, parameters)
+	var range2 = Range(player, bounds, parameters)
+
+	var turn = Turn([range1, range2], parameters)
+
+	t.truthy(turn.outcome)
+
+	// forcing outcomeMode
+	var turn = Turn([choice1, choice2], { forceOutcomeMode: true })
+	t.falsy(turn.l)
+	t.truthy(turn.outcome)
+});
+
+
+test("Turn payoffsMatrix", t => {
+	var player = Player()
+	var options = ["l", "r", "c"]
+	var parameters = {}
+	var choice1 = Choice(player, options, parameters)
+	options = ["u", "d"]
+	var choice2 = Choice(player, options, parameters)
+
+	var turn = Turn([choice1, choice2], parameters)
+
+	var payoffs = [
+		[
+			[1, 1],
+			[2, 2]
+		],
+		[
+			[3, 3],
+			[4, 4]
+		],
+		[
+			[2, 2],
+			[5, 5]
+		]
+	]
+
+	turn.setAllPayoffs(payoffs)
+	t.deepEqual(turn.payoffsMatrix(), payoffs)
+});
+
+
+test("Turn setallPayoffs", t => {
+	var player = Player()
+	var options = ["l", "r", "c"]
+	var parameters = {}
+	var choice1 = Choice(player, options, parameters)
+	options = ["u", "d"]
+	var choice2 = Choice(player, options, parameters)
+
+	var turn = Turn([choice1, choice2], parameters)
+
+	var payoffs = [
+		[
+			[1, 1],
+			[2, 2]
+		],
+		[
+			[3, 3],
+			[4, 4]
+		],
+		[
+			[2, 2],
+			[5, 5]
+		]
+	]
+
+	t.truthy(turn.setAllPayoffs(payoffs))
+
+	// Case 2, wrong dimensions, should throw.
+	var payoffs = [
+		[
+			[1, 1],
+			[2, 2]
+		],
+		[
+			[3, 3],
+			[4, 4]
+		],
+		[
+			[2, 2]
+		]
+	]
+
+	t.throws(turn.setAllPayoffs.bind(turn, payoffs))
+})
+
+
+test("Turn payoffs", t => {
+	var player = Player()
+	var options = ["l", "r"]
+	var parameters = {}
+	var choice1 = Choice(player, options, parameters)
+	options = ["u", "d"]
+	var choice2 = Choice(player, options, parameters)
+
+	var turn = Turn([choice1, choice2], parameters)
+
+	var payoffs = [
+		[
+			[1, 1, { p1: 6 }],
+			[2, 2]
+		],
+		[
+			[3, 3],
+			[4, 4]
+		],
+	]
+
+	turn.setAllPayoffs(payoffs)
+
+	var result = turn.payoffs()
+
+	t.deepEqual(result.implicit.l.u, [1, 1])
+	t.deepEqual(result.implicit.l.d, [2, 2])
+	t.deepEqual(result.implicit.r.u, [3, 3])
+	t.deepEqual(result.implicit.r.d, [4, 4])
+	t.deepEqual(result.explicit.l.u, { p1: 6 })
+})
+
+
+test("Turn decisionMap", t => {
+	var player = Player()
+	var options = ["l", "r", "c"]
+	var parameters = {}
+	var choice1 = Choice(player, options, parameters)
+	options = ["u", "d"]
+	var choice2 = Choice(player, options, parameters)
+
+	var turn = Turn([choice1, choice2], parameters)
+
+	var comparison = [
+		["l", "r", "c"],
+		["u", "d"]
+	]
+
+	t.deepEqual(turn.decisionMap(), comparison)
+})
+
+
+test("Turn branchMode", t => {
+	var player = Player()
+	var options = ["l", "r"]
+	var parameters = {}
+	var choice1 = Choice(player, options, parameters)
+	options = ["u", "d"]
+	var choice2 = Choice(player, options, parameters)
+	var turn = Turn([choice1, choice2], parameters)
+
+	t.is(turn.branchMode(), "tree")
+
+	var player = Player()
+	var options = ["l", "r"]
+	var parameters = {}
+	var choice1 = Choice(player, options, parameters)
+	var bounds = [1, 5]
+	var range = Range(player, bounds, parameters)
+	var turn = Turn([choice1, range], parameters)
+
+	t.is(turn.branchMode(), "outcome")
+})
