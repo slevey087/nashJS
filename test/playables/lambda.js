@@ -60,6 +60,7 @@ test("_Lambda play", async t => {
 	t.snapshot(result)
 })
 
+
 // Frontend
 test("Lambda exists and is subclass of Playable", t => {
 	t.truthy(Lambda)
