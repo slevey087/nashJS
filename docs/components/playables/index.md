@@ -61,12 +61,14 @@ Some _playables_ also can form several branches of chains. This is outlined in m
 ### Basic Playables
 
 * [Choice](./choice.md)
+* [Range](./range.md)
 * [Turn](./turn.md)
-* [Sequence](./sequence.md)
 
 ### Control Playables
 
+* [Sequence](./sequence.md)
 * [Simultaneous](./simultaneous.md)
-* [Loop](loop.md)
+* [Loop](./loop.md)
+* [Lambda](./lambda.md)
 
 ### Stochastic Playables
