@@ -317,7 +317,7 @@ test("PlayerList strategies", t => {
 })
 
 
-test("PlayerList", t => {
+test("PlayerList usingStrategy", t => {
     var p1 = Player({ assign: "logger" })
     var p2 = Player({ assign: "logger" })
     var p3 = Player({ assign: "debugger" })
@@ -339,3 +339,4 @@ test("PlayerList", t => {
     t.is(pll[0], registry.players[p1.id()])
     t.is(pll[1], registry.players[p2.id()])
 })
+
