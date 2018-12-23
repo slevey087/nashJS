@@ -4,7 +4,7 @@ import test from 'ava';
 var NASH = require("../index")
 var { Player, Strategies } = NASH
 
-var { PlayerList, UserPlayerList, InfoPlayerList } = require("../lib/population")
+var { _PlayerList, PlayerList, InfoPlayerList } = require("../lib/population")
 
 var { registry, gameHistory } = require("../lib/engine").Backend.State
 
@@ -12,34 +12,34 @@ var { registry, gameHistory } = require("../lib/engine").Backend.State
 Strategies.debugger()
 Strategies.logger()
 
-test("PlayerList exists and is a subclass of Array", t => {
-    t.truthy(PlayerList)
-    t.true(Object.getPrototypeOf(PlayerList) === Array)
+test("_PlayerList exists and is a subclass of Array", t => {
+    t.truthy(_PlayerList)
+    t.true(Object.getPrototypeOf(_PlayerList) === Array)
 })
 
 
-test("Playerlist constructor + generator", t => {
+test("_Playerlist constructor + generator", t => {
     var p1 = Player()
     var p2 = Player()
 
-    var pl = new PlayerList(p1, p2)
+    var pl = new _PlayerList(p1, p2)
 
     // check that it fetched the players
     t.is(pl[0], registry.players[p1.id()])
     t.is(pl[1], registry.players[p2.id()])
 
     // try it with argument as single array
-    var pl = new PlayerList([p1, p2])
+    var pl = new _PlayerList([p1, p2])
     t.is(pl[0], registry.players[p1.id()])
     t.is(pl[1], registry.players[p2.id()])
 
     // try it with player ids instead of objects
-    var pl = new PlayerList(p1.id(), p2.id())
+    var pl = new _PlayerList(p1.id(), p2.id())
     t.is(pl[0], registry.players[p1.id()])
     t.is(pl[1], registry.players[p2.id()])
 
     // try it with backend objects instead of frontend
-    var pl = new PlayerList(registry.players[p1.id()], registry.players[p2.id()])
+    var pl = new _PlayerList(registry.players[p1.id()], registry.players[p2.id()])
     t.is(pl[0], registry.players[p1.id()])
     t.is(pl[1], registry.players[p2.id()])
 
@@ -51,11 +51,11 @@ test("Playerlist constructor + generator", t => {
 })
 
 
-test("PlayerList assign", t => {
+test("_PlayerList assign", t => {
     var p1 = Player()
     var p2 = Player()
 
-    var pl = new PlayerList(p1, p2)
+    var pl = new _PlayerList(p1, p2)
 
     pl.assign("logger")
 
@@ -64,12 +64,12 @@ test("PlayerList assign", t => {
 })
 
 
-test("PlayerList exclude", t => {
+test("_PlayerList exclude", t => {
     var p1 = Player()
     var p2 = Player()
     var p3 = Player()
 
-    var pl = new PlayerList(p1, p2, p3)
+    var pl = new _PlayerList(p1, p2, p3)
 
     // Should work for frontend player
     var pl2 = pl.exclude(p3)
@@ -80,8 +80,8 @@ test("PlayerList exclude", t => {
     // should work for id string
     var pl4 = pl.exclude(p3.id())
 
-    // returns PlayerList
-    t.true(pl2 instanceof PlayerList)
+    // returns _PlayerList
+    t.true(pl2 instanceof _PlayerList)
 
     // Appropriate lengths and elements
     t.deepEqual([pl2.length, pl3.length, pl4.length], [2, 2, 2])
@@ -95,21 +95,21 @@ test("PlayerList exclude", t => {
 })
 
 
-test("PlayerList ids", t => {
+test("_PlayerList ids", t => {
     var p1 = Player()
     var p2 = Player()
 
-    var pl = new PlayerList(p1, p2)
+    var pl = new _PlayerList(p1, p2)
 
     t.deepEqual(pl.ids(), [p1.id(), p2.id()])
 })
 
 
-test("PlayerList info", t => {
+test("_PlayerList info", t => {
     var p1 = Player()
     var p2 = Player()
 
-    var pl = new PlayerList(p1, p2)
+    var pl = new _PlayerList(p1, p2)
 
     var pli = pl.info()
 
@@ -117,25 +117,25 @@ test("PlayerList info", t => {
 })
 
 
-test("PlayerList kill", t => {
+test("_PlayerList kill", t => {
     var p1 = Player()
     var p2 = Player()
 
-    var pl = new PlayerList(p1, p2)
+    var pl = new _PlayerList(p1, p2)
 
     var pl2 = pl.kill()
 
-    t.true(pl2 instanceof PlayerList)
+    t.true(pl2 instanceof _PlayerList)
     t.false(p1.alive() || p2.alive())
 })
 
 
-test("PlayerList leader", t => {
+test("_PlayerList leader", t => {
     var p1 = Player()
     var p2 = Player()
     var p3 = Player()
 
-    var pl = new PlayerList(p1, p2, p3)
+    var pl = new _PlayerList(p1, p2, p3)
 
     // case with single leader
     registry.players[p2.id()].score = 2
@@ -144,16 +144,16 @@ test("PlayerList leader", t => {
     // case with tie
     registry.players[p3.id()].score = 2
     var pll = pl.leader()
-    t.true(pll instanceof PlayerList)
+    t.true(pll instanceof _PlayerList)
     t.deepEqual(pll.slice(), [registry.players[p2.id()], registry.players[p3.id()]])
 })
 
 
-test("PlayerList markAvailable", t => {
+test("_PlayerList markAvailable", t => {
     var p1 = Player()
     var p2 = Player()
 
-    var pl = new PlayerList(p1, p2)
+    var pl = new _PlayerList(p1, p2)
 
     p1.markBusy()
     p2.markBusy()
@@ -164,41 +164,41 @@ test("PlayerList markAvailable", t => {
 })
 
 
-test("PlayerList onlyAlive", t => {
+test("_PlayerList onlyAlive", t => {
     var p1 = Player()
     var p2 = Player()
 
-    var pl = new PlayerList(p1, p2)
+    var pl = new _PlayerList(p1, p2)
 
     p2.kill()
 
     var pll = pl.onlyAlive()
-    t.true(pll instanceof PlayerList)
+    t.true(pll instanceof _PlayerList)
     t.is(pll.length, 1)
     t.is(pll[0], registry.players[p1.id()])
 })
 
 
-test("PlayerList onlyAvailable", t => {
+test("_PlayerList onlyAvailable", t => {
     var p1 = Player()
     var p2 = Player()
 
-    var pl = new PlayerList(p1, p2)
+    var pl = new _PlayerList(p1, p2)
 
     p2.markBusy()
 
     var pll = pl.onlyAvailable()
-    t.true(pll instanceof PlayerList)
+    t.true(pll instanceof _PlayerList)
     t.is(pll.length, 1)
     t.is(pll[0], registry.players[p1.id()])
 })
 
 
-test("PlayerList scores", t => {
+test("_PlayerList scores", t => {
     var p1 = Player()
     var p2 = Player()
 
-    var pl = new PlayerList(p1, p2)
+    var pl = new _PlayerList(p1, p2)
 
     registry.players[p1.id()].score = 2
     registry.players[p2.id()].score = 5
@@ -207,12 +207,12 @@ test("PlayerList scores", t => {
 })
 
 
-test("PlayerList scoresByStrategy", t => {
+test("_PlayerList scoresByStrategy", t => {
     var p1 = Player({ assign: "logger" })
     var p2 = Player({ assign: "logger" })
     var p3 = Player({ assign: "debugger" })
 
-    var pl = new PlayerList(p1, p2, p3)
+    var pl = new _PlayerList(p1, p2, p3)
 
     registry.players[p1.id()].score = 2
     registry.players[p2.id()].score = 5
@@ -228,12 +228,12 @@ test("PlayerList scoresByStrategy", t => {
 })
 
 
-test("PlayerList scoresByStrategyTotal", t => {
+test("_PlayerList scoresByStrategyTotal", t => {
     var p1 = Player({ assign: "logger" })
     var p2 = Player({ assign: "logger" })
     var p3 = Player({ assign: "debugger" })
 
-    var pl = new PlayerList(p1, p2, p3)
+    var pl = new _PlayerList(p1, p2, p3)
 
     registry.players[p1.id()].score = 2
     registry.players[p2.id()].score = 5
@@ -244,12 +244,12 @@ test("PlayerList scoresByStrategyTotal", t => {
     t.deepEqual(sbs, { logger: 7, debugger: 8 })
 })
 
-test("PlayerList scoresObject", t => {
+test("_PlayerList scoresObject", t => {
     var p1 = Player()
     var p2 = Player()
     var p3 = Player()
 
-    var pl = new PlayerList(p1, p2, p3)
+    var pl = new _PlayerList(p1, p2, p3)
 
     registry.players[p1.id()].score = 2
     registry.players[p2.id()].score = 5
@@ -261,12 +261,12 @@ test("PlayerList scoresObject", t => {
 })
 
 
-test("PlayerList scoresMean", t => {
+test("_PlayerList scoresMean", t => {
     var p1 = Player()
     var p2 = Player()
     var p3 = Player()
 
-    var pl = new PlayerList(p1, p2, p3)
+    var pl = new _PlayerList(p1, p2, p3)
 
     registry.players[p1.id()].score = 2
     registry.players[p2.id()].score = 5
@@ -276,12 +276,12 @@ test("PlayerList scoresMean", t => {
 })
 
 
-test("PlayerList scoresRange", t => {
+test("_PlayerList scoresRange", t => {
     var p1 = Player()
     var p2 = Player()
     var p3 = Player()
 
-    var pl = new PlayerList(p1, p2, p3)
+    var pl = new _PlayerList(p1, p2, p3)
 
     registry.players[p1.id()].score = 2
     registry.players[p2.id()].score = 5
@@ -291,12 +291,12 @@ test("PlayerList scoresRange", t => {
 })
 
 
-test("PlayerList scoresStd", t => {
+test("_PlayerList scoresStd", t => {
     var p1 = Player()
     var p2 = Player()
     var p3 = Player()
 
-    var pl = new PlayerList(p1, p2, p3)
+    var pl = new _PlayerList(p1, p2, p3)
 
     registry.players[p1.id()].score = 2
     registry.players[p2.id()].score = 5
@@ -306,27 +306,27 @@ test("PlayerList scoresStd", t => {
 })
 
 
-test("PlayerList strategies", t => {
+test("_PlayerList strategies", t => {
     var p1 = Player({ assign: "logger" })
     var p2 = Player({ assign: "logger" })
     var p3 = Player({ assign: "debugger" })
 
-    var pl = new PlayerList(p1, p2, p3)
+    var pl = new _PlayerList(p1, p2, p3)
 
     t.deepEqual(pl.strategies(), ["logger", "logger", "debugger"])
 })
 
 
-test("PlayerList usingStrategy", t => {
+test("_PlayerList usingStrategy", t => {
     var p1 = Player({ assign: "logger" })
     var p2 = Player({ assign: "logger" })
     var p3 = Player({ assign: "debugger" })
 
-    var pl = new PlayerList(p1, p2, p3)
+    var pl = new _PlayerList(p1, p2, p3)
 
     var pll = pl.usingStrategy("logger")
 
-    t.true(pll instanceof PlayerList)
+    t.true(pll instanceof _PlayerList)
     t.is(pll.length, 2)
     t.is(pll[0], registry.players[p1.id()])
     t.is(pll[1], registry.players[p2.id()])
@@ -334,9 +334,93 @@ test("PlayerList usingStrategy", t => {
     // should work the same if you use the actual function
     var pll = pl.usingStrategy(registry.strategies.logger)
 
-    t.true(pll instanceof PlayerList)
+    t.true(pll instanceof _PlayerList)
     t.is(pll.length, 2)
     t.is(pll[0], registry.players[p1.id()])
     t.is(pll[1], registry.players[p2.id()])
 })
 
+
+test("_PlayerList strategyDistribution", t => {
+    var p1 = Player({ assign: "logger" })
+    var p2 = Player({ assign: "logger" })
+    var p3 = Player({ assign: "debugger" })
+
+    var pl = new _PlayerList(p1, p2, p3)
+
+    var dist = pl.strategyDistribution()
+
+    t.deepEqual(dist, { logger: 2, debugger: 1 })
+})
+
+
+test("_PlayerList resetScores", t => {
+    var p1 = Player()
+    var p2 = Player()
+    var p3 = Player()
+
+    registry.players[p1.id()].score = 2
+    registry.players[p2.id()].score = 5
+    registry.players[p3.id()].score = 8
+
+    var pl = new _PlayerList(p1, p2, p3)
+
+    pl.resetScores()
+
+    t.is(p1.score(), 0)
+    t.is(p2.score(), 0)
+    t.is(p3.score(), 0)
+})
+
+
+// PlayerList
+
+test("PlayerList exists and is a subclass of Array", t => {
+    t.truthy(PlayerList)
+    t.true(Object.getPrototypeOf(PlayerList) === Array)
+})
+
+
+test("Playerlist constructor + generator", t => {
+    var p1 = Player()
+    var p2 = Player()
+
+    var pl = new PlayerList(p1, p2)
+
+    // check that it fetched the players
+    t.is(pl[0], p1)
+    t.is(pl[1], p2)
+
+    // try it with argument as single array
+    var pl = new PlayerList([p1, p2])
+    t.is(pl[0], p1)
+    t.is(pl[1], p2)
+
+    // try it with player ids instead of objects
+    var pl = new _PlayerList(p1.id(), p2.id())
+    t.is(pl[0], registry.players[p1.id()])
+    t.is(pl[1], registry.players[p2.id()])
+
+    // check that generator works
+    var pl2 = pl.generator()
+    // copy over generator, because test fails if not
+    pl2.generator = pl.generator
+    t.deepEqual(pl, pl2)
+})
+
+test("PlayerList arguments return correct datatypes", t => {
+    // only need to check a few representative methods, because the same code does all methods
+    var p1 = Player()
+    var p2 = Player()
+    var p3 = Player()
+
+    var pl = new PlayerList(p1, p2, p3)
+    t.log(_PlayerList.prototype.exclude)
+    t.true(pl.exclude(p3) instanceof PlayerList)
+
+    registry.players[p3.id()].score = 1
+    t.true(pl.leader() instanceof Player)
+})
+
+
+//InfoPlayerList
