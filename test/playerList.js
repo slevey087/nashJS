@@ -415,7 +415,6 @@ test("PlayerList arguments return correct datatypes", t => {
     var p3 = Player()
 
     var pl = new PlayerList(p1, p2, p3)
-    t.log(_PlayerList.prototype.exclude)
     t.true(pl.exclude(p3) instanceof PlayerList)
 
     registry.players[p3.id()].score = 1
@@ -424,3 +423,35 @@ test("PlayerList arguments return correct datatypes", t => {
 
 
 //InfoPlayerList
+test("InfoPlayerList exists and subclasses Array", t => {
+    t.truthy(InfoPlayerList)
+    t.true(Object.getPrototypeOf(InfoPlayerList) === Array)
+})
+
+
+test("InfoPlayerList constructor", t => {
+    var p1 = Player()
+    var p2 = Player()
+    var p3 = Player()
+
+    var pl = new _PlayerList(p1, p2, p3)
+    var ipl = new InfoPlayerList(pl)
+
+    t.deepEqual(ipl[0], registry.players[p1.id()].infoClean(JSON.parse(JSON.stringify(registry.players[p1.id()]))))
+})
+
+
+test("InfoPlayerList methods", t => {
+    //only need to check a few representative ones because the same code handles all of them
+    var p1 = Player()
+    var p2 = Player()
+    var p3 = Player()
+
+    var pl = new _PlayerList(p1, p2, p3)
+    var ipl = new InfoPlayerList(pl)
+
+    t.true(ipl.exclude(p3) instanceof InfoPlayerList)
+
+    registry.players[p3.id()].score = 1
+    t.true(ipl.leader() instanceof Player)
+})
