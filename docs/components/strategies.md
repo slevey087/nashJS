@@ -7,10 +7,12 @@ TODO: all this stuff Here
 
 `NashJS` comes with several simple strategies meant for speedy debugging. Each of the following is loaded by calling a method on `Strategies`. Each returns its own name, so that it can be loaded and assigned to a player at the same time, eg.
 
-Each strategy takes a `methods` argument, outlining which strategy methods to create. Even if you supply nothing, `choose` and `range` (the default methods for `Choice` and `Range` will be created)
 ```js
 var p1 = Player({assign:Strategies.dummy()})
 ```
+
+Each strategy can take a `methods` argument, outlining which strategy methods to create. If you supply nothing, `choose` and `range` (the default methods for `Choice` and `Range`) will be created.
+
 
 ### dummy
 ```js

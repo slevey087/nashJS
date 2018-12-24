@@ -4,9 +4,10 @@ import test from 'ava';
 var NASH = require("../index")
 var { Player, Strategies } = NASH
 
-var { _PlayerList, PlayerList, InfoPlayerList } = require("../lib/population")
+var { _PlayerList, PlayerList, InfoPlayerList, gamePopulation, Population, InfoPopulation } = require("../lib/population")
 
 var { registry, gameHistory } = require("../lib/engine").Backend.State
+var { _Player } = require("../lib/engine").Backend.Classes
 
 // load the test strategies
 Strategies.debugger()
@@ -92,6 +93,11 @@ test("_PlayerList exclude", t => {
     var pl5 = pl.exclude([p2, p3])
     t.is(pl5.length, 1)
     t.is(pl[0], pl5[0])
+
+    // should work for argument list
+    var pl6 = pl.exclude(p2, p3)
+    t.is(pl6.length, 1)
+    t.is(pl[0], pl6[0])
 })
 
 
@@ -194,6 +200,25 @@ test("_PlayerList onlyAvailable", t => {
 })
 
 
+test("_PlayerList resetScores", t => {
+    var p1 = Player()
+    var p2 = Player()
+    var p3 = Player()
+
+    registry.players[p1.id()].score = 2
+    registry.players[p2.id()].score = 5
+    registry.players[p3.id()].score = 8
+
+    var pl = new _PlayerList(p1, p2, p3)
+
+    pl.resetScores()
+
+    t.is(p1.score(), 0)
+    t.is(p2.score(), 0)
+    t.is(p3.score(), 0)
+})
+
+
 test("_PlayerList scores", t => {
     var p1 = Player()
     var p2 = Player()
@@ -223,8 +248,8 @@ test("_PlayerList scoresByStrategy", t => {
     t.deepEqual(sbs["logger"], [2, 5])
     t.deepEqual(sbs["debugger"], [8])
 
-    // test .total method
-    t.deepEqual(sbs.total(), { logger: 7, debugger: 8 })
+    // test .totals method
+    t.deepEqual(sbs.totals(), { logger: 7, debugger: 8 })
 })
 
 
@@ -317,6 +342,19 @@ test("_PlayerList strategies", t => {
 })
 
 
+test("_PlayerList strategyDistribution", t => {
+    var p1 = Player({ assign: "logger" })
+    var p2 = Player({ assign: "logger" })
+    var p3 = Player({ assign: "debugger" })
+
+    var pl = new _PlayerList(p1, p2, p3)
+
+    var dist = pl.strategyDistribution()
+
+    t.deepEqual(dist, { logger: 2, debugger: 1 })
+})
+
+
 test("_PlayerList usingStrategy", t => {
     var p1 = Player({ assign: "logger" })
     var p2 = Player({ assign: "logger" })
@@ -338,38 +376,6 @@ test("_PlayerList usingStrategy", t => {
     t.is(pll.length, 2)
     t.is(pll[0], registry.players[p1.id()])
     t.is(pll[1], registry.players[p2.id()])
-})
-
-
-test("_PlayerList strategyDistribution", t => {
-    var p1 = Player({ assign: "logger" })
-    var p2 = Player({ assign: "logger" })
-    var p3 = Player({ assign: "debugger" })
-
-    var pl = new _PlayerList(p1, p2, p3)
-
-    var dist = pl.strategyDistribution()
-
-    t.deepEqual(dist, { logger: 2, debugger: 1 })
-})
-
-
-test("_PlayerList resetScores", t => {
-    var p1 = Player()
-    var p2 = Player()
-    var p3 = Player()
-
-    registry.players[p1.id()].score = 2
-    registry.players[p2.id()].score = 5
-    registry.players[p3.id()].score = 8
-
-    var pl = new _PlayerList(p1, p2, p3)
-
-    pl.resetScores()
-
-    t.is(p1.score(), 0)
-    t.is(p2.score(), 0)
-    t.is(p3.score(), 0)
 })
 
 
@@ -453,5 +459,43 @@ test("InfoPlayerList methods", t => {
     t.true(ipl.exclude(p3) instanceof InfoPlayerList)
 
     registry.players[p3.id()].score = 1
-    t.true(ipl.leader() instanceof Player)
+    t.false(ipl.leader() instanceof Player)
+    t.false(ipl.leader() instanceof _Player)
+})
+
+
+// Population shortcuts
+
+test("gamePopulation", t => {
+    t.truthy(gamePopulation)
+
+    var pop = gamePopulation()
+
+    t.true(pop instanceof _PlayerList)
+    t.is(pop.length, Object.keys(registry.players).length)
+})
+
+
+test("Population", t => {
+    t.truthy(Population)
+
+    var pop = Population()
+
+    t.true(pop instanceof PlayerList)
+    t.is(pop.length, Object.keys(registry.players).length)
+})
+
+
+test("Population size", t => {
+    t.is(Population.size(), Object.keys(registry.players).length)
+})
+
+
+test("InfoPopulation", t => {
+    t.truthy(InfoPopulation)
+
+    var pop = InfoPopulation()
+
+    t.true(pop instanceof InfoPlayerList)
+    t.is(pop.length, Object.keys(registry.players).length)
 })

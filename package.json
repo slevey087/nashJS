@@ -35,6 +35,7 @@
     "browserify-fs": "^1.0.0",
     "consolify": "^2.2.0",
     "markdown-toc": "^1.2.0",
-    "ndb": "^1.0.26"
+    "ndb": "^1.0.26",
+    "watchify": "^3.11.0"
   }
 }
