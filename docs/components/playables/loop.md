@@ -16,8 +16,8 @@ var l1 = Loop(playable, count, {
   * `id:null` - The id for this playable. If not provided, one will be generated automatically.
   * `logContinue:false` - If false, omit entries to the `gameHistory` record for each time through the loop, and only record when the loop completes.
   * `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
-  * `shortCircuit:false` - If false, proceed down the chain as normal after the `Sequence` is complete. If true, stop after this `Sequence` is complete. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
-  * `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Sequence` is bundled into any other *playable.*)
+  * `shortCircuit:false` - If false, proceed down the chain as normal after the `Loop` is complete. If true, stop after this `Loop` is complete. (This will be superceded if the `Loop` is bundled into any other *playable.*)
+  * `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Loop` is bundled into any other *playable.*)
 
 Use `Loop` to repeat simple *playables* like `Choice` or `Turn`:
 ```javascript
@@ -26,7 +26,7 @@ var l1 = Loop(t1,5);
 
 l1.play();
 ```
-Or with `Sequence` to loop chains of game-steps:
+Or with `Sequence` or `Consecutive` to loop chains of game-steps:
 ```javascript
 var t1 = Turn(['Left', 'Right']);
 var t2 = Turn (['Up', 'Down']);
