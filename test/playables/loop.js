@@ -7,7 +7,8 @@ var { _Loop } = require("../../lib/playables/loop")
 
 var { Loop, Lambda } = NASH.Playables
 var { registry, gameHistory } = require("../../lib/engine").Backend.State
-
+var { _Lambda } = require("../../lib/engine").Backend.Classes.PlayableClasses
+var { History } = require("../../lib/engine").Backend.Classes
 
 test("_Loop exists and is subclass of _Playable", t => {
 	t.truthy(_Loop)
@@ -28,27 +29,26 @@ test("_Loop constructor", t => {
 	t.is(_loop.logContinue, parameters.logContinue)
 })
 
-/*
-test("_Lambda run", t => {
-	var playable = function () { }
-	var parameters = {}
-	var _lambda = new _Lambda("l1", action, parameters)
-
-	var args = "hi"
-	t.is(_lambda.run(args), args)
-})
 
 
-test("_Lambda summaryThis", t => {
+test("_Loop summaryThis", t => {
 	var action = function (arg) { return arg; }
 	var parameters = {}
 	var _lambda = new _Lambda("l1", action, parameters)
 
-	var summary = new Summary()
-	t.is(_lambda.summaryThis(summary)("action"), action.toString())
+	var _loop = new _Loop("l2", _lambda, 3, parameters)
+
+	var summary = _loop.summaryThis(new Summary())
+	t.is(summary("count"), 3)
+	t.deepEqual(summary("action").summary, _lambda.summarize(new Summary()).summary)
 })
 
 
+test("_Loop handleHistory", t => {
+
+})
+
+/*
 test("_Lambda play", async t => {
 	var played = false
 	var action = function (arg) {
