@@ -23,7 +23,7 @@ Use `Loop` to repeat simple *playables* like `Choice` or `Turn`:
 ```javascript
 var t1 = Turn(['Left', 'Right']);
 var l1 = Loop(t1,5);
-
+// play t1 5 times
 l1.play();
 ```
 Or with `Sequence` or `Consecutive` to loop chains of game-steps:
@@ -32,9 +32,6 @@ var t1 = Turn(['Left', 'Right']);
 var t2 = Turn (['Up', 'Down']);
 var t3 = Turn(['Back','Forward']);
 
-t2(t1);
-t3(t2);
-
-var s1 = Sequence(t1, t3);
-var l1 = Loop(s1, 4);           //t1, then t2, then t3 will play 4 times.
+var c1 = Consecutive([t1, t2, t3]);
+var l1 = Loop(c1, 4);           //t1, then t2, then t3 will play 4 times.
 ```

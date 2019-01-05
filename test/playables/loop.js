@@ -44,27 +44,66 @@ test("_Loop summaryThis", t => {
 })
 
 
-test("_Loop handleHistory", t => {
+test("_Loop handleHistory", async t => {
+	// Mock up of these objects
+	var mock = false;
+	var history = {
+		log: [],
+		addNoLog(arg) {
+			mock = arg
+		}
+	}
+	history.log.add = function (item) {
+		history.log.push(item)
+	}
 
+	var action = {}
+	var parameters = { logContinue: false }
+	var _lambda = new _Lambda("l1", action, parameters)
+	var _loop = new _Loop("l2", _lambda, 3, parameters)
+
+
+	var result = { historyEntry: {} }
+
+	// returns result
+	t.is(await _loop.handleHistory({ history }, result), result)
+	// adds entry to tree only
+	t.is(mock, result.historyEntry)
+
+
+	// test logContinue true
+	var action = {}
+	var parameters = { logContinue: true }
+	var _lambda = new _Lambda("l1", action, parameters)
+	var _loop = new _Loop("l2", _lambda, 3, parameters)
+
+	var result = { historyEntry: {} }
+
+	// returns result
+	t.is(await _loop.handleHistory({ history }, result), result)
+	// adds entry to tree only
+	t.is(mock, result.historyEntry)
+	t.deepEqual(history.log[0], { loop: _loop.id, loopTo: "Loop finished.", count: _loop.counter })
 })
 
-/*
-test("_Lambda play", async t => {
+
+test("_Loop play", async t => {
 	var played = false
 	var action = function (arg) {
 		played = true
 		return arg;
 	}
 	var parameters = {}
-	var _lambda = new _Lambda("l1", action, parameters)
+	var _lambda = new _Lambda("l1", action)
+	var _loop = new _Loop("l2", _lambda, 3, parameters)
 
-	var result = await _lambda.play()
+	var result = await _loop.play()
 	delete result.historyEntry.duration // This'll be different every time
 
 	t.true(played)
 	t.snapshot(result)
 })
-*/
+
 
 // Frontend
 test("Loop exists and is subclass of Playable", t => {
