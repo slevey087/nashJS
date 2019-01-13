@@ -4,7 +4,9 @@ To develop for `NashJS` will require you to make use of the `NashJS` backend com
 
 ## Accessing
 
-To access the backend, `require` the *engine.js* file directly. It is located in the library ("lib") folder.
+If you are accessing backend components in order to build a custom _playable_, then you'll need to access them individually by file. This is because the _playables_ are imported before the engine finishes loading. The guides for each component should detail where these files are, or check the source code.
+
+To access the backend after the engine finishes loading, as you might do to write a stock game, plugin, or a test, `require` the *engine.js* file directly. It is located in the library ("lib") folder.
 
 ```js
 // Be sure to edit for the path your file is actually in

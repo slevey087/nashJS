@@ -101,7 +101,7 @@ var TwoPlayerNormal = gameWrapper(function(players, choices, payoffs = null, par
 	var wrappedFilter = function(information) {
 		// Figure out who I am and who the opponent is
 		var me = information.me.id
-		var players = [information.turn.choices[0].choice.player, information.turn.choices[1].choice.player]
+		var players = [information.turn.decisions[0].choice.player, information.turn.decisions[1].choice.player]
 		var opponent = players.splice(players.indexOf(me), 1) && players[0];
 
 		// add entry for opponent

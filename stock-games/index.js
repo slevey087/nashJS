@@ -1,5 +1,7 @@
 "use strict";
 
+var { registry } = require("../lib/engine").Backend.State
+
 var StockGames = {
 	//Game skeletons
 	"Two-Player Normal": require("./simple-normal").TwoPlayerNormal,
@@ -31,7 +33,7 @@ var StockGames = {
 
 	// Function to display loaded query shortcuts.
 	queries() {
-		return Object.keys(registry.queries).map(function(query) {
+		return Object.keys(registry.queries).map(function (query) {
 			return {
 				[query]: registry.queries[query].description
 			}
