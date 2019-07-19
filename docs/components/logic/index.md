@@ -4,5 +4,6 @@ To make games more dynamic, you can use play-time logic (which is like run-time 
 
 The objects available for us are:
 * [Variable](./Variable.md)
-* [Random Variable](./random-variable.md)
+* [RandomVariable](./random-variable.md)
 * [Expression](./Expression.md)
+* [ComplexVariable](./complex-variable.md)

@@ -16,3 +16,10 @@ c1(L1);
 L1.play();
 ```
 In this example, the value of the payoff of 'right' is set to 3 when the game is defined, but when `L1` is played, the value changes to 6. You can also use the original value of the `Variable` to set the new value, such as `v1.set(v1+1)`.This is especially handy for loops.
+
+A word of caution: when writing code doing comparisons against variables that might potentially be `Variable`s, be sure to use the `==` operator rather than `===`.
+```js
+var v = Variable(5)
+v == 5  // true
+v === 5 // false
+```
