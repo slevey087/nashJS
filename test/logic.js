@@ -130,3 +130,17 @@ test("ComplexVariable functionality", t => {
     t.is(c[0], 2)
     t.is(c[1], 5)
 })
+
+test("creator functions", t => {
+    var a = Variable.creator(5)
+    t.true(a instanceof Variable)
+
+    var b = Expression.creator(function () { return 0 })
+    t.true(b instanceof Expression)
+
+    var c = RandomVariable.creator()
+    t.true(c instanceof RandomVariable)
+
+    var d = ComplexVariable.creator([])
+    t.true(d instanceof ComplexVariable);
+})
