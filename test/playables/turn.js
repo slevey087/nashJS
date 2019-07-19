@@ -8,6 +8,7 @@ var { Evaluator, _Range } = require("../../lib/playables/range")
 var { _Choice } = require("../../lib/playables/choice")
 var { Turn, Choice, Range } = NASH.Playables
 var { Summary } = require("../../lib/summary")
+var OutcomeTree = require("../../lib/outcomeTree");
 
 var { registry, gameHistory } = require("../../lib/engine").Backend.State
 
@@ -35,15 +36,15 @@ test("TurnBranch payoff", t => {
 	var turn = {
 		decisions: [null, null],
 		interface: {},
-		payoffsImplicit: { "left": { "right": [0, 0] } },
-		payoffsExplicit: { "left": { "right": {} } }
+		payoffsImplicit: new OutcomeTree([["left"], ["right"]], null, () => [0, 0]),
+		payoffsExplicit: new OutcomeTree([["left"], ["right"]], null, () => ({}))
 	} // mockup
 
 	var tb = new TurnBranch(path, turn)
 	tb([2, 3, { p1: 6 }])
 
-	t.deepEqual(turn.payoffsImplicit.left.right, [2, 3])
-	t.is(turn.payoffsExplicit.left.right.p1, 6)
+	t.deepEqual(turn.payoffsImplicit.getValue(path), [2, 3])
+	t.is(turn.payoffsExplicit.getValue(path).p1, 6)
 
 	// should throw error if not given a number
 	t.throws(tb)
@@ -58,7 +59,7 @@ test("TurnOutcome exists and is a subclass of Branch", t => {
 
 
 test("TurnOutcome callable/payoffs", t => {
-	var func = function() {}
+	var func = function () { }
 	var evaluator = new Evaluator(func)
 
 	var mock_Turn = {
@@ -101,9 +102,9 @@ test("_Turn constructor with Choices", t => {
 	])
 	t.is(_turn.branchMode, "tree")
 
-	t.deepEqual(_turn.next, { l: { u: [], d: [] }, r: { u: [], d: [] } })
-	t.deepEqual(_turn.payoffsImplicit, { l: { u: [0, 0], d: [0, 0] }, r: { u: [0, 0], d: [0, 0] } })
-	t.deepEqual(_turn.payoffsExplicit, { l: { u: {}, d: {} }, r: { u: {}, d: {} } })
+	t.deepEqual(_turn.next.collapse(), { l: { u: [], d: [] }, r: { u: [], d: [] } })
+	t.deepEqual(_turn.payoffsImplicit.collapse(), { l: { u: [0, 0], d: [0, 0] }, r: { u: [0, 0], d: [0, 0] } })
+	t.deepEqual(_turn.payoffsExplicit.collapse(), { l: { u: {}, d: {} }, r: { u: {}, d: {} } })
 })
 
 
@@ -150,7 +151,7 @@ test("_Turn generateBranches", t => {
 	var turn = _turn.interface = {}
 
 	t.true(_turn.generateBranches())
-	t.true(_turn.branches.every(function(item) { return item instanceof TurnBranch }))
+	t.true(_turn.branches.every(function (item) { return item instanceof TurnBranch }))
 	t.true(turn.Left.Left instanceof TurnBranch)
 	t.deepEqual(turn.Left.Left.path, ["Left", "Left"])
 	t.true(turn.Left.Right instanceof TurnBranch)
@@ -230,7 +231,7 @@ test("_Turn summaryNext outcome mode", t => {
 
 
 	// second test, complex branching
-	var evaluator = new Evaluator(function(result) {
+	var evaluator = new Evaluator(function (result) {
 		if (result == 3) return true
 	});
 	var to = new TurnOutcome(evaluator, _turn1)
@@ -258,7 +259,7 @@ test("_Turn addNext", t => {
 	var _turn1 = new _Turn("t1", [_choice1, _choice2], parameters)
 	_turn1.addNext(_choice2, ["l", "d"])
 
-	t.is(_turn1.next.l.d[0], _choice2)
+	t.is(_turn1.next.collapse().l.d[0], _choice2)
 
 	// In range mode, things are different
 	var player = Player()
@@ -271,7 +272,7 @@ test("_Turn addNext", t => {
 	var _turn1 = new _Turn("t1", [_range1, _range2], parameters)
 
 	// second test, complex branching
-	var evaluator = new Evaluator(function(result) {
+	var evaluator = new Evaluator(function (result) {
 		if (result == 3) return true
 	});
 	var to = new TurnOutcome(evaluator, _turn1)
@@ -337,7 +338,7 @@ test("_Turn findNext", t => {
 	var _turn1 = new _Turn("t1", [_range1, _range2], parameters)
 	_turn1.addNext(_range3)
 
-	var evaluator = new Evaluator(function(result) {
+	var evaluator = new Evaluator(function (result) {
 		if (result == 3) return true
 	});
 	var to = new TurnOutcome(evaluator, _turn1)
@@ -373,13 +374,13 @@ test("_Turn setAllPayoffs", t => {
 	_turn1.setAllPayoffs(payoffs)
 
 	// the implicit payoffs
-	t.deepEqual(_turn1.payoffsImplicit.l.u, [1, 1])
-	t.deepEqual(_turn1.payoffsImplicit.l.d, [2, 2])
-	t.deepEqual(_turn1.payoffsImplicit.r.u, [3, 3])
-	t.deepEqual(_turn1.payoffsImplicit.r.d, [4, 4])
+	t.deepEqual(_turn1.payoffsImplicit.getValue(["l", "u"]), [1, 1])
+	t.deepEqual(_turn1.payoffsImplicit.getValue(["l", "d"]), [2, 2])
+	t.deepEqual(_turn1.payoffsImplicit.getValue(["r", "u"]), [3, 3])
+	t.deepEqual(_turn1.payoffsImplicit.getValue(["r", "d"]), [4, 4])
 
 	// the explicit payoffs
-	t.deepEqual(_turn1.payoffsExplicit.l.u, { p1: 6 })
+	t.deepEqual(_turn1.payoffsExplicit.getValue(["l", "u"]), { p1: 6 })
 })
 
 

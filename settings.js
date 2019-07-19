@@ -1,6 +1,7 @@
 module.exports = {
-	"condense-next-summary-preview": false,
 	"clear-history-on-play": true,
+	"condense-next-summary-preview": false,
 	"init-log-level": "info",
-	"init-sync-mode": "async"
+	"init-sync-mode": "async",
+	"plugins-directory": "../plugins"
 }

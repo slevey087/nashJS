@@ -56,7 +56,7 @@ test("_Choice constructor", t => {
 		defaultOption: "r",
 		playerMethod: "cheese",
 		usePayoffs: true,
-		informationFilter: function() {},
+		informationFilter: function () { },
 	}
 	var _choice = new _Choice("c1", player.id(), options, parameters)
 
@@ -68,9 +68,9 @@ test("_Choice constructor", t => {
 	t.is(_choice.informationFilter, parameters.informationFilter)
 	t.is(_choice.usePayoffs, parameters.usePayoffs)
 
-	var nexts = Object.keys(_choice.next)
+	var nexts = Object.keys(_choice.next.collapse())
 
-	t.true(nexts.every(function(item) {
+	t.true(nexts.every(function (item) {
 		return options.includes(item)
 	}))
 
@@ -128,7 +128,7 @@ test("_Choice summaryThis", t => {
 
 
 	t.is(summary.summary.player, player.id())
-	t.true(options.every(function(item) {
+	t.true(options.every(function (item) {
 		return summary.summary.options.includes(item)
 	}))
 })
@@ -191,7 +191,7 @@ test("_Choice play", async t => {
 
 	// mockup choose function
 	var helperGlobal = { response: "l" }
-	player.choose = function(options, information, method) {
+	player.choose = function (options, information, method) {
 		helperGlobal.options = options
 		helperGlobal.information = information
 		helperGlobal.method = method

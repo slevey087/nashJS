@@ -3,9 +3,9 @@ import test from 'ava';
 //Main game elements
 var NASH = require("../index")
 
-// class
+// classes
 var { Summary } = require("../lib/summary")
-
+var OutcomeTree = require("../lib/outcomeTree")
 
 
 test("Summary exists", t => {
@@ -49,7 +49,7 @@ test("Summary array", t => {
 	var summary = new Summary()
 	var choices = [{ hey: "hi" }]
 
-	summary.array("choices", choices, function(item, summary) {
+	summary.array("choices", choices, function (item, summary) {
 		summary("hey", item.hey)
 	})
 
@@ -60,7 +60,7 @@ test("Summary array", t => {
 	var summary = new Summary()
 	var choices = [{ hey: "hi" }]
 
-	summary.array("choices", choices, function(item, summary) {
+	summary.array("choices", choices, function (item, summary) {
 		summary("hey", item.hey)
 	}, true)
 
@@ -71,7 +71,7 @@ test("Summary array", t => {
 	var summary = new Summary()
 	var choices = [{ hey: "hi" }, { hey: "the" }]
 
-	summary.array("choices", choices, function(item, summary) {
+	summary.array("choices", choices, function (item, summary) {
 		summary("hey", item.hey)
 	})
 
@@ -88,9 +88,9 @@ test("Summary tree", t => {
 	]
 
 	// case where terms are identical. Result should be single key
-	var next = { l: "hi", r: "hi" }
+	var next = new OutcomeTree(choices, "hi")
 
-	summary.tree("next", choices, next, function(item, path, itemSummary) {
+	summary.tree("next", choices, next, function (item, path, itemSummary) {
 		itemSummary("path", path)
 		itemSummary("item", item)
 		return itemSummary
@@ -99,9 +99,9 @@ test("Summary tree", t => {
 	t.deepEqual(summary.summary, { next: "hi" })
 
 	// case with different terms. Result should be tree summary
-	var next = { l: "hi", r: "hey" }
+	next.setValue("r", "hey")
 
-	summary.tree("next", choices, next, function(item, path, itemSummary) {
+	summary.tree("next", choices, next, function (item, path, itemSummary) {
 		itemSummary("path", path)
 		itemSummary("item", item)
 		return itemSummary
@@ -119,17 +119,28 @@ test("Summary treeArray", t => {
 	]
 
 	// case where terms are identical and singular. Result should be single key with single elment
-	var next = { l: ["hi"], r: ["hi"] }
-	summary.treeArray("next", choices, next, function(item, path, itemSummary) {
+	var next = new OutcomeTree(choices, ["hi"])
+	summary.treeArray("next", choices, next, function (item, path, itemSummary) {
 		itemSummary("path", path)
 		itemSummary("item", item)
 		return itemSummary
 	})
 	t.deepEqual(summary.summary.next.summary, { item: "hi", path: ["r"] })
 
+	// case where treeIfIdentical is true (only works for single element)
+	var next = new OutcomeTree(choices, ["hi"])
+	summary.treeArray("next", choices, next, function (item, path, itemSummary) {
+		itemSummary("path", path)
+		itemSummary("item", item)
+		return itemSummary
+	}, { treeIfIdentical: true })
+	t.deepEqual(summary.summary.next.l.summary, { item: "hi", path: ["l"] })
+	t.deepEqual(summary.summary.next.r.summary, { item: "hi", path: ["r"] })
+
 	// case where terms have multiple items. Result should be full tree.
-	var next = { l: ["hi", "hey"], r: ["hi"] }
-	summary.treeArray("next", choices, next, function(item, path, itemSummary) {
+	var next = new OutcomeTree(choices, null, () => ["hi"])
+	next.getValue(["l"]).push("hey")
+	summary.treeArray("next", choices, next, function (item, path, itemSummary) {
 		itemSummary("path", path)
 		itemSummary("item", item)
 		return itemSummary
@@ -140,7 +151,7 @@ test("Summary treeArray", t => {
 
 
 	// case where arrayIfOne is true
-	summary.treeArray("next", choices, next, function(item, path, itemSummary) {
+	summary.treeArray("next", choices, next, function (item, path, itemSummary) {
 		itemSummary("path", path)
 		itemSummary("item", item)
 		return itemSummary
@@ -149,15 +160,7 @@ test("Summary treeArray", t => {
 	t.deepEqual(summary.summary.next.l[1].summary, { item: "hey", path: ["l"] })
 	t.deepEqual(summary.summary.next.r[0].summary, { item: "hi", path: ["r"] })
 
-	// case where treeIfIdentical is true (only works for single element)
-	var next = { l: ["hi"], r: ["hi"] }
-	summary.treeArray("next", choices, next, function(item, path, itemSummary) {
-		itemSummary("path", path)
-		itemSummary("item", item)
-		return itemSummary
-	}, { treeIfIdentical: true })
-	t.deepEqual(summary.summary.next.l.summary, { item: "hi", path: ["l"] })
-	t.deepEqual(summary.summary.next.r.summary, { item: "hi", path: ["r"] })
+
 });
 
 
@@ -168,7 +171,7 @@ test("Summary mapArray", t => {
 
 	// case of default settings
 	var summary = new Summary()
-	summary.mapArray("next", next, function(item, summary) {
+	summary.mapArray("next", next, function (item, summary) {
 		summary("yo", item.a)
 	})
 
@@ -176,7 +179,7 @@ test("Summary mapArray", t => {
 
 	// case not using defaults
 	var summary = new Summary()
-	summary.mapArray("next", next, function(item, summary) {
+	summary.mapArray("next", next, function (item, summary) {
 		summary("yo", item.a)
 	}, { arrayIfOne: true })
 
@@ -184,9 +187,9 @@ test("Summary mapArray", t => {
 
 
 	// bigger object to test that, and function naming
-	next.set(function b() {}, [{ a: "the" }])
+	next.set(function b() { }, [{ a: "the" }])
 	var summary = new Summary()
-	summary.mapArray("next", next, function(item, summary) {
+	summary.mapArray("next", next, function (item, summary) {
 		summary("yo", item.a)
 	})
 	t.is(summary.summary.next[1].b.summary.yo, "the")
@@ -195,7 +198,7 @@ test("Summary mapArray", t => {
 	var next = new Map()
 	next.set("all", [{ a: "hi" }])
 	var summary = new Summary()
-	summary.mapArray("next", next, function(item, summary) {
+	summary.mapArray("next", next, function (item, summary) {
 		summary("yo", item.a)
 	})
 	t.is(summary.summary.next.summary.yo, "hi")
@@ -204,7 +207,7 @@ test("Summary mapArray", t => {
 	var next = new Map()
 	next.set("all", [{ a: "hi" }])
 	var summary = new Summary()
-	summary.mapArray("next", next, function(item, summary) {
+	summary.mapArray("next", next, function (item, summary) {
 		summary("yo", item.a)
 	}, { condenseAll: false })
 	t.is(summary.summary.next.all.summary.yo, "hi")
@@ -225,11 +228,11 @@ test("Summary print", t => {
 	var summary = new Summary()
 	var choices = [{ hey: "hi" }, { hey: "the" }]
 
-	var branch = summary.array("choices", choices, function(item, summary) {
+	var branch = summary.array("choices", choices, function (item, summary) {
 		summary("hey", item.hey)
 	})
 	t.is(branch.summary.choices[0].summary, summary.print().choices[0])
-	var branch = summary.array("choices", choices, function(item, summary) {
+	var branch = summary.array("choices", choices, function (item, summary) {
 		summary("hey", item.hey)
 	})
 	t.is(branch.summary.choices[1].summary, summary.print().choices[1])
@@ -240,8 +243,13 @@ test("Summary print", t => {
 	var choices = [
 		["l", "r"]
 	]
-	var next = { l: ["hi", "hey"], r: ["hi"] }
-	summary.treeArray("next", choices, next, function(item, path, itemSummary) {
+
+	var next = new OutcomeTree(choices, null, function () {
+		return ["hi"]
+	})
+	next.getValue("l").push("hey")
+
+	summary.treeArray("next", choices, next, function (item, path, itemSummary) {
 		itemSummary("path", path)
 		itemSummary("item", item)
 		return itemSummary

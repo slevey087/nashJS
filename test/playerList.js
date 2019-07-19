@@ -166,7 +166,8 @@ test("_PlayerList markAvailable", t => {
 
     var pll = pl.markAvailable()
     t.is(pll, pl)
-    t.true(p1.isAvailable(), p2.isAvailable())
+    t.true(p1.isAvailable())
+    t.true(p2.isAvailable())
 })
 
 

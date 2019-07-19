@@ -20,7 +20,7 @@ var PluginManager = Engine.Backend.PluginManager;
 
 function invertTerms(termsOfTrade) {
 	var inverse = {}
-	Object.entries(termsOfTrade).forEach(function(term) {
+	Object.entries(termsOfTrade).forEach(function (term) {
 		if (term[0] == "borrow") {
 			inverse.lend = term[1]
 		} else if (term[0] == "lend") {
@@ -35,7 +35,7 @@ function invertTerms(termsOfTrade) {
 // termsOfTrade should be an object reflecting the outcomes for player 1.
 // Example {apple:2, orange:-2}. To borrow or lend, create a sub-object describing the loan terms.
 // eg {apple:2, borrow:{IOU:5}}, or {couch:-10, lend:{'credit card':50}}
-var Exchange = gameWrapper(function(players, termsOfTrade = {}, parameters = {}) {
+var Exchange = gameWrapper(function (players, termsOfTrade = {}, parameters = {}) {
 	var { utilityFunctions, utilityMode = "absolute", initialEndowment = [{}, {}] } = parameters //utilityFunctions should be an array of 2 functions, which take a results object and return a change in utility
 	parameters.id = "Exchange" || parameters.id;
 
@@ -44,17 +44,17 @@ var Exchange = gameWrapper(function(players, termsOfTrade = {}, parameters = {})
 
 	// To play this game, players will need a balance sheet. This plugin will add balance sheets to the players,
 	// as well as ensure that new players are created with one, and that they are re-initialized properly.
-	var balanceSheet = PluginManager.package("balance-sheet-complex").require(players);
+	var balanceSheet = PluginManager.plugin("balance-sheet-complex").require(players);
 	balanceSheet.settings({ cleanZeros: false })
 
 	var p1 = registry.players[players[0].id()];
 	var p2 = registry.players[players[1].id()];
 
 	// Do initial endowments if there are any. Format same as for terms of trade.
-	initialEndowment.forEach(function(endowment, index) {
+	initialEndowment.forEach(function (endowment, index) {
 		var player = players[index]
 		var invertPlayer = players[Number(!index)]
-		Object.entries(endowment).forEach(function(term) {
+		Object.entries(endowment).forEach(function (term) {
 			if (term[0] == "borrow") {
 				var loanTerms = Object.entries(term[1])[0]
 				new balanceSheet.FinancialClaim(invertPlayer, player, loanTerms[1], loanTerms[0])
@@ -72,22 +72,22 @@ var Exchange = gameWrapper(function(players, termsOfTrade = {}, parameters = {})
 		["Accept", "Reject"],
 		["Accept", "Reject"]
 	], null, {
-		id: "Decision",
-		informationFilter: function(info) { //TODO might need to wrap user-supplied informationFilter?
-			info.termsOfTrade = {
-				[p1.id]: termsOfTrade,
-				[p2.id]: invertTerms(termsOfTrade)
+			id: "Decision",
+			informationFilter: function (info) { //TODO might need to wrap user-supplied informationFilter?
+				info.termsOfTrade = {
+					[p1.id]: termsOfTrade,
+					[p2.id]: invertTerms(termsOfTrade)
+				}
+				return info;
 			}
-			return info;
-		}
-	})
+		})
 
 	// Distribute the goods
-	var Distribute = Lambda(function() {
+	var Distribute = Lambda(function () {
 
 		var results = [];
 
-		Object.entries(termsOfTrade).forEach(function(term) {
+		Object.entries(termsOfTrade).forEach(function (term) {
 			if (term[0] == "borrow") {
 				var loanTerms = Object.entries(term[1])[0]
 				var loan = new balanceSheet.FinancialClaim(p2.interface, p1.interface, loanTerms[1], loanTerms[0])
@@ -156,11 +156,11 @@ var Exchange = gameWrapper(function(players, termsOfTrade = {}, parameters = {})
 
 	return Sequence(Decision, Distribute, parameters);
 }, {
-	argumentValidator(players, termsOfTrade) {
-		// TODO: validate parameters
-		return true;
-	}
+		argumentValidator(players, termsOfTrade) {
+			// TODO: validate parameters
+			return true;
+		}
 
-});
+	});
 
 module.exports = Exchange;
