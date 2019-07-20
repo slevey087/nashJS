@@ -61,8 +61,18 @@ test("Expression various accessors", t => {
 
     t.is(e(), a)
     t.true(e == a)
+    t.false(e === a)
     t.is(e.valueOf(), a)
     t.is(e.toString(), a)
+})
+
+test("Expression set", t => {
+    var a = 7
+    var expression = function () { return a }
+    var e = new Expression(expression)
+
+    e.set(() => 8)
+    t.true(e == 8)
 })
 
 
@@ -89,8 +99,27 @@ test("RandomVariable default functionality", t => {
     t.not(results[0] == results[1]) // different results each time
     t.not(results[1] == results[2])
     t.not(results[2] == results[3])  // good enough.
+
+    t.is(r.set(), undefined) // overwrite set
 })
 
+test("RandomVariable freeze", t => {
+    var r = new RandomVariable();
+
+    t.falsy(r.unfreeze)
+
+    var value = r.freeze()
+
+    t.is(r.value, value)
+    t.is(r(), value)    // same result every time
+    t.is(r(), value)
+    t.is(r * 1, value)
+
+    t.truthy(r.unfreeze)
+    t.not(r.unfreeze(), value) // different results each time.
+    t.not(r(), value)
+    t.not(r(), value)
+})
 
 test("ComplexVariable exists and extends Variable", t => {
     t.truthy(ComplexVariable)
