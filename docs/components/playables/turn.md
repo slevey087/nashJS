@@ -4,11 +4,6 @@ A `turn` is a collection of [choices](./choice.md) or [ranges](./range.md), call
 
 ```javascript
 Turn(choices, {
-  id: null,
-  usePayoffs: true,
-  initializePlayers: false,
-  shortCircuit: false,
-  writeHistory: true,
   releasePlayers: true,
 	forceOutcomeMode: false
 });
@@ -16,12 +11,7 @@ Turn(choices, {
 
 * `choices` - an array of the `choices` or `ranges` that make up the `turn`.
 * Optional parameters:
-  * `id:null` - The id for this playable. If not provided, one will be generated automatically.
-  * `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
-  * `usePayoffs:true` - If false, then payoffs defined for this `Turn` will be ignored.
-  * `shortCircuit:false` - If false, proceed down the chain as normal after the `Turn` is complete. If true, stop after this `Turn` is complete. \(This will be superceded if the `Turn` is bundled into any other _playable._\)
-  * `writeHistory:true` - If false, omit entries to the `gameHistory` record. \(This will be superceded if the `Turn` is bundled into any other _playable._\)
-  * `releasePlayer:true` - When each `Choice` executes, players will be noted as occupied and prevented from being selected by other _playables_. If true, the `Turn` will release all players when finished. \(This will be superceded if the `Turn` is bundled into any other _playable._\)
+  * `releasePlayer:true` - When each decision executes, players will be noted as occupied and prevented from being selected by other _playables_. If true, the `Turn` will release all players when finished. \(This will be superceded if the `Turn` is bundled into any other _playable._\)
 	* `forceOutcomeMode:false` - if true, the `turn` will operate using `.outcome()` and `Evaluators` even if all of the sub-playables are `Choice`. More on that below.
 
 Bundle any number of `choices` or `ranges` into a `turn`:
@@ -144,4 +134,4 @@ t1.outcome(function(results){
 t1.play();
 ```
 
-(If you really prefer outcome mode but you are only using `Choice`s, you can set `forceOutcomeMode` to true when you create the `Turn`)
+(If you really prefer outcome mode but you are only using `Choice`s, you can set `forceOutcomeMode` to true when you create the `Turn`.)

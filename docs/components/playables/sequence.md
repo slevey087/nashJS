@@ -3,21 +3,12 @@
 `Sequence` converts a chain of _playables_ into a _playable._ This is useful for supplying longer chains to _playables_ that act on other _playables_ (such as loops) or for cleaning up code by defining your own composite _playables_.
 
 ```javascript
-Sequence(playableStart, playableFinish, {
-  id: null,
-  initializePlayers: false,
-  shortCircuit: false,
-  writeHistory: true
-});
+Sequence(playableStart, playableFinish, parameters);
 ```
 
 * `playableStart` - any _playable_ with which to begin the sequence.
 * `playableFinish` - the _playable_ that should end the sequence.
-* Optional parameters:
-  * `id:null` - The id for this playable. If not provided, one will be generated automatically.
-  * `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
-  * `shortCircuit:false` - If false, proceed down the chain as normal after the `Sequence` is complete. If true, stop after this `Sequence` is complete. (This will be superceded if the `Sequence` is bundled into any other _playable._)
-  * `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the `Sequence` is bundled into any other _playable._)
+* Optional parameters: none.
 
 `Sequence` will call `.play()` on the _playable_ supplied as _playableStart_, then continue down the chain until either it reaches _playableFinish_ or until the chain finishes.
 
