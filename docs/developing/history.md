@@ -73,7 +73,7 @@ history
 */
 ```
 
-The __log__ contains history entries in chronological order, so users can see what happened when during game play. (Note that the entries in the __log__ may not be identical to the entries in the __tree__. `Playables` should format their entries to maximize readibility and convenience in each branch.)
+The __log__ contains history entries in chronological order, so users can see what happened during game play. (Note that the entries in the __log__ may not be identical to the entries in the __tree__. `Playables` should format their entries to maximize readibility and convenience in each branch.)
 
 ```js
 // eg.
@@ -229,14 +229,14 @@ Note: the new history will be blank; it will not contain any entries already in 
 
 The purpose of `.child` is to create a sub-history, which can be passed to sub-playables, so that their history entries will not be written directly into the main __tree__, but rather will be collected and stored, then merged into a property of the main `playable`'s __tree__ entry.
 
-For instance, `Loop` takes a sub-playable, which it calls `.play` on repeatedly. To handle the history entries, it creates a child history, which it passes to the sub-playable when it calls `.play()`. 
+For instance, [`Loop`](../components/playables/loop.md) takes a sub-playable, which it calls `.play` on repeatedly. To handle the history entries, it creates a child history, which it passes to the sub-playable when it calls `.play()`. 
 
 ```js
 // pseudo-code for Loop.play()
 play({history}){
-    loopistory = history.child()
+    loopHistory = history.child()
 
-    result = Loop.subPlayable.play(loopHistory)
+    result = Loop.subPlayable.play({history:loopHistory})
     //... continued below
 }
 ```
@@ -344,7 +344,7 @@ var history = new History();
 var userHistory = new UserHistory(history);
 ```
 
-`UserHistory` inherits methods from `History`, and runs them on the original history, but will convert any returned `History` into a `UserHistory`. This means the underlying `History` can be added to using `.add()`, and the game can be ended by using `.end()`, etc.
+`UserHistory` inherits methods from `History`, and runs them on the original history, but will convert any returned `History` into a `UserHistory`. This means the underlying `History` can be added to using `.add()`, and the game can be ended by using `.end()`, etc. (Note that because of these methods, `UserHistory`s are not suitable to be passed to game players during the game. For that, use [`Information`](./information.md))
 
 ## gameHistory
 

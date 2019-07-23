@@ -193,6 +193,19 @@ test("History end", t => {
     t.true(h.stop)
     t.true(child.stop)
     t.true(grandchild.stop)
+
+    // test fukuyama, because why not. It's the same code as above.
+    var i = [{}, {}, {}]
+    var h = new History(i)
+
+    var child = h.child()
+    var grandchild = child.child()
+
+    child.fukuyama()
+
+    t.true(h.stop)
+    t.true(child.stop)
+    t.true(grandchild.stop)
 })
 
 test("History orphan", t => {
@@ -239,5 +252,9 @@ test("UserHistory constructor", t => {
     var h = new History(i)
     var u = new UserHistory(h)
 
-    t.log(u)
+    t.snapshot(u)
+    t.not(h[0], u[0])       // userHistory should be copy but not same reference as original history.
+    t.deepEqual(h[0], u[0])
 })
+
+test.todo("More userHistory stuff")

@@ -6,6 +6,7 @@ var { Branch, _Playable, Playable } = require("../../lib/playables/playable")
 var { ChoiceBranch, _Choice } = require("../../lib/playables/choice")
 var { Choice } = NASH.Playables
 var { Summary } = require("../../lib/summary")
+var { PerfectInformation } = require("../../lib/information")
 
 var { registry, gameHistory } = require("../../lib/engine").Backend.State
 
@@ -66,7 +67,6 @@ test("_Choice constructor", t => {
 	t.is(_choice.defaultOption, parameters.defaultOption)
 	t.is(_choice.playerMethod, parameters.playerMethod)
 	t.is(_choice.informationFilter, parameters.informationFilter)
-	t.is(_choice.usePayoffs, parameters.usePayoffs)
 
 	var nexts = Object.keys(_choice.next.collapse())
 
@@ -183,7 +183,8 @@ test("_Choice zeroPayoffs", t => {
 test("_Choice play", async t => {
 	var player = Player()
 	var options = ["l", "r"]
-	var parameters = {}
+	var parameters = { usePayoffs: false }
+
 	var _choice = new _Choice("c1", player.id(), options, parameters)
 
 	// shift to the internal player object
@@ -211,8 +212,9 @@ test("_Choice play", async t => {
 	t.is(gameHistory[0], result.historyEntry)
 	t.is(gameHistory.log[0], result.historyEntry)
 
-	// case with informationFilter
+	// TODO: case with informationFilter
 
+	// TODO: case with payoffs
 
 	// case where player is dead. Should reject TODO: make this work
 	//player.alive = false

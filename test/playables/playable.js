@@ -43,14 +43,18 @@ test("_Playable constructor", t => {
 	var history = {}
 	var information = {}
 	var initializePlayers = {}
+	var usePayoffs = {}
+	var writeHistory = {}
 
-	var _playable = new _Playable(id, { compartmentalize, history, information, initializePlayers })
+	var _playable = new _Playable(id, { compartmentalize, history, information, initializePlayers, usePayoffs, writeHistory })
 
 	t.is(_playable.id, id)
 	t.is(_playable.compartmentalize, compartmentalize)
-	t.is(_playable.history, history)
-	t.is(_playable.information, information)
-	t.is(_playable.initializePlayers, initializePlayers)
+	t.is(_playable.playParameters.history, history)
+	t.is(_playable.playParameters.information, information)
+	t.is(_playable.playParameters.initializePlayers, initializePlayers)
+	t.is(_playable.playParameters.usePayoffs, usePayoffs)
+	t.is(_playable.playParameters.writeHistory, writeHistory)
 
 	t.is(registry.playables[id], _playable)
 });
@@ -79,7 +83,7 @@ test("_Playable play hooks", async t => {
 	var result = {}
 
 	var _playable = new _Playable("id")
-	t.is(await _playable.prePlay(params, result).then(function(result) {
+	t.is(await _playable.prePlay(params, result).then(function (result) {
 		return _playable.postPlay(params, result);
 	}), result)
 });
@@ -96,7 +100,7 @@ test("_Playable findNext", t => {
 test("_Playable playNext", async t => {
 	var _playable = new _Playable("id")
 	var next = new _Playable("id2")
-	next.play = function(params, result) { //Mockup play function
+	next.play = function (params, result) { //Mockup play function
 		return Promise.resolve("hey")
 	}
 	_playable.addNext(next)
@@ -106,7 +110,7 @@ test("_Playable playNext", async t => {
 test("_Playable proceed", async t => {
 	var _playable = new _Playable("id")
 	var next = new _Playable("id2")
-	next.play = function(params, result) { //Mockup play function
+	next.play = function (params, result) { //Mockup play function
 		return Promise.resolve("hey")
 	}
 	_playable.addNext(next)
@@ -137,8 +141,8 @@ test("_Playable summarize", t => {
 	// mockup to check that .summaryThis and .summaryNext get called
 	var thisQ = false
 	var nextQ = false
-	_playable.summaryThis = function() { thisQ = true }
-	_playable.summaryNext = function() { nextQ = true }
+	_playable.summaryThis = function () { thisQ = true }
+	_playable.summaryNext = function () { nextQ = true }
 
 	var summary = _playable.summarize()
 

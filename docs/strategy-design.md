@@ -4,7 +4,7 @@ This page outlines how to create your own strategy. There are two different ways
 
 Every strategy should have a name, a description, and a constructor function. Strategies can optionally specify a player name that they are allowed to be associated with (for instance, strategy "Punish Child If Misbehaving" might only be allowed to be associated with the player in the role of "Parent").
 
-The constructor function defines the strategy and how it acts. Each time your strategy is assigned to a player, a new instance of the constructor function will be created using the `new` keyword (this way 2 players using the same strategy are not sharing data). A strategy should have a `.choose()` method, which will get called when the player is involved in a `Choice`.
+The constructor function defines the strategy and how it acts. Each time your strategy is assigned to a player, a new instance of the constructor function will be created using the `new` keyword (this way 2 players using the same strategy are not sharing data). A strategy should have methods which will get called when the player is invoked in a _playable_. These most commonly will be `.choose` for discrete choices and `.range` when there is a range of possible values. But these are customizable (See [Choice](./playables/choice.md) or [Range](./playables/range.md)).
 
 Here's a simple example:
 ```js

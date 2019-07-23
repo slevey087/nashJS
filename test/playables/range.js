@@ -15,7 +15,7 @@ test("Evaluator exists", t => {
 
 test("Evaluator callable", t => {
 	var obj = {}
-	var func = function() { return obj }
+	var func = function () { return obj }
 
 	var evaluator = new Evaluator(func)
 
@@ -24,7 +24,7 @@ test("Evaluator callable", t => {
 
 
 test("Evaluator id", t => {
-	var func = function() {}
+	var func = function () { }
 
 	// explicit name parameter
 	var evaluator = new Evaluator(func, { id: "Less than 3" })
@@ -35,7 +35,7 @@ test("Evaluator id", t => {
 	t.is(evaluator.id, func.name)
 
 	// default value
-	var evaluator = new Evaluator(function() {})
+	var evaluator = new Evaluator(function () { })
 	t.is(evaluator.id, "evaluator")
 });
 
@@ -49,7 +49,7 @@ test("RangeOutcome exists and is a subclass of Branch", t => {
 
 
 test("RangeOutcome callable/payoff", t => {
-	var func = function() {}
+	var func = function () { }
 	var evaluator = new Evaluator(func)
 
 	var mock_Range = { payoffs: new Map(), next: new Map(), interface: {} }
@@ -74,7 +74,7 @@ test("_Range constructor", t => {
 	var id = "hi"
 	var player = Player()
 	var bounds = [0, 10]
-	var parameters = { informationFilter: function() {} }
+	var parameters = { informationFilter: function () { } }
 
 	var _range = new _Range(id, player.id(), bounds, parameters)
 
@@ -95,7 +95,7 @@ test("_Range addNext", t => {
 
 	var _range = new _Range(id, player, bounds, parameters)
 
-	var evaluator = new Evaluator(function(result) {
+	var evaluator = new Evaluator(function (result) {
 		if (result == 3) return true
 	});
 
@@ -122,7 +122,7 @@ test("_range findNext", t => {
 
 	var _range = new _Range(id, player, bounds, parameters)
 
-	var evaluator = new Evaluator(function(result) {
+	var evaluator = new Evaluator(function (result) {
 		if (result == 3) return true
 	});
 
@@ -148,7 +148,7 @@ test("_range findNext", t => {
 test("_Range play", async t => {
 	var player = Player()
 	var bounds = [0, 10]
-	var parameters = {}
+	var parameters = { usePayoffs: false }
 	var _range = new _Range("r1", player.id(), bounds, parameters)
 
 	// shift to the internal player object
@@ -156,7 +156,7 @@ test("_Range play", async t => {
 
 	// mockup choose function
 	var helperGlobal = { response: 1 }
-	player.choose = function(bounds, information, method) {
+	player.choose = function (bounds, information, method) {
 		helperGlobal.bounds = bounds
 		helperGlobal.information = information
 		helperGlobal.method = method
@@ -184,6 +184,8 @@ test("_Range play", async t => {
 
 
 	// TODO: case with informationFilter
+
+	// TODO: case with payoffs
 
 	// case where player is dead. Should reject TODO: make this work
 	//player.alive = false
@@ -225,7 +227,7 @@ test("_Range summaryNext", t => {
 
 
 	// second test, complex branching
-	var evaluator = new Evaluator(function(result) {
+	var evaluator = new Evaluator(function (result) {
 		if (result == 3) return true
 	});
 	var ro = new RangeOutcome(evaluator, _range1)
@@ -266,7 +268,7 @@ test("Range outcome", t => {
 	var parameters = {}
 	var range = Range.creator(player, bounds, parameters)
 
-	var func = function() {}
+	var func = function () { }
 	var parameters = {}
 	var o1 = range.outcome(func, parameters)
 
@@ -279,11 +281,11 @@ test("Range payoff", t => {
 	var player = Player()
 	var r1 = Range.creator(player, [0, 10]); //p1 will choose 0 through 5
 
-	var r1_low = r1.outcome(function(result) {
+	var r1_low = r1.outcome(function (result) {
 		if (result < 5) return true
 	})
 
-	var r1_high = r1.outcome(function(result) {
+	var r1_high = r1.outcome(function (result) {
 		if (result >= 5) return true
 	})
 

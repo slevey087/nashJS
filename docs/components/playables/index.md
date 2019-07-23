@@ -10,7 +10,7 @@ Import the _playables_ you'd like to use using `require`, for instance:
 var { Choice, Turn, Sequence, Loop } = require("nashJS").Playables;
 ```
 
-A _playable_ is created by calling its parent function, with the necessary arguments and optional parameters.
+A _playable_ is created by calling its parent function, with the necessary arguments and optional parameters. The optional parameters always take the form of an object in the last argument.
 
 ```js
 var c1 = Choice(*** arguments here ***, {*** optional parameters here ***});
@@ -54,9 +54,25 @@ c2(c1); //Play c2 after c1
 c3(c1); //Also play c3 after c1.
 ```
 
-Some _playables_ also can form several branches of chains. This is outlined in more detail in specific _playable_ descriptions, following immediately.
+Some _playables_ also can form several branches of chains. This is outlined in more detail in specific _playable_ descriptions, linked to below.
 
-## Playable Reference
+## Common arguments
+While each _playable_ will have unique required and optional arguments, there are also a set of optional arguments that all _playables_ support. These can be specified in the last argument in any _playable_ creator, which will be a parameters object. For instance, with the [`Lambda`]("./lambda.md) _playable_:
+
+```js
+var parameters = { /* Optional parameters here */ }
+var lambdaArgument; // Required argument for Lambda
+var l1 = Lambda(lambdaArgument, parameters)
+```
+The common parameters and default values are:
+
+* `id:null` - The id for this playable. If not provided, one will be generated automatically.
+* `initializePlayers:false` - If true, then all players, scores, and strategies will be reset when `.play()` is called. You can also specify a particular player or multiple players (using an array or `PlayerList`) to reinitialize only.
+  * `usePayoffs:false` - If false, then payoffs defined for this _playable_, or its sub-_playables_, will be ignored. This will be superceded if the _playable_ is bundled into Turn or any other _playable_ which substitutes its own payoffs. It will be passed down to any sub-_playables_ that get called. 
+  * `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the _playable_ is bundled into any other _playable._)
+
+
+## Specific Playable Reference
 
 ### Basic Playables
 
