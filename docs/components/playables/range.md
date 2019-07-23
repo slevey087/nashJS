@@ -4,38 +4,61 @@ A core building block of nashJS,  `Range` is very much like [Choice](./choice.md
 
 ```javascript
 Range(player, bounds, {
-  id: null,
-  initializePlayers: false,
-  usePayoffs: false,
-  shortCircuit: false,
-  writeHistory: true,
-  releasePlayer: true
+  defaultResponse:bounds[0],
+  informationFilter:null,
+  playerMethod:"range"
 });
 ```
 
 * `player` - the reference object of the player who makes the choice (more on this in the `player` section.
 * `options` - an array of specifying the bounds that player may select from in between. For instance: `[1,100]`. The first value is the lower bound, the second value is the upper bound, and an optional 3rd value specifies an increment (see below).
 * Optional parameters:
-  * `id:null` - The id for this playable. If not provided, one will be generated automatically.
-  * `initializePlayers:false` - If true, then players scores and strategies will be reset when `.play()` is called.
-  * `usePayoffs:false` - If false, then payoffs defined for this Range will be ignored. (This will be superceded if the Range is bundled into Turn or any other _playable._)
-  * `shortCircuit:false` - If false, proceed down the chain as normal after the Range is complete. If true, stop after this Range is complete. (This will be superceded if the Range is bundled into Turn or any other _playable._)
-  * `writeHistory:true` - If false, omit entries to the `gameHistory` record. (This will be superceded if the Range is bundled into Turn or any other _playable._)
-  * `releasePlayer:true` - When the Range executes, players will be noted as occupied and prevented from being selected by other _playables_. If true, the Range will release the player when finished. (This will be superceded if the Range is bundled into Turn or any other _playable._)
+  * `defaultResponse:bounds[0]` - the response chosen automatically if the player returns no response. By default it is the lower bound supplied in `bounds`.
+  * `informationFilter:null` - You can supply a function to filter the information object that the player receives. See the section below on `.play()` for more on this.
+  * `playerMethod:"range"` - the name of the method on the player to call when `.play()` is called. See the section below on `.play()` for more on this.  
 
-To create a game-step that involves only a single-player making a choice, use Range by itself.
+To create a game-step that involves only a single-player making a decision, use Range by itself.
 
 ```javascript
 var r1 = Range(p1, [0,30]); //p1 will choose a number between 0 and 30 inclusive
 r1.play();
 ```
 
-To specify an increment, use a third value in the `bounds`, eg. to ask the user to pick a multiple of 5 between 0 and 30, use `[0,30,5]`. (If the user doesn't choose the correct increment, their response will be rounded to the nearest correct value)
+To specify an increment, use a third value in the `bounds`, eg. to ask the user to pick a multiple of 5 between 0 and 30, use `[0,30,5]`. (If the user doesn't choose the correct increment, their response will be rounded to the nearest correct value.)
 
 ```javascript
 var r1 = Range(p1, [0,30,5]); //p1 will choose a multiple of 5 between 0 and 30 inclusive
 r1.play(); 	// If the user chose 22, it would be rounded to 20.
 ```
+
+
+## .play()
+```js
+r1.play();
+```
+will execute the choice. This will call the method on the player object whose name matches `playerMethod`, eg. if using the default "range",  `r1.play()` will call `.range()` on the player's strategy instance. If will be called with two arguments, `bounds`, an array of the bounds and increment (if given), and `information`, an object containing information about the game. (See the [Strategy Design Guide](../strategy-design.md) for more details on implementing strategies.) The player's response will be written to the history and payoffs will be assigned, unless these functions are disabled (as will typically be the case of the `Range` is bundled into another _playable_ like [`Turn`](./turn.md)).
+
+`.play()` can be called with several optinoal parameters:
+```js
+var parameters = {
+  informationFilter:this.informationFilter,
+  releasePlayer:true
+};
+r1.play();
+```
+
+* `informationFilter:this.informationFilter` - a function that will receive the information object bound for the user, and may perform operations on it before passing it along. Defaults to any `informationFilter` assigned when the `Range` was created.
+* `releasePlayer:true` - When the `Range` executes, players will be noted as occupied and prevented from being selected by other _playables_. If true, the `Range` will release the player when finished. (This will be superceded if the `Range` is bundled into `Turn` or any other _playable._)
+
+The `informationFilter` should be a function that takes this form: 
+```js
+function(information){
+  // do something to the information object
+  return information;
+}
+```
+Keep in mind that this will happen during the game, and if it's an iterated game that loops the same _playable_, the information filter may potentially get called many times. Therefore, whatever it does, it should do it *fast*. 
+
 
 ## Branching and Payoffs
 
