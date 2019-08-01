@@ -6,6 +6,8 @@ This page will document this class, but you will probably not need to use it unl
 
 Create one like so:
 ```js
+var {OutcomeTree} = require("./lib/engine").Backend.Classes
+
 var map = // array of arrays with possible outcome sets, eg [["Left", "Right"], ["Up", "Down"]]
 var val = // the value to write to each key in the tree
 

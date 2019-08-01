@@ -33,7 +33,9 @@ See the section below "Branching and Payoffs" for more on this.
 ```js
 c1.play();
 ```
-will execute the choice. This will call the method on the player object whose name matches `playerMethod`, eg. if using the default "choose",  `c1.play()` will call `.choose()` on the player's strategy instance. If will be called with two arguments, `options`, an array of the available responses, and `information`, an object containing information about the game. (See the [Strategy Design Guide](../strategy-design.md) for more details on implementing strategies.) The player's response will be written to the history and payoffs will be assigned, unless these functions are disabled (as will typically be the case of the `Choice` is bundled into another _playable_ like [`Turn`](./turn.md)).
+will execute the choice. This will call the method on the player object whose name matches `playerMethod`, eg. if using the default "choose",  `c1.play()` will call `.choose()` on the player's strategy instance. For short games with only one or a few decision _playables_, you can probably stick with the defaults. This makes for simple programming, but the disadvantage is that if multiple `Choice`s or `Range`s call the same method, then the strategy designer will need to put code into the method to distinguish which one is asking the question. So, for games with many `Choice`s or `Range`s, it is recommended that you distinguish them by having them call different `playerMethod`s
+
+Whatever the `playerMethod` is, it will be called with two arguments, `options`, an array of the available responses, and `information`, an object containing information about the game. (See the [Strategy Design Guide](../strategy-design.md) for more details on implementing strategies.) The player's response will be written to the history and payoffs will be assigned, unless these functions are disabled (as will typically be the case of the `Choice` is bundled into another _playable_ like [`Turn`](./turn.md)).
 
 `.play()` can be called with several optinoal parameters:
 ```js

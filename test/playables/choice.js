@@ -6,7 +6,6 @@ var { Branch, _Playable, Playable } = require("../../lib/playables/playable")
 var { ChoiceBranch, _Choice } = require("../../lib/playables/choice")
 var { Choice } = NASH.Playables
 var { Summary } = require("../../lib/summary")
-var { PerfectInformation } = require("../../lib/information")
 
 var { registry, gameHistory } = require("../../lib/engine").Backend.State
 
