@@ -25,6 +25,8 @@ The summary of a game is meant to include all the branches that the game could t
 
 NOTE: `Summary` contains an internal mechanism to prevent circular recursion. That is, if your game has loops in its game structure (perhaps a branch that returns to the start if a certain choice is made), then `Summary` will eventually terminate rather than looping forever. Therefore, *do not create your own summary branching. You will break the recursion prevention.* Use the summary branching functionality provided, as detailed below.
 
+As a word of advice, bear in mind that if you are asking sub-_playables_ for summaries, you may, depending on the exact behavior, want to set `shortCircuit` to true, so that the sub-_playable_ does not continue down its own `next` branches. This is called as `playable.summarize(summary, true)`.
+
 ### .branch
 Creates a simple branch in the form of a key whose value is a new `Summary`.  The argument is the name of the branch, and the function returns the newly created `Summary.`
 ```js
