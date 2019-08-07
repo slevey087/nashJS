@@ -62,11 +62,11 @@ The `counterName` is used for id uniqueness. Each _playable_ instance **MUST** h
 
 The convention is to use the procedure above, where your code runs `idHandler` in the frontend constructor, then passes returned id to the backend constructor as the first argument, which then passes it to the backend super-constructor. The reason this must be done explicitly is to allow for the possibility of you generating ids in a different fashion, if this default behavior is unsatisfactory for your application. This also aids in testing.
 
-And, finally, your code should overwrite the `Promise` built-in class with the code stored in `registry.Promise`. This is done because, as explained below, the `.play` cycle is all written in terms of promises, but when `nashJS` is running in "sync mode," the standard `Promise` is replaced with (`SynchronousPromise`)[https://www.npmjs.com/package/synchronous-promise]. 
+And, finally, your code should overwrite the `Promise` built-in class with the code stored in `registry.Promise`. This is done because, as explained below, the `.play` cycle is all written in terms of promises, but when `nashJS` is running in "sync mode," the standard `Promise` is replaced with [`SynchronousPromise`](https://www.npmjs.com/package/synchronous-promise). 
 
 ## Methods
 
-The specific functionality for your _playable_ is created by overwriting the standard methods, or creating new ones as necessary. Almost certainly, unless perhaps you are merely extending another _playabble_, you will need to overwrite the `.play()` method. You will also likely need to overwrite the `.summaryThis` method which is used to provide information on the _playable_ to the user in the form of a (`Summary`)[./summary.md]. If your _playable_ has branching behavior that is more sophisticated than the default, then you may need to overwrite the methods related to branching, which include `.findNext`, and `.summaryNext`. If the default history-recording behavior isn't suitable for your application, then you may need to overwrite `.handleHistory` as well. Each of these will be covered in turn below.
+The specific functionality for your _playable_ is created by overwriting the standard methods, or creating new ones as necessary. Almost certainly, unless perhaps you are merely extending another _playabble_, you will need to overwrite the `.play()` method. You will also likely need to overwrite the `.summaryThis` method which is used to provide information on the _playable_ to the user in the form of a [`Summary`](./summary.md). If your _playable_ has branching behavior that is more sophisticated than the default, then you may need to overwrite the methods related to branching, which include `.findNext`, and `.summaryNext`. If the default history-recording behavior isn't suitable for your application, then you may need to overwrite `.handleHistory` as well. Each of these will be covered in turn below.
 
 
 ## The `.play` Cycle
@@ -106,7 +106,7 @@ The functions that get called in the `.play` cycle are the following. Some of th
 
 `.checkInit` deals with the `initializePlayers` parameter, which can be used to re-initialize all or some players when `.play` is called. **DO NOT OVERWRITE**.
 
-`.prePlay` is called prior to `.play` and can be used for any initialization you need to do. The prototype method does nothing, and you are free to overwrite it. However, this is not typically necessary, as it's usually just fine to place setup code within `.play` itself. The exception is in circumstances with "simultaneity" (such as with (`Simultaneous`)[../components/playables/simultaneous.md], or (`Turn`)[../components/playables/turn.md]) which will call each `.play` cycle step in a dovetailed fashion. That is, every "simultaneous" `.prePlay` will be called, followed by all `.play`s, then all `.postPlay`s, and so on.
+`.prePlay` is called prior to `.play` and can be used for any initialization you need to do. The prototype method does nothing, and you are free to overwrite it. However, this is not typically necessary, as it's usually just fine to place setup code within `.play` itself. The exception is in circumstances with "simultaneity" (such as with [`Simultaneous`](../components/playables/simultaneous.md), or [`Turn`(../components/playables/turn.md)) which will call each `.play` cycle step in a dovetailed fashion. That is, every "simultaneous" `.prePlay` will be called, followed by all `.play`s, then all `.postPlay`s, and so on.
 
 `.play` is where the main attraction is. This is covered in more detail in the section below. 
 
@@ -177,7 +177,7 @@ while `.findNext` gets called from within `.playNext` during the `.play` cycle, 
 
 The default behavior is that your _playable_ can proceed to multiple next game-steps, but these are chosen independent of the results of play. This is accomplished with `.next` taking the form of an array. In that case `.addNext` will simply push to that array, and `.findNext` will simply return the entire contents of that array. This is the default setup, and requires no additional coding in your _playable_.
 
-If that behavior isn't sufficient, then you can have your `.next` property take a different form. `.addNezt` and `.findNext` automatically support arrays and (`outcomeTrees`)[./outcometree.md] of arrays, but for more complicated structures you may need to rewrite these methods. 
+If that behavior isn't sufficient, then you can have your `.next` property take a different form. `.addNezt` and `.findNext` automatically support arrays and [`outcomeTrees`](./outcometree.md) of arrays, but for more complicated structures you may need to rewrite these methods. 
 
 The default form of `.addNext` works in the following manner:
 ```js
@@ -191,7 +191,7 @@ The default form of `.addNext` works in the following manner:
 ```
 If `.next` is an `outcomeTree`, then the `path` argument will tell it where in the tree to add the `nextPlayable`.
 
-For help with this kind of discrete branching, you can use the helper class (`Branch`)[./branch.md]. `Branch` provides a simple way to easily extend the _playable_ chaining functionality, because the argument in the chaining doesn't just have to be a `Playable`, but can be a `Branch` as well. This will automatically look up the associated _playable_ and call `.addNext` on it, with the appropriate path argument. 
+For help with this kind of discrete branching, you can use the helper class [`Branch`](./branch.md). `Branch` provides a simple way to easily extend the _playable_ chaining functionality, because the argument in the chaining doesn't just have to be a `Playable`, but can be a `Branch` as well. This will automatically look up the associated _playable_ and call `.addNext` on it, with the appropriate path argument. 
 
 The most common way to do this is to add a `.generateBranches()` method to your backend `_playable` prototype, and then call it from your frontend `playable` constructor. That method can create new `Branch`es and add them to your frontend `playable` instance as object values. Then you can pass these in during chaining. 
 
@@ -217,7 +217,7 @@ If the `.next` property is an `outcomeTree`, this will use data stored in `resul
 
 The basic handling of histories goes like this: any data entered into the `result.historyEntry` object received by `.handleHistory` will be recorded to both the tree and log of whatever history is passed to `.play`, which by default is the complete `gameHistory`.
 
-If you need additional entries besides this, you can simply write them as needed. A `history` is provided in the parameters to every method that gets called during the `.play` cycle (except `.findNext`). Simply pull it from the argument and write to it using the (`history` API)[./history.md]
+If you need additional entries besides this, you can simply write them as needed. A `history` is provided in the parameters to every method that gets called during the `.play` cycle (except `.findNext`). Simply pull it from the argument and write to it using the [`history` API](./history.md).
 
 If you need to change the behavior of `.handleHistory`, then you can overwrite it with your own behavior. As with all `.play` cycle methods, its arguments are `parameters` and the `result` from previous entries, and it should return a `Promise` with the (possibly mutated) `result`. Here's the standard code:
 ```js
@@ -237,7 +237,7 @@ _Playables_ have a `summarize` functionality, to allow the user to more quickly 
 
 Instead, every _playable_ will need to overwrite the `.summaryThis` method, which provides information on the specific _playable_. Additionally, _playables_ with more complex branching will need to overwrite the `.summaryNext` method, which takes us on our merry way to the next game steps for summarization.
 
-The `.summaryThis` method will get called with a single argument, which will be a (`Summary`)[./summary.md] object. You should use that standard API to write data to the `summary`, then return the `summary`. Eg.
+The `.summaryThis` method will get called with a single argument, which will be a [`Summary`](./summary.md) object. You should use that standard API to write data to the `summary`, then return the `summary`. Eg.
 ```js
 summaryThis(summary){
     summary("player", this.player.id)
@@ -248,7 +248,7 @@ The `.summarize` handler in the super-class will take care of adding an `id` fie
 
 (Remember that summaries are not histories - it should convey information about the _playable_ in general, not related to a specific run through the `.play` cycle. You should also keep the summaries short and sweet, just convey a few pieces of useful information.)
 
-The `.summaryNext` method will get called if the summary is proceeding to the next-branches of the _playable_. This notably won't happen if the `shortCircuit` argument to `.summarize()` is set to true. If your `.next` property is just an array, then the default coding of `.summaryNext` should be sufficient. If you have more complicated branching, such as `outcomeTrees` or other data types, then you'll need to rewrite `.summaryNext`. Fortunately, the branching functionalilty built into the (`Summary`)[./summary.md] class should help out. See those docs for more details. `.summarizeNext` is called with a single argument, a new `summary` in which to write your data.
+The `.summaryNext` method will get called if the summary is proceeding to the next-branches of the _playable_. This notably won't happen if the `shortCircuit` argument to `.summarize()` is set to true. If your `.next` property is just an array, then the default coding of `.summaryNext` should be sufficient. If you have more complicated branching, such as `outcomeTrees` or other data types, then you'll need to rewrite `.summaryNext`. Fortunately, the branching functionalilty built into the [`Summary`](./summary.md) class should help out. See those docs for more details. `.summarizeNext` is called with a single argument, a new `summary` in which to write your data.
 
 
 ## Incorporating Your _Playable_ Into nashJS
@@ -265,4 +265,4 @@ Add a markdown documentation file to the _./docs/components/playables/_ folder. 
 
 ## Misc
 
-If your _playable_ allows any user-defined numbers at all, then you should be prepared for them to be (logic classes)[../logic/index.md] rather than actual numbers. In most places, this won't affect your code at all, but it will for equality comparisons. Strict equality (=== or Object.is) will yield false even when the object's numerical value is equal to your comparison number. To facilitate use of these objects, either a) always use loose equality (==), or b) do something to convert any object to a number, such as multiply by 1. Again, this is only necessary for equality comparisons. Arithmetic operations like multiplication and addition will work fine as normal.
+If your _playable_ allows any user-defined numbers at all, then you should be prepared for them to be [logic classes](../logic/index.md) rather than actual numbers. In most places, this won't affect your code at all, but it will for equality comparisons. Strict equality (=== or Object.is) will yield false even when the object's numerical value is equal to your comparison number. To facilitate use of these objects, either a) always use loose equality (==), or b) do something to convert any object to a number, such as multiply by 1. Again, this is only necessary for equality comparisons. Arithmetic operations like multiplication and addition will work fine as normal.

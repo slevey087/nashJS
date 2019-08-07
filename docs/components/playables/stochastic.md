@@ -13,7 +13,7 @@ var s1 = Stochastic(probabilities, {
 * Optional parameters:
     * `omitHistories:true` - if set to `true`, then no history will be logged by this _playable_. This is meant to keep logs tidy, as playing this _playable_ doesn't really *do* anything per se, and by looking at the log for other entries it will be obvious what the results of this one were.
 
-`probabilities` should be an array of the probability values. However, these do not have to sum to 1, because `Stochastic` will add an extra, residual value, which takes on the difference between 1 and the sum, even if that's zero. (This is so that you can use (`Variable`s)[../logic/variable.md]) in order to change the values during game-play.)
+`probabilities` should be an array of the probability values. However, these do not have to sum to 1, because `Stochastic` will add an extra, residual value, which takes on the difference between 1 and the sum, even if that's zero. (This is so that you can use [`Variable`s](../logic/variable.md) in order to change the values during game-play.)
 
 Once defined, `Stochastic` creates an array of branches attached to the _playable_, which can be used for next-chaining in the same was as normal _playables_. Each item in the array corresponds to the corresponding probability in the `probabilities` list. 
 ```js
