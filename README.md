@@ -4,11 +4,16 @@ A flexible and extendable game theory simulator for Javascript. Meant for testin
 
 ## Installation
 
+If you haven't already, install [Node.js](https://nodejs.org/en/), which comes with the NPM package manager.
+
 To install using NPM on the command line:
 
 ```
 npm install nashjs
 ```
+
+Our favorite execution environment, rather than Node.js directly, is [ndb](https://github.com/GoogleChromeLabs/ndb).
+
 ## Usage
 
 `require("nashjs")` will return an object made up of various `nashJS` components. You can either use ES6 destructuring to seperate out the components you want:

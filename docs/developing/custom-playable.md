@@ -248,7 +248,22 @@ The `.summarize` handler in the super-class will take care of adding an `id` fie
 
 (Remember that summaries are not histories - it should convey information about the _playable_ in general, not related to a specific run through the `.play` cycle. You should also keep the summaries short and sweet, just convey a few pieces of useful information.)
 
-The `.summaryNext` method will get called if the summary is proceeding to the next-branches of the _playable_. This notably won't happen if the `shortCircuit` argument to `.summarize()` is set to true. If your `.next` property is just an array, then the default coding of `.summaryNext` should be sufficient. If you have more complicated branching, such as `outcomeTrees` or other data types, then you'll need to rewrite `.summaryNext`. Fortunately, the branching functionalilty built into the [`Summary`](./summary.md) class should help out. See those docs for more details. `.summarizeNext` is called with a single argument, a new `summary` in which to write your data.
+The `.summaryNext` method will get called if the summary is proceeding to the next-branches of the _playable_. This notably won't happen if the `shortCircuit` argument to `.summarize()` is set to true. If your `.next` property is just an array, then the default coding of `.summaryNext` should be sufficient. If you have more complicated branching, such as `outcomeTrees` or other data types, then you'll need to rewrite `.summaryNext`. Fortunately, the branching functionalilty built into the [`Summary`](./summary.md) class should help out. See those docs for more details. `.summarizeNext` is called with a single argument, a new `summary` in which to write your data, and it should return that `summary`.
+
+### How to summarize another _playable_
+
+If you _playable_ has sub-_playables_ (eg. every `Turn` will have `Choice`s or `Range`s as sub-_playables_), then you should call `.summarize` on that _playable_ and feed it a `summary` created by one of the branching functions of your `summary`. To see what that means, let's take a look at the `.summaryThis` method for `Loop`. `Loop` has a single sub-_playable_, the _playable_ to be looped. The summary for `Loop` includes the id (added automatically), the "count" of the number of times it will loop, and a field called "action" which will include a summary of the _playable_ that will get looped.
+```js
+summaryThis(summary) {
+	summary("count", this.count);
+	this.playable.summarize(summary.branch("action"), true);
+
+	return summary;
+};
+```
+`summary.branch("action")` creates a key in the `summary` called "action", and returns a new `summary` object, linked to the parent `summary`, which will occupy that value. `this.playable` is the _playable_ to be looped, and calling `.summarize` requests a summary, to be stored in the `summary` returned by `summary.branch`. The second argument to `.summarize` is `shortCircuit`, which, when set to true as above, prevents the _playable_ from summaring its own next-branches. This is because `Loop` only loops the single _playable_, and ignores any of its next-branches.
+
+Whenever you have to summarize a `playable`, you should **make sure** to use the various branching methods available on `Summary` (such as `.branch`, `.array`, `.tree`, etc). This handles several important features in the background for you, such as preventing the summary from going on infinite loops.
 
 
 ## Incorporating Your _Playable_ Into nashJS
