@@ -324,7 +324,7 @@ test("_Turn findNext", t => {
 	var _turn1 = new _Turn("t1", [_choice1, _choice2], parameters)
 	_turn1.addNext(_choice3, ["l", "d"])
 
-	t.is(_turn1.findNext({ result: { result: ["l", "d"] } })[0], _choice3)
+	t.is(_turn1.findNext({ result: ["l", "d"] })[0], _choice3)
 
 
 	// In outcome mode
@@ -344,7 +344,7 @@ test("_Turn findNext", t => {
 	var to = new TurnOutcome(evaluator, _turn1)
 	_turn1.addNext(_range2, evaluator)
 
-	var next = _turn1.findNext({ result: { result: 3 } })
+	var next = _turn1.findNext({ result: 3 })
 	t.is(next[0], _range3)
 	t.is(next[1], _range2)
 })

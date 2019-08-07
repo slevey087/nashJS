@@ -89,13 +89,13 @@ q1 = Query(p1, [0, 5]) // p1 choose a number between 0 and 5
 
 // Branching would be done with an evaluator function, that returns the playable to go to next
 // play t2 next if the q1 result is less than 3
-t2(q1.outcome(function(value) {
+t2(q1.outcome(function (value) {
 	if (value < 3) return true
 }))
 
 // You can assign payoffs when you create a branch
 t1 = Turn([q1, q2])
-success = t1.outcome(function([values]) {
+success = t1.outcome(function ([values]) {
 	if (values[0] == 7) && (values[1] < 2) return true
 })([1, 1])
 t2(success)
@@ -104,11 +104,11 @@ t2(success)
 
 // for player:
 function someStrategy() {
-	this.choose = function(options, information) {
+	this.choose = function (options, information) {
 		// for Choice
 	}
 
-	this.query = function(bounds, information) {
+	this.query = function (bounds, information) {
 		// for Query
 	}
 }
@@ -119,8 +119,8 @@ c1 = Choice(p1, options, { method: "propose" })
 c2 = Choice(p1, options2, { method: "respond" })
 
 function someStrategy() {
-	this.propose = function(options, information) {}
-	this.respond = function(options, information) {}
+	this.propose = function (options, information) { }
+	this.respond = function (options, information) { }
 }
 
 
@@ -131,6 +131,14 @@ function someStrategy() {
 t1 = StochasticTurn([c1, c2], .4) //40% chance of c1 happening first
 t2 = StochasticTurn([c1, c2, c3], [.4, .3]) //40% chance of c1 first, 30% of c2 first
 
+
+// Have next branch be stochastic
+s = Stochastic([.4, .2])
+c(s[0])
+
+s1 = Stochastic(t1, [.4, .6])
+s2 = Stochastic(t1.left, [.4, .6])
+s3 = Stochastic(t1.left.down, [.4, .6])
 
 //Calculations and logic
 
@@ -143,7 +151,7 @@ t1 = * some turn *
 logic = Nash.if((p1.score() > 5), v1.set(4)).else(v1.set(3))(t1)
 
 //or
-logic = Lambda(function() {
+logic = Lambda(function () {
 	if p1.score() > 5 v1.set(4)
 	else v1.set(3)
 })(t1)
@@ -154,12 +162,12 @@ l1 = Loop(c1, v1)(logic)
 
 //Defining strategies
 
-module.exports = function(NASH) {
+module.exports = function (NASH) {
 	function TitForTat() {
 		this.name = "Tit for Tat"
 		//more metadata here
 
-		this.choose = function(options, information) {
+		this.choose = function (options, information) {
 			return choice
 		};
 	}

@@ -134,8 +134,8 @@ test("_range findNext", t => {
 	_range.addNext(nextPlayable1, "all")
 	_range.addNext(nextPlayable2, evaluator)
 
-	var result1 = { result: { result: 2 } }
-	var result2 = { result: { result: 3 } }
+	var result1 = { result: 2 }
+	var result2 = { result: 3 }
 
 	var onlyAll = _range.findNext(result1)
 	var both = _range.findNext(result2)

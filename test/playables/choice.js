@@ -99,7 +99,7 @@ test("_Choice findNext", t => {
 	var _choice2 = new _Choice("c2", player.id(), options, parameters)
 
 	_choice.addNext(_choice2)
-	t.is(_choice.findNext({ result: { result: "l" } })[0], _choice2)
+	t.is(_choice.findNext({ result: "l" })[0], _choice2)
 });
 
 

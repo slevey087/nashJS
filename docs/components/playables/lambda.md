@@ -11,7 +11,7 @@ Lambda(action, options, parameters);
 
   `Lambda` is very useful for changing [Variables] (../logic/variable.md) during game-play. Eg.
 
-  ```javascript
+```javascript
 var p1 = Player()
 
 // assign a strategy here, etc.
@@ -26,4 +26,4 @@ var l1 = Lambda(function(){
     // if p1's score is greater than 5, change the payoff for c1 to 4
     if (p1.score > 3) v1.set(4)     
 })
-  ```
+```
