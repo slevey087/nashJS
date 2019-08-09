@@ -82,9 +82,18 @@ The common parameters and default values are:
 
 ### Control Playables
 
+* [Consecutive](./consecutive.md)
 * [Sequence](./sequence.md)
 * [Simultaneous](./simultaneous.md)
 * [Loop](./loop.md)
-* [Lambda](./lambda.md)
+* 
 
 ### Stochastic Playables
+
+* [Stochastic](./stochastic.md)
+* [StochasticHalt](./stochastic-halt.md)
+* [StochasticLoop](./stochastic-loop.md)
+
+### Other Playables
+
+* [Lambda](./lambda.md)

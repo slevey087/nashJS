@@ -1,16 +1,16 @@
 import test from 'ava';
 
 var NASH = require("../../index")
-var { Branch, _Playable, Playable } = require("../../lib/playables/playable")
+var { Playable } = require("../../lib/playables/playable")
 var { _StochasticHalt, StochasticHalt } = require("../../lib/playables/stochastic-halt")
-var { _Halt } = require('../../lib/playables/halt-if');
+var { _HaltIf } = require('../../lib/playables/halt-if');
 var { Summary } = require("../../lib/summary")
 
 var { registry, gameHistory } = require("../../lib/engine").Backend.State
 
 test("_StochasticHalt exists and subclasses _Halt", t => {
     t.truthy(_StochasticHalt)
-    t.true(Object.getPrototypeOf(_StochasticHalt) === _Halt)
+    t.true(Object.getPrototypeOf(_StochasticHalt) === _HaltIf)
 })
 
 test("_StochasticHalt constructor", t => {

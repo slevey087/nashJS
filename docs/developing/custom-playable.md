@@ -14,6 +14,9 @@ So, the basic structure of every _playable_ looks like this:
 ```js
 "use strict";
 
+var log = require("../logger");
+log("debug", "Loading Class: MyPlayable");
+
 // Parent class
 var { _Playable, Playable } = require("./playable");
 
@@ -158,7 +161,11 @@ result = {
     result: /* a result value */
 }
 ```
-`.handleHistory`, if not overwritten, will automatically add the duration then write the `historyEntry` to the appropriate locations in the `History`. `result.result` may get used for complex branching (For instance, `Turn` uses `result.result` to pass the result of the players' choices to `.findNext` in order to determine what the next game step should be.), but is optional.
+Some points about this `result` object:
+* `.handleHistory`, if not overwritten, will automatically add the duration then write the `historyEntry` to the appropriate locations in the `History`. 
+* You almost certainly want a key in your `historyEntry` that contains the _playable_'s id. This typically takes the form of `[counterName]:playable.id`, eg: `choice:choice5`.
+* `result.result` may get used for complex branching (For instance, `Turn` uses `result.result` to pass the result of the players' choices to `.findNext` in order to determine what the next game step should be.), but is optional. 
+* An additional key will get added (by `.proceed`) called `result.playable`, which will be a reference to your _playable_ backend instance; this is necessary for `shortCircuit` to work, as well as some complex sub-_playable_ relationships, such as used by `Sequence` and `Loop`. 
 
 You're free to use other keys in this object to pass data around between methods in the `.play` cycle. 
 
