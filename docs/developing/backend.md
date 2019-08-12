@@ -13,7 +13,7 @@ To access the backend after the engine finishes loading, as you might do to writ
 var Backend = require("./lib/engine").Backend
 ```
 
-As usual, we recommend ES6 destructuring to get the components you want.
+As usual, we recommend ES6 destructuring to get the components you want, eg.
 
 ```js
 //eg.

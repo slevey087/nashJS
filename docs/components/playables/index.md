@@ -86,7 +86,8 @@ The common parameters and default values are:
 * [Sequence](./sequence.md)
 * [Simultaneous](./simultaneous.md)
 * [Loop](./loop.md)
-* 
+* [Halt](./halt.md)
+* [HaltIf](./halt-if.md)
 
 ### Stochastic Playables
 
