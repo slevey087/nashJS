@@ -8,7 +8,7 @@ var { Evaluator, _Range } = require("../../lib/playables/range")
 var { _Choice } = require("../../lib/playables/choice")
 var { Turn, Choice, Range } = NASH.Playables
 var { Summary } = require("../../lib/summary")
-var OutcomeTree = require("../../lib/outcomeTree");
+var { OutcomeTree } = require("../../lib/outcomeTree");
 
 var { registry, gameHistory } = require("../../lib/engine").Backend.State
 

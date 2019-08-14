@@ -1,6 +1,6 @@
 import test from 'ava';
 
-var OutcomeTree = require("../lib/outcomeTree")
+var { OutcomeTree } = require("../lib/outcomeTree")
 
 test("OutcomeTree exists", t => {
     t.truthy(OutcomeTree)

@@ -5,7 +5,7 @@ var NASH = require("../index")
 
 // classes
 var { Summary } = require("../lib/summary")
-var OutcomeTree = require("../lib/outcomeTree")
+var { OutcomeTree } = require("../lib/outcomeTree")
 
 
 test("Summary exists", t => {
