@@ -67,6 +67,7 @@ test("Engine references", t => {
     t.is(f.loadStrategy, require("../lib/strategy-loader").loadStrategy)
     t.is(f.loadStrategyFolder, require("../lib/strategy-loader").loadStrategyFolder)
 
+    t.is(b.Classes.StockGame, require("../lib/stock-game").StockGame)
     t.true(b.Expose instanceof Function)
     t.true(f.startREPL instanceof Function)
 })

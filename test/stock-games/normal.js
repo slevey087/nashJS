@@ -1,7 +1,13 @@
 import test from "ava";
 
-var { StockGames, Player, History } = require("../../index")
-var { QueryResult } = require("../../lib/engine").Backend.Classes
+var Engine = require("../../lib/engine")
+
+var { Player, History } = Engine.Frontend
+var { Turn, RandomPlayerChoice } = Engine.Frontend.Playables
+var { QueryResult } = Engine.Backend.Classes
+var { registry } = Engine.Backend.State
+
+var StockGames = require("../../stock-games")
 
 var p1 = Player()
 var p2 = Player()
@@ -35,7 +41,7 @@ var payoffs = [
 		]
 	]
 ]
-var parameters = {}
+var parameters = { informationFilter: function () { } }
 
 var game = StockGames["Normal"](players, choices, payoffs, parameters)
 
@@ -43,8 +49,23 @@ p1.assign("Choose First")
 p2.assign("Choose Second")
 p3.assign("Choose First")
 
-test("Queries", t => {
-	return game.play().then(function() {
+test("Normal builder", t => {
+	t.true(game instanceof Turn)
+
+	// information filter should propogate
+	t.is(Object.entries(registry.decisions)[0][1].informationFilter, parameters.informationFilter)
+	t.is(Object.entries(registry.decisions)[1][1].informationFilter, parameters.informationFilter)
+
+	t.deepEqual(game.payoffsMatrix(), payoffs)
+
+	// random players
+	var game2 = StockGames["Normal"]("random", choices, payoffs, parameters)
+	t.true(registry.playables[game2.id()].decisions[0] instanceof RandomPlayerChoice)
+	t.true(registry.playables[game2.id()].decisions[1] instanceof RandomPlayerChoice)
+})
+
+test("Normal Queries", t => {
+	return game.play().then(function () {
 		t.deepEqual(History().query("@N-choices"), new QueryResult("hi", {
 			player1: "Left",
 			player2: "Down",

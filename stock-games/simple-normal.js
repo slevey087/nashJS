@@ -3,94 +3,93 @@
 //Game engine
 var Engine = require("../lib/engine")
 
+// Base class
+var { StockGame } = Engine.Backend.Classes
+
 //Helper functions
 var { isFunction } = Engine.Backend.HelperFunctions("general")
-var { gameWrapper } = Engine.Backend.HelperFunctions("stock-games")
 
 // Playables
 var { Turn, Choice, RandomPlayerChoice } = Engine.Frontend.Playables;
 
-//Play-time Logic
-var { RandomVariable } = Engine.Frontend
 
+var Normal = new StockGame(function (players, choiceLists, payoffs = null, parameters = {}) {
+	//propogate the information filter
+	parameters.parameters ? parameters.parameters.informationFilter = parameters.informationFilter :
+		parameters.parameters = { informationFilter: parameters.informationFilter }
 
-var Normal = gameWrapper(function(players, choiceLists, payoffs = null, parameters = {}) {
+	// construct the choices
+	var choices = choiceLists.map(function (list, index) {
+		return players == "random" ? RandomPlayerChoice(list, parameters.parameters) : Choice(players[index],
+			list, parameters.parameters);
+	});
 
-		//propogate the information filter
-		parameters.parameters ? parameters.parameters.informationFilter = parameters.informationFilter :
-			parameters.parameters = { informationFilter: parameters.informationFilter }
+	var game = Turn(choices, parameters);
 
-		// construct the choices
-		var choices = choiceLists.map(function(list, index) {
-			return players == "random" ? RandomPlayerChoice(list, parameters.parameters) : Choice(players[index],
-				list, parameters.parameters);
-		});
+	if (payoffs) game.setAllPayoffs(payoffs);
 
-		var game = Turn(choices, parameters);
-
-		if (payoffs) game.setAllPayoffs(payoffs);
-
-		return game;
-	}, {
+	return game;
+}, {
 		queries: [{
-				shortcut: "@N-choices",
-				query: "$.results{player:result}",
-				description: "Normal: Players and their choice."
-			},
-			{
-				shortcut: "@N-payouts",
-				query: "$.payouts",
-				description: "Normal: Payouts object, by player."
-			},
-			{
-				shortcut: "@N-players",
-				query: "$.results.player",
-				description: "Normal: Who played."
-			}
+			shortcut: "@N-choices",
+			query: "$.results{player:result}",
+			description: "Normal: Players and their choice."
+		},
+		{
+			shortcut: "@N-payouts",
+			query: "$.payouts",
+			description: "Normal: Payouts object, by player."
+		},
+		{
+			shortcut: "@N-players",
+			query: "$.results.player",
+			description: "Normal: Who played."
+		}
 		],
-		strategyLoader: function() {
+		strategyLoader: function () {
 			return [{
-					strategy: function chooseFirst() {
-						this.choose = function(choices, information) {
-							return choices[0]
-						}
-					},
-					name: "Choose First",
-					description: "Always choose first available option."
+				strategy: function chooseFirst() {
+					this.choose = function (choices, information) {
+						return choices[0]
+					}
 				},
+				name: "Choose First",
+				description: "Always choose first available option."
+			},
 
-				{
-					strategy: function chooseSecond() {
-						this.choose = function(choices, information) {
-							return choices[1]
-						}
-					},
-					name: "Choose Second",
-					description: "Always choose second available option."
+			{
+				strategy: function chooseSecond() {
+					this.choose = function (choices, information) {
+						return choices[1]
+					}
 				},
+				name: "Choose Second",
+				description: "Always choose second available option."
+			},
 
-				{
-					strategy: function randomize(choices = [0, 1]) {
-						// Creating a map will make picking a random value easier
-						choices = choices.map(function(item, index) {
-							return [index, item]
-						});
-						var choiceMap = new Map(choices)
+			{
+				strategy: function randomize(choices = [0, 1]) {
+					// Creating a map will make picking a random value easier
+					choices = choices.map(function (item, index) {
+						return [index, item]
+					});
+					var choiceMap = new Map(choices)
 
-						this.choose = function(choices, information) {
-							return choices[choiceMap.get(Math.floor(Math.random() * choiceMap.size))];
-						}
-					},
-					name: "Randomize",
-					description: "Choose randomly from available options."
-				}
+					this.choose = function (choices, information) {
+						return choices[choiceMap.get(Math.floor(Math.random() * choiceMap.size))];
+					}
+				},
+				name: "Randomize",
+				description: "Choose randomly from available options."
+			}
 			];
 		}
 	} // 										TODO: validate all arguments
-);
+)
 
 
-var TwoPlayerNormal = gameWrapper(function(players, choices, payoffs = null, parameters = {}) {
+
+var TwoPlayerNormal = new StockGame(function (players, choices, payoffs = null, parameters = {}) {
 
 	// Information mechanics.. There are only two players, so we can have a 'me' and 'opponent' entry.
 	// If user supplied an information filter, wrap that filter in ours.
@@ -98,14 +97,14 @@ var TwoPlayerNormal = gameWrapper(function(players, choices, payoffs = null, par
 	if (!isFunction(informationFilter)) informationFilter = null;
 
 	// Wrap the user's filter
-	var wrappedFilter = function(information) {
+	var wrappedFilter = function (information) {
 		// Figure out who I am and who the opponent is
 		var me = information.me.id
 		var players = [information.turn.decisions[0].choice.player, information.turn.decisions[1].choice.player]
 		var opponent = players.splice(players.indexOf(me), 1) && players[0];
 
 		// add entry for opponent
-		var opponentDetail = information.population.filter(function(player) {
+		var opponentDetail = information.population.filter(function (player) {
 			return (player.id == opponent)
 		})[0];
 		information.opponent = opponentDetail;
