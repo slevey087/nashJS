@@ -7,10 +7,10 @@ var { QueryResult, Query } = require("../lib/engine").Backend.Classes
 // load a game to get some queries.
 StockGames["Iterated Prisoner's Dilemma"]("random")
 
-test("See all stored queries", async t => {
+test("See all stored queries", t => {
 	// Returns shortcut and description
 	var qua = Queries()
-	await Object.keys(registry.queries).forEach(function(q, index) {
+	Object.keys(registry.queries).forEach(function (q, index) {
 		t.is(qua[index].shortcut, q)
 		t.is(qua[index].query, registry.queries[q].query)
 		t.is(qua[index].description, registry.queries[q].description)
