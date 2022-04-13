@@ -14,7 +14,7 @@
   "author": "SLevey087",
   "license": "ISC",
   "dependencies": {
-    "async": "^2.6.1",
+    "async": "^3.2.2",
     "esprima": "^4.0.0",
     "expression-sandbox": "^1.1.0",
     "jsonata": "^1.4.1",
